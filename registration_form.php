@@ -58,7 +58,7 @@
 
 		$check_pic = 1;
 
-		include('db_connection.php');
+		include('config/db_connection.php');
 
 		$q_fetch = "SELECT emp.first_name AS f_name, emp.middle_name AS m_name, emp.last_name AS 
 			l_name, emp.prefix AS prefix, emp.gender AS gender, emp.dob AS dob, emp.marital_status AS 
