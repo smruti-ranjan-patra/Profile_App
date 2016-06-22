@@ -3,8 +3,8 @@
 	session_start();
 
 	$check_pic = 0;
-	include('config/states.php');
-	include('config/photo_path.php');
+	require_once('config/states.php');
+	require_once('config/photo_path.php');
 	/**
 	* Checks each field of select dropdown and makes the required as selected
 	*
@@ -58,7 +58,7 @@
 
 		$check_pic = 1;
 
-		include('db_connection.php');
+		require_once('config/db_connection.php');
 
 		$q_fetch = "SELECT emp.first_name AS f_name, emp.middle_name AS m_name, emp.last_name AS 
 			l_name, emp.prefix AS prefix, emp.gender AS gender, emp.dob AS dob, emp.marital_status AS 
@@ -860,7 +860,7 @@
 							<label for="pic">Photo:</label>
 						</div>
 						<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8"> 
-							<input type="file" id="pic" name="pic" required value="<?php echo $row['photo'] 
+							<input type="file" id="pic" name="pic" value="<?php echo $row['photo'] 
 							?>"><span>
 							<?php
 							if(isset($_GET['validation']) && $_GET['validation'] == 1)
@@ -872,6 +872,8 @@
 							{
 							  echo "<img src=".PIC_PATH.$row['photo']." width=200 height=200>";
 							}
+							echo '<span class="text-danger">'.$_SESSION['error_array']
+							['photo']['msg']."</span>";
 							?></span>
 						</div>
 					</div>

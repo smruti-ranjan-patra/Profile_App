@@ -17,8 +17,8 @@
 	</nav>
 	<?php
 
-		include('config/db_connection.php');
-		include('config/photo_path.php');
+		require_once('config/db_connection.php');
+		require_once('config/photo_path.php');
 
 		$q_fetch = "SELECT emp.prefix AS prefix, CONCAT(emp.first_name,' ', emp.middle_name,' ', 
 			emp.last_name) AS name, emp.gender AS gender, emp.dob AS dob, 

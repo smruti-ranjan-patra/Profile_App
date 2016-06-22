@@ -1,8 +1,10 @@
 <?php
 	session_start();
 
-	include('config/db_connection.php');
-	include('config/photo_path.php');
+	require_once('config/db_connection.php');
+	require_once('config/photo_path.php');
+	require_once('OOPS.php');
+	$obj = new Database;
 
 	$pic_update = FALSE;
 	
@@ -37,7 +39,7 @@
 		if(isset($_POST['middle_name']) && !empty($_POST['middle_name']))
 		{
 			$m_name = formatted($_POST['middle_name']);
-			if(preg_match("/^[a-zA-Z ]*$/",$_POST['middle_name']))
+			if(preg_match("/^[a-zA-Z ]*$/",$m_name))
 			{
 				$_SESSION['error_array']['middle_name']['val'] = $m_name;
 				$_SESSION['error_array']['middle_name']['msg'] = '';
@@ -45,13 +47,13 @@
 			else
 			{
 				$_SESSION['error_array']['middle_name']['val'] = $m_name;
-				$_SESSION['error_array']['middle_name']['msg'] = 'Invalid Middle Name';
-				$error_error_count++;
+				$_SESSION['error_array']['middle_name']['msg'] = 'Only Alphabets Allowed';
+				$error_count++;
 			}
 		}
 		else
 		{
-			$_SESSION['error_array']['middle_name']['val'] = ' ';
+			$_SESSION['error_array']['middle_name']['val'] = '';
 			$_SESSION['error_array']['middle_name']['msg'] = '';
 		}
 
@@ -431,7 +433,7 @@
 		// Validating Picture
 		if(isset($_FILES['pic']))
 		{
-			$errors= array();
+			$errors = array();
 			$file_name = $_FILES['pic']['name'];
 			$file_size = $_FILES['pic']['size'];
 
@@ -444,15 +446,19 @@
 				$ext_arr = explode('.',$file_name);
 				$file_ext = strtolower(end($ext_arr));
 				$extensions = array("jpeg","jpg","png");
-				if(in_array($file_ext,$extensions) === false)
+				if(in_array($file_ext, $extensions) === false)
 				{
-					$errors[]="extension not allowed, please choose a JPEG or PNG file.";
+					$errors[] = "extension not allowed, please choose a JPEG or PNG file.";
+					$_SESSION['error_array']['photo']['val'] = $file_name;
+					$_SESSION['error_array']['photo']['msg'] = 'Please choose jpg, jpeg or png file';
+					header("Location: registration_form.php?validation=1");
+					exit();
 				}
 				if($file_size > 8388608)
 				{
-					$errors[]='File size must be excately 2 MB';
+					$errors[] = 'File size must be excately 2 MB';
 				}
-				if(empty($errors)==true)
+				if(empty($errors) == true)
 				{
 					move_uploaded_file($file_tmp, PIC_PATH.$file_name);
 				}
@@ -462,7 +468,7 @@
 				}
 			}
 			$_SESSION['error_array']['photo']['val'] = $file_name;
-			$_SESSION['error_array']['photo']['msg'] = '';	
+			$_SESSION['error_array']['photo']['msg'] = 'Please Provide a Photo';	
 		}
 		else
 		{
@@ -535,6 +541,8 @@
 
 			$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
+
+
 			$update_add_res = "UPDATE `address` 
 				SET `street` = '$r_street', `city` = '$r_city', `state` = '$r_state', `zip` = $r_zip, 
 				`phone` = $r_phone, `fax` = $r_fax 
@@ -577,7 +585,46 @@
 
 		if($check_edit_id == FALSE)
 		{
-			$q_employee = "INSERT INTO employee(first_name, middle_name, last_name, prefix, gender, 
+
+			$employee_data_array = array(
+				"first_name" => "$f_name", 
+				"middle_name" => "$m_name", 
+				"last_name" => "$l_name", 
+				"prefix" => "$prefix", 
+				"gender" => "$gender", 
+				"dob" => "$dob", 
+				"marital_status" => "$marital", 
+				"employment" => "$employment", 
+				"employer" => "$employer", 
+				"photo" => "$file_name", 
+				"extra_note" => "$notes", 
+				"comm_id" => "$comm" );
+
+			$connection = $obj->insert_full('employee', $employee_data_array);
+
+			$employee_id = mysqli_insert_id($connection);
+
+			$address_data_array = array(
+				"emp_id" => "$employee_id", 
+				"r_street" => "$r_street", 
+				"r_city" => "$r_city", 
+				"r_state" => "$r_state", 
+				"r_zip" => "$r_zip", 
+				"r_phone" => "$r_phone", 
+				"r_fax" => "$r_fax", 
+				"o_street" => "$o_street", 
+				"o_city" => "$o_city", 
+				"o_state" => "$o_state", 
+				"o_zip" => "$o_zip", 
+				"o_phone" => "$o_phone", 
+				"o_fax" => "$o_fax", 
+				);
+
+			$connection = $obj->insert_full('address', $address_data_array);
+
+
+
+			/*$q_employee = "INSERT INTO employee(first_name, middle_name, last_name, prefix, gender, 
 				dob, marital_status, employment, employer, photo, extra_note, comm_id) 
 				VALUES ('$f_name', '$m_name', '$l_name', '$prefix', '$gender', '$dob', '$marital', 
 				'$employment', '$employer', '$file_name', '$notes', '$comm')";
@@ -602,7 +649,7 @@
 			{
 				echo 'Unable to insert data';
 				exit;
-			}
+			}*/
 		}
 	}
 	else
