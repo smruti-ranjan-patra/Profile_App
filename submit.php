@@ -7,10 +7,11 @@
 	session_start();
 	// session_destroy();
 
-	require_once('config/db_connection.php');
+	//require_once('config/db_connection.php');
 	require_once('config/photo_path.php');
 	require_once('class/DatabaseConnection.php');
 	require_once('class/Validation.php');
+	require_once('config/constants.php');
 	$obj = DatabaseConnection::create_connection();
 
 	$pic_update = FALSE;
@@ -19,7 +20,10 @@
 	{
 		$validate_obj = new Validation($_POST);
 		$error_count = 0;
-		$validate_obj->validate_form();
+		$validate_obj->validate_form('submit');
+
+		// Validating Email ID
+		// $validate_obj->email($_POST['email']);
 
 		// Validating Picture
 		$pic_info = $validate_obj->photo_validation();
@@ -37,7 +41,7 @@
 
 		if($error_count > 0)
 		{
-			header("Location: registration_form.php?validation=1");
+			header("Location: sign_up.php?validation=1");
 			exit();
 		}
 		$check_edit_id = FALSE;
@@ -99,6 +103,8 @@
 				"first_name" => $_POST['first_name'], 
 				"middle_name" => $_POST['middle_name'], 
 				"last_name" => $_POST['last_name'], 
+				"email" => $_POST['email'], 
+				"password" => $_POST['password'], 
 				"prefix" => $_POST['prefix'], 
 				"gender" => $_POST['gender'], 
 				"dob" => $_POST['dob'], 

@@ -1,15 +1,16 @@
 <?php
-require_once('config/photo_path.php');
+//require_once('config/photo_path.php');
 require_once('config/error_messages.php');
+require_once('config/constants.php');
 
 class DatabaseConnection
 {
 
 	// Member variables
-	private $host_name = NULL;
-	private $user_name = NULL;
-	private $password = NULL;
-	private $db_name = NULL;
+	// private $host_name = NULL;
+	// private $user_name = NULL;
+	// private $password = NULL;
+	// private $db_name = NULL;
 	public static $conn = NULL;
 	public static $connection_obj = NULL;
 
@@ -22,12 +23,11 @@ class DatabaseConnection
 	*/
 	private function __construct()
 	{
-		$this->host_name = 'localhost';
-		$this->user_name = 'root';
-		$this->password = 'mindfire';
-		$this->db_name = 'registration';
-		self::$conn = mysqli_connect($this->host_name, $this->user_name, $this->password, 
-			$this->db_name);
+		// $this->host_name = 'localhost';
+		// $this->user_name = 'root';
+		// $this->password = 'mindfire';
+		// $this->db_name = 'registration';
+		self::$conn = mysqli_connect(HOST_NAME, USER_NAME, PASSWORD, DB_NAME);
 		// if (mysqli_connect_errno($this->conn))
 		// {
 		// 	die ('Failed to connect to MySQL :' . mysqli_connect_error());
@@ -90,7 +90,7 @@ class DatabaseConnection
 	}
 
 	/**
-	* To select all data into the database
+	* To select all data from the database
 	*
 	* @access public
 	* @param  integer $id
@@ -99,8 +99,8 @@ class DatabaseConnection
 	public function select($id)
 	{
 		$q_fetch = "SELECT emp.first_name AS f_name, emp.middle_name AS m_name, 
-			emp.last_name AS l_name, emp.prefix AS prefix, emp.gender AS gender, emp.dob AS dob, 
-			emp.marital_status AS marital_status, emp.employment AS employment, 
+			emp.last_name AS l_name, emp.email AS email, emp.prefix AS prefix, emp.gender AS gender, 
+			emp.dob AS dob, emp.marital_status AS marital_status, emp.employment AS employment, 
 			emp.employer AS employer, res.street AS r_street, res.city AS r_city, 
 			res.state AS r_state, res.zip AS r_zip, res.phone AS r_phone, 
 			res.fax AS r_fax, off.street AS o_street, off.city AS o_city, off.state AS o_state, 
@@ -117,6 +117,34 @@ class DatabaseConnection
 	}
 
 	/**
+	* To select the desired eamil from the database
+	*
+	* @access public
+	* @param  integer $id
+	* @return object
+	*/
+	public function select_email($email)
+	{
+		$q_fetch = "SELECT * from employee where email = '{$email}'";
+		$result = DatabaseConnection::db_query($q_fetch);
+		return $result;
+	}
+
+	/**
+	* To select the desired eamil from the database
+	*
+	* @access public
+	* @param  integer $id
+	* @return object
+	*/
+	public function select_login($email, $password)
+	{
+		$q_fetch = "SELECT * from employee where email = '{$email}' AND password = '{$password}'";
+		$result = DatabaseConnection::db_query($q_fetch);
+		return $result;
+	}
+
+	/**
 	* To insert data into the database
 	*
 	* @access public
@@ -127,10 +155,12 @@ class DatabaseConnection
 	{
 		if($table_name == 'employee')
 		{
-			$q_employee = "INSERT INTO $table_name (first_name, middle_name, last_name, prefix, 
-				gender, dob, marital_status, employment, employer, photo, extra_note, comm_id) 
+			$q_employee = "INSERT INTO $table_name (first_name, middle_name, last_name, email, 
+				password, prefix, gender, dob, marital_status, employment, employer, photo, 
+				extra_note, comm_id) 
 				VALUES ('{$data_array['first_name']}', '{$data_array['middle_name']}', 
-				'{$data_array['last_name']}', '{$data_array['prefix']}', '{$data_array['gender']}', 
+				'{$data_array['last_name']}', '{$data_array['email']}', '{$data_array['password']}', 
+				'{$data_array['prefix']}', '{$data_array['gender']}', 
 				'{$data_array['dob']}', '{$data_array['marital_status']}', 
 				'{$data_array['employment']}', '{$data_array['employer']}', 
 				'{$data_array['photo']}', '{$data_array['extra_note']}', 

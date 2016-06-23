@@ -13,3 +13,8 @@ th
 text-align:center;
 }
 
+.my_block
+{
+text-align: center;
+vertical-align: middle;
+}

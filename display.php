@@ -19,10 +19,10 @@
 
 		require_once('config/db_connection.php');
 		require_once('config/photo_path.php');
-		require_once('class/DatabaseConnection.php');
-		//require_once('class/Validation.php');
+		require_once('class/oops.php');
 
 		$obj = DatabaseConnection::create_connection();
+
 		$result_list = $obj->display_list();
 
 		$rnum = 0;

@@ -105,7 +105,7 @@
 <html>
 	<head>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Registration Form</title>
+		<title>Sign Up</title>
 		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="css/form.css">
 	</head>
@@ -114,8 +114,9 @@
 	<nav class="navbar navbar-inverse">
 		<div class="container-fluid">
 			<ul class="nav navbar-nav">
-				<li class="active"><a href="registration_form.php">Register</a></li>
-				<li><a href="display.php">Display details</a></li>
+				<li><a href="home_default.php">Home</a></li>
+				<li class="active"><a href="sign_up.php">Sign Up</a></li>
+				<li><a href="login_form.php">Login</a></li>
 			</ul>
 		</div>
 	</nav>
