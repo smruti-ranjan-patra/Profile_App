@@ -19,8 +19,11 @@
 
 		require_once('config/db_connection.php');
 		require_once('config/photo_path.php');
+		require_once('class/oops.php');
 
-		$q_fetch = "SELECT emp.prefix AS prefix, CONCAT(emp.first_name,' ', emp.middle_name,' ', 
+		$obj = DatabaseConnection::create_connection();
+
+		/*$q_fetch = "SELECT emp.prefix AS prefix, CONCAT(emp.first_name,' ', emp.middle_name,' ', 
 			emp.last_name) AS name, emp.gender AS gender, emp.dob AS dob, 
 			emp.marital_status AS marital_status, emp.employment AS employment, 
 			emp.employer AS employer, 
@@ -32,10 +35,12 @@
 			inner join address AS res on (emp.id = res.emp_id and res.address_type = 'residence')
 			inner join address AS off on (emp.id = off.emp_id and off.address_type = 'office')";
 		
-		$result_3 = mysqli_query($conn, $q_fetch);
+		$result_3 = mysqli_query($conn, $q_fetch);*/
+
+		$result_list = $obj->display_list();
 
 		$rnum = 0;
-		$rnum = mysqli_num_rows($result_3);
+		$rnum = DatabaseConnection::db_num_rows($result_list);
 		if($rnum == 0)
 		{
 			echo "<h3>No Record Present</h3>";
@@ -66,7 +71,7 @@
 				<tbody>
 				<?php
 					$sl = 1;
-					while ($row = mysqli_fetch_array($result_3, MYSQLI_ASSOC))
+					while ($row = DatabaseConnection::db_fetch_array($result_list))
 					{
 						echo "<tr>";
 						echo "<td>".$sl++."</td>";

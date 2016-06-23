@@ -1,6 +1,7 @@
 <?php
 
 	session_start();
+	//session_destroy();
 
 	$check_pic = 0;
 	require_once('config/states.php');
