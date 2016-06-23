@@ -9,7 +9,8 @@
 
 	require_once('config/db_connection.php');
 	require_once('config/photo_path.php');
-	require_once('class/oops.php');
+	require_once('class/DatabaseConnection.php');
+	require_once('class/Validation.php');
 	$obj = DatabaseConnection::create_connection();
 
 	$pic_update = FALSE;
@@ -21,81 +22,17 @@
 		$validate_obj->validate_form();
 
 		// Validating Picture
-		if(isset($_FILES['pic']))
-		{
-			$errors = array();
-			$file_name = $_FILES['pic']['name'];
-			$file_size = $_FILES['pic']['size'];
-
-			if ($file_size > 0) 
-			{
-				// $pic_update = TRUE;
-				$file_tmp = $_FILES['pic']['tmp_name'];
-				$file_type= $_FILES['pic']['type'];
-
-				$ext_arr = explode('.',$file_name);
-				$file_ext = strtolower(end($ext_arr));
-				$extensions = array("jpeg","jpg","png");
-				if(in_array($file_ext, $extensions) === false)
-				{
-					$errors[] = "extension not allowed, please choose a JPEG or PNG file.";
-					$_SESSION['error_array']['photo']['val'] = $file_name;
-					$_SESSION['error_array']['photo']['msg'] = 'Please choose jpg, jpeg or png file';
-					header("Location: registration_form.php?validation=1");
-					exit();
-				}
-				if($file_size > 8388608)
-				{
-					$errors[] = 'File size must be excately 2 MB';
-				}
-				if(empty($errors) == true)
-				{
-					move_uploaded_file($file_tmp, PIC_PATH.$file_name);
-					$pic_update = TRUE;
-				}
-				else
-				{
-					//print_r($errors);
-				}
-			}
-			$_SESSION['error_array']['photo']['val'] = $file_name;
-			$_SESSION['error_array']['photo']['msg'] = 'Please Provide a Photo';	
-		}
-		else
-		{
-			$_SESSION['error_array']['photo']['val'] = ' ';
-			$_SESSION['error_array']['photo']['msg'] = 'Invalid Photo';
-			$error_count++;
-		}
+		$pic_info = $validate_obj->photo_validation();
+		$pic_update = $pic_info['pic_update'];
+		$file_name = $pic_info['name'];
 		
 		// Validating Notes
-		if(isset($_POST['notes']))
-		{
-			$notes = formatted($_POST['notes']);
-			$_SESSION['error_array']['notes']['val'] = $notes;
-			$_SESSION['error_array']['notes']['msg'] = '';
-		}
-		else
-		{
-			$notes = ' ';
-			$_SESSION['error_array']['notes']['val'] = $notes;
-			$_SESSION['error_array']['notes']['msg'] = '';
-		}
+		$notes = $validate_obj->notes_validation($_POST['notes']);
 
 		// Validating Communication Medium
-		if(isset($_POST['comm']) && !empty($_POST['comm']))
-		{
-			$comm = implode(', ', $_POST['comm']);
-			$_SESSION['error_array']['comm']['val'] = $_POST['comm'];
-			$_SESSION['error_array']['comm']['msg'] = '';
-		}
-		else
-		{
-			$_SESSION['error_array']['comm']['val'] = '';
-			$_SESSION['error_array']['comm']['msg'] = 'Select at least one medium';
-			$error_count++;
-		}
+		$comm = $validate_obj->comm_validation($_POST['comm']);
 
+		// Fetching no. of errors from the validation object
 		$error_count += $validate_obj->count;
 
 		if($error_count > 0)
@@ -199,18 +136,5 @@
 	{
 		exit;
 	}
-	/**
-	* Trims extra spaces, deletes slashes, translates the string
-	*
-	* @param string
-	* @return string
-	*/
-	function formatted($data)
-		{
-			$data = trim($data);
-			$data = stripslashes($data);
-			$data = htmlspecialchars($data);
-			return $data;
-		}
 	header("Location: display.php");
 ?>

@@ -6,6 +6,9 @@
 	$check_pic = 0;
 	require_once('config/states.php');
 	require_once('config/photo_path.php');
+	require_once('class/DatabaseConnection.php');
+	require_once('class/Validation.php');
+
 	/**
 	* Checks each field of select dropdown and makes the required as selected
 	*
@@ -59,23 +62,8 @@
 
 		$check_pic = 1;
 
-		require_once('config/db_connection.php');
-
-		$q_fetch = "SELECT emp.first_name AS f_name, emp.middle_name AS m_name, emp.last_name AS 
-			l_name, emp.prefix AS prefix, emp.gender AS gender, emp.dob AS dob, emp.marital_status AS 
-			marital_status, emp.employment AS employment, emp.employer AS employer, res.street AS 
-			r_street, res.city AS r_city, res.state AS r_state, res.zip AS r_zip, res.phone AS 
-			r_phone, res.fax AS r_fax, off.street AS o_street, off.city AS o_city, off.state AS 
-			o_state, off.zip AS o_zip, off.phone AS o_phone, off.fax AS o_fax, emp.photo AS photo, 
-			emp.extra_note AS notes, emp.comm_id AS comm_id 
-			from employee AS emp 
-			INNER JOIN address AS res ON (emp.id = res.emp_id AND res.address_type = 'residence')
-			INNER JOIN address AS off ON (emp.id = off.emp_id AND off.address_type = 'office')
-			where emp.id = ".$_GET['id'];
-
-		$result = mysqli_query($conn, $q_fetch);
-
-		$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+		$obj = DatabaseConnection::create_connection();
+		$row = $obj->select($_GET['id']);
 
 		$com = explode(", ",$row['comm_id']);
 		$length = count($com);

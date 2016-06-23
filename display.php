@@ -19,24 +19,10 @@
 
 		require_once('config/db_connection.php');
 		require_once('config/photo_path.php');
-		require_once('class/oops.php');
+		require_once('class/DatabaseConnection.php');
+		//require_once('class/Validation.php');
 
 		$obj = DatabaseConnection::create_connection();
-
-		/*$q_fetch = "SELECT emp.prefix AS prefix, CONCAT(emp.first_name,' ', emp.middle_name,' ', 
-			emp.last_name) AS name, emp.gender AS gender, emp.dob AS dob, 
-			emp.marital_status AS marital_status, emp.employment AS employment, 
-			emp.employer AS employer, 
-			CONCAT(res.street, ', ', res.city, ', ', res.state, ', ', res.zip, ', ', 
-			res.phone, ', ', res.fax) AS res_add, 
-			CONCAT(off.street, ', ', off.city, ', ', off.state, ', ', off.zip, ', ', 
-			off.phone, ', ', off.fax) AS off_add, emp.comm_id AS comm_id, emp.id, emp.photo AS photo
-			from employee AS emp 
-			inner join address AS res on (emp.id = res.emp_id and res.address_type = 'residence')
-			inner join address AS off on (emp.id = off.emp_id and off.address_type = 'office')";
-		
-		$result_3 = mysqli_query($conn, $q_fetch);*/
-
 		$result_list = $obj->display_list();
 
 		$rnum = 0;
