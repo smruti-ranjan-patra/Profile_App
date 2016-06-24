@@ -1,6 +1,8 @@
 <?php
-	
 	session_start();
+	ini_set('display_errors', 1);
+	ini_set('display_startup_errors', 1);
+	error_reporting(E_ALL);
 	// session_destroy();
 
 	$check_pic = 0;
@@ -28,6 +30,8 @@
 			<?php
 		}
 	}
+	$check_box1 = $check_box2 = $check_box3 = $check_box4 = FALSE;
+
 	if(isset($_GET['validation']) && $_GET['validation'] == 1)
 	{
 		$communcation_array = implode(', ',$_SESSION['error_array']['comm']['val']);
@@ -56,39 +60,42 @@
 	}
 
 
-	if (isset($_GET['id']))
+	if (isset($_GET['id']) || isset($_SESSION['id']))
 	{
-		ini_set('display_errors', 1);
-		ini_set('display_startup_errors', 1);
-		error_reporting(E_ALL);
-
 		$check_pic = 1;
 
 		$obj = DatabaseConnection::create_connection();
-		$row = $obj->select($_GET['id']);
+		if(isset($_SESSION['id']))
+			$row = $obj->select($_SESSION['id']);
 
-		$com = explode(", ",$row['comm_id']);
-		$length = count($com);
-		$check_box1 = $check_box2 = $check_box3 = $check_box4 = FALSE;
-		for($i = 0; $i < $length; $i++)
+		else
+			$row = $obj->select($_GET['id']);
+
+		if(isset($row['comm_id']))
 		{
-			if(1 == $com[$i])
+			$com = explode(", ",$row['comm_id']);
+			$length = count($com);
+			$check_box1 = $check_box2 = $check_box3 = $check_box4 = FALSE;
+			for($i = 0; $i < $length; $i++)
 			{
-				$check_box1 = TRUE;
+				if(1 == $com[$i])
+				{
+					$check_box1 = TRUE;
+				}
+				if(2 == $com[$i])
+				{
+					$check_box2 = TRUE;
+				}
+				if(3 == $com[$i])
+				{
+					$check_box3 = TRUE;
+				}
+				if(4 == $com[$i])
+				{
+					$check_box4 = TRUE;
+				}
 			}
-			if(2 == $com[$i])
-			{
-				$check_box2 = TRUE;
-			}
-			if(3 == $com[$i])
-			{
-				$check_box3 = TRUE;
-			}
-			if(4 == $com[$i])
-			{
-				$check_box4 = TRUE;
-			}
-		}
+		}		
 	}
 	else
 	{
@@ -110,8 +117,40 @@
 		<link rel="stylesheet" type="text/css" href="css/form.css">
 	</head>
 	<body class="bg">
+
 	<!-- Navigation bar -->
-	<nav class="navbar navbar-inverse">
+	<?php
+	if(isset($_SESSION['id']))
+	{
+		?>
+		<nav class="navbar navbar-inverse">
+			<div class="container-fluid">
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="sign_up.php">Home</a></li>
+					<li><a href="details.php">Details</a></li>
+					<li><a href="sign_out.php">Sign out</a></li>
+				</ul>
+			</div>
+		</nav>
+	<?php
+	}
+	else
+	{
+		?>
+		<nav class="navbar navbar-inverse">
+			<div class="container-fluid">
+				<ul class="nav navbar-nav">
+					<li><a href="home_default.php">Home</a></li>
+					<li class="active"><a href="sign_up.php">Sign Up</a></li>
+					<li><a href="login_form.php">Login</a></li>
+				</ul>
+			</div>
+		</nav>
+	<?php
+	}?>
+
+	<!-- Navigation bar -->
+	<!-- <nav class="navbar navbar-inverse">
 		<div class="container-fluid">
 			<ul class="nav navbar-nav">
 				<li><a href="home_default.php">Home</a></li>
@@ -119,7 +158,7 @@
 				<li><a href="login_form.php">Login</a></li>
 			</ul>
 		</div>
-	</nav>
+	</nav> -->
 
 	<div class="container">
 
@@ -138,6 +177,8 @@
 				<?php
 				if(isset($_GET['id']))
 					echo $_GET['id'];
+				elseif(isset($_SESSION['id']))
+					echo $_SESSION['id'];
 				else
 					echo 0;
 				?>">
@@ -160,7 +201,10 @@
 							}
 							else
 							{
-								echo "value=".$row['f_name'];
+								if(isset($row['f_name']))
+								{
+									echo "value=".$row['f_name'];
+								}								
 							}
 							?> >
 							<?php 
@@ -186,7 +230,10 @@
 							}
 							else
 							{
-								echo "value=".$row['m_name'];
+								if(isset($row['m_name']))
+								{
+									echo "value=".$row['m_name'];
+								}
 							}
 							?> >
 							<?php 
@@ -213,7 +260,10 @@
 							}
 							else
 							{
-								echo "value=".$row['l_name'];
+								if(isset($row['l_name']))
+								{
+									echo "value=".$row['l_name'];
+								}
 							}
 							?> >
 							<?php 
@@ -241,13 +291,16 @@
 							}
 							else
 							{
-								echo "value=".$row['email'];
+								if(isset($row['email']))
+								{
+									echo "value=".$row['email'];
+								}
 							}
-							if(!empty($_GET['id']))
-							{
-								echo " disabled";
-							}
-							?>>
+							// if(!empty($_GET['id']))
+							// {
+							// 	echo " disabled";
+							// }
+							?> >
 							<?php 
 							if(isset($_GET['validation']) && 1 == $_GET['validation'])
 							{
@@ -267,14 +320,28 @@
 							<input type="password" name="password" id="password" 
 							class="form-control" placeholder="**********" 
 							<?php
-							if(!empty($_GET['id']))
+							if(isset($_GET['validation']) && 1 == $_GET['validation'])
 							{
-								echo " disabled";
+								echo "value=".$_SESSION['error_array']['password']['val'];
 							}
+							else
+							{
+								if(isset($row['password']))
+								{
+									echo "value=".$row['password'];
+								}
+							}
+							// if(!empty($_GET['id']))
+							// {
+							// 	echo " disabled";
+							// }
 							?> >
 							<?php
-							echo '<span class="text-danger">'.$_SESSION['error_array']
-							['password']['msg']."</span>"; 
+							if (isset($_SESSION['error_array']['password']['msg']))
+							{
+								echo '<span class="text-danger">'.$_SESSION['error_array']
+								['password']['msg']."</span>"; 
+							}							
 							?>
 						</div>
 					</div>
@@ -421,7 +488,10 @@
 							}
 							else
 							{
-								echo "value=".$row['dob'];
+								if(isset($row['dob']))
+								{
+									echo "value=".$row['dob'];
+								}
 							}
 							?> >
 							<?php 
@@ -544,7 +614,10 @@
 							}
 							else
 							{
-								echo "value=".$row['employer'];
+								if(isset($row['employer']))
+								{
+									echo "value=".$row['employer'];
+								}
 							}
 							?> >
 							<?php 
@@ -578,7 +651,10 @@
 									}
 									else
 									{
-										echo "value=".$row['r_street'];
+										if(isset($row['r_street']))
+										{
+											echo "value=".$row['r_street'];
+										}
 									}
 									?> >
 									<?php 
@@ -606,7 +682,10 @@
 									}
 									else
 									{
-										echo "value=".$row['r_city'];
+										if(isset($row['r_city']))
+										{
+											echo "value=".$row['r_city'];
+										}
 									}
 									?> >
 									<?php 
@@ -660,7 +739,10 @@
 									}
 									else
 									{
-										echo "value=".$row['r_zip'];
+										if(isset($row['r_zip']))
+										{
+											echo "value=".$row['r_zip'];
+										}
 									}
 									?> >
 									<?php 
@@ -686,7 +768,10 @@
 									}
 									else
 									{
-										echo "value=".$row['r_phone'];
+										if(isset($row['r_phone']))
+										{
+											echo "value=".$row['r_phone'];
+										}
 									}
 									?> >
 									<?php 
@@ -711,7 +796,10 @@
 									}
 									else
 									{
-										echo "value=".$row['r_fax'];
+										if(isset($row['r_fax']))
+										{
+											echo "value=".$row['r_fax'];
+										}
 									}
 									?> >
 									<?php 
@@ -747,8 +835,12 @@
 									}
 									else
 									{
-										echo "value=".$row['o_street'];
-									}?> >
+										if(isset($row['o_street']))
+										{
+											echo "value=".$row['o_street'];
+										}
+									}
+									?> >
 									<?php 
 									if(isset($_GET['validation']) && 1 == $_GET['validation'])
 									{
@@ -775,7 +867,10 @@
 									}
 									else
 									{
-										echo "value=".$row['o_city'];
+										if(isset($row['o_city']))
+										{
+											echo "value=".$row['o_city'];
+										}
 									}
 									?> >
 									<?php 
@@ -831,7 +926,10 @@
 									}
 									else
 									{
-										echo "value=".$row['o_zip'];
+										if(isset($row['o_zip']))
+										{
+											echo "value=".$row['o_zip'];
+										}
 									}
 									?> >
 									<?php 
@@ -858,7 +956,10 @@
 									}
 									else
 									{
-										echo "value=".$row['o_phone'];
+										if(isset($row['o_phone']))
+										{
+											echo "value=".$row['o_phone'];
+										}
 									}
 									?> >
 									<?php 
@@ -885,7 +986,10 @@
 									}
 									else
 									{
-										echo "value=".$row['o_fax'];
+										if(isset($row['o_fax']))
+										{
+											echo "value=".$row['o_fax'];
+										}
 									}
 									?> >
 									<?php 
@@ -920,8 +1024,11 @@
 							{
 							  echo "<img src=".PIC_PATH.$row['photo']." width=200 height=200>";
 							}
-							echo '<span class="text-danger">'.$_SESSION['error_array']
-							['photo']['msg']."</span>";
+							if(isset($_SESSION['error_array']['photo']['msg']))
+							{
+								echo '<span class="text-danger">'.$_SESSION['error_array']
+								['photo']['msg']."</span>";
+							}
 							?></span>
 						</div>
 					</div>
@@ -940,7 +1047,14 @@
 							}
 							else
 							{
-								$note_value =  $row['notes'];
+								if(isset($row['notes']))
+								{
+									$note_value = $row['notes'];
+								}
+								else
+								{
+									$note_value = "";
+								}
 							}
 							?>
 							<textarea class="form-control" id="notes" name="notes" rows="10" 

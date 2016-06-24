@@ -50,8 +50,11 @@ session_start();
 						</div>
 						<div class="text-center">
 						<?php
-						echo '<span class="text-danger">'.$_SESSION['error_array']
-						['login']['msg']."</span>";
+						if(isset($_SESSION['error_array']['login']['msg']))
+						{
+							echo '<span class="text-danger">'.$_SESSION['error_array']
+							['login']['msg']."</span>";
+						}
 						?>
 						</div>
 					</div>

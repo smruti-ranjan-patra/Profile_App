@@ -4,6 +4,11 @@ require_once('config/error_messages.php');
 require_once('class/DatabaseConnection.php');
 require_once('config/constants.php');
 
+//session_start();
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 class Validation
 {
 	public static $form_data = array();
@@ -244,7 +249,8 @@ class Validation
 			if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))
 			{
 				$obj = DatabaseConnection::create_connection();
-				$rows = $obj->select_email($form_data[$email]);
+				$rows = $obj->select_email($form_data[$email], $_SESSION['id']);
+				
 				$rnum = DatabaseConnection::db_num_rows($rows);
 				if($rnum == 0)
 				{
@@ -252,7 +258,7 @@ class Validation
 					$_SESSION['error_array'][$email]['msg'] = '';
 				}
 				else
-				{
+				{	
 					$_SESSION['error_array'][$email]['val'] = $form_data[$email];
 					$_SESSION['error_array'][$email]['msg'] = '*Email ID already taken';
 					$error = 1;
@@ -284,12 +290,12 @@ class Validation
 			$length = strlen((string)$form_data[$password]);
 			if($length >= 8 && $length <= 12)
 			{
-				$_SESSION['error_array'][$password]['val'] = "";
+				$_SESSION['error_array'][$password]['val'] = $form_data[$password];
 				$_SESSION['error_array'][$password]['msg'] = '';
 			}
 			else
 			{
-				$_SESSION['error_array'][$password]['val'] = "";
+				$_SESSION['error_array'][$password]['val'] = $form_data[$password];;
 				$_SESSION['error_array'][$password]['msg'] = '*Password must be of 8 to 12 
 				characters';
 				$error = 1;
@@ -402,9 +408,11 @@ class Validation
 			$obj = DatabaseConnection::create_connection();
 			$rows = $obj->select_login($_POST['email'], $_POST['password']);
 			$rnum = DatabaseConnection::db_num_rows($rows);
+			$fetch_data = $obj->db_fetch_array($rows);
 			if($rnum != 0)
 			{
 				$_SESSION['error_array']['login']['msg'] = '';
+				$_SESSION['id'] = $fetch_data['id'];
 			}
 			else
 			{

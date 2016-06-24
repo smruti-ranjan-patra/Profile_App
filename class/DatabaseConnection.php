@@ -2,6 +2,10 @@
 //require_once('config/photo_path.php');
 require_once('config/error_messages.php');
 require_once('config/constants.php');
+//session_start();
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 class DatabaseConnection
 {
@@ -123,9 +127,13 @@ class DatabaseConnection
 	* @param  integer $id
 	* @return object
 	*/
-	public function select_email($email)
+	public function select_email($email, $eid = 0)
 	{
+		
 		$q_fetch = "SELECT * from employee where email = '{$email}'";
+		if($eid > 0) {
+			$q_fetch .= "id != {$eid}";
+		}
 		$result = DatabaseConnection::db_query($q_fetch);
 		return $result;
 	}
@@ -166,6 +174,7 @@ class DatabaseConnection
 				'{$data_array['photo']}', '{$data_array['extra_note']}', 
 				'{$data_array['comm_id']}')";
 
+			// echo $q_employee; exit;
 			$result_employee = DatabaseConnection::db_query($q_employee);
 
 			if(!$result_employee)
@@ -307,6 +316,8 @@ class DatabaseConnection
 					SET `first_name` = '{$data_array['first_name']}', 
 					`middle_name` = '{$data_array['middle_name']}', 
 					`last_name` = '{$data_array['last_name']}', 
+					`email` = '{$data_array['email']}', 
+					`password` = '{$data_array['password']}', 
 					`prefix` = '{$data_array['prefix']}', 
 					`gender` = '{$data_array['gender']}', 
 					`dob` = '{$data_array['dob']}', 
@@ -324,6 +335,8 @@ class DatabaseConnection
 					SET `first_name` = '{$data_array['first_name']}', 
 					`middle_name` = '{$data_array['middle_name']}', 
 					`last_name` = '{$data_array['last_name']}', 
+					`email` = '{$data_array['email']}', 
+					`password` = '{$data_array['password']}', 
 					`prefix` = '{$data_array['prefix']}', 
 					`gender` = '{$data_array['gender']}', 
 					`dob` = '{$data_array['dob']}', 

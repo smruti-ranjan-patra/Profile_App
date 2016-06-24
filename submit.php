@@ -41,7 +41,7 @@
 
 		if($error_count > 0)
 		{
-			header("Location: sign_up.php?validation=1");
+			header("Location:sign_up.php?validation=1");
 			exit();
 		}
 		$check_edit_id = FALSE;
@@ -53,11 +53,14 @@
 			}
 			$comm = implode(', ', $_POST['comm']);
 
+			// echo "111111"; exit;
 			$employee_data_array = array(
 				"emp_id" => $_POST['edit_id'], 
 				"first_name" => $_POST['first_name'], 
 				"middle_name" => $_POST['middle_name'], 
 				"last_name" => $_POST['last_name'], 
+				"email" => $_POST['email'], 
+				"password" => $_POST['password'], 
 				"prefix" => $_POST['prefix'], 
 				"gender" => $_POST['gender'], 
 				"dob" => $_POST['dob'], 
@@ -93,7 +96,7 @@
 				$obj->update_table('employee', $employee_data_array);
 			}
 			$check_edit_id = TRUE;
-			header("Location: display.php");
+			header("Location: details.php");
 		}
 
 		if($check_edit_id == FALSE)
@@ -142,5 +145,5 @@
 	{
 		exit;
 	}
-	header("Location: display.php");
+	header("Location:details.php");
 ?>
