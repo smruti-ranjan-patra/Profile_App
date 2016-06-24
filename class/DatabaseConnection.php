@@ -262,7 +262,7 @@ class DatabaseConnection
 			CONCAT(res.street, ', ', res.city, ', ', res.state, ', ', res.zip, ', ', 
 			res.phone, ', ', res.fax) AS res_add, 
 			CONCAT(off.street, ', ', off.city, ', ', off.state, ', ', off.zip, ', ', 
-			off.phone, ', ', off.fax) AS off_add, emp.comm_id AS comm_id, emp.id, emp.photo AS photo
+			off.phone, ', ', off.fax) AS off_add, emp.comm_id AS comm_id, emp.id AS id, emp.photo AS photo
 			from employee AS emp 
 			inner join address AS res on (emp.id = res.emp_id and res.address_type = 'residence')
 			inner join address AS off on (emp.id = off.emp_id and off.address_type = 'office')";

@@ -110,14 +110,30 @@ error_reporting(E_ALL);
 						}
 						else
 						{
-							echo '<td><img src="default_images/default_pic.jpg" width=100 
+							echo '<td><img src="default_images/default_others_pic.jpg" width=100 
 							height=100</td>';
 						}
 						?>
-						<td><a href="sign_up.php?id=<?php echo $row['id'] ?>">
-						<span class="glyphicon glyphicon-pencil" ></span></a></td>
-						<td><a href="delete.php?id=<?php echo $row['id']?>">
-						<span class="glyphicon glyphicon-remove" ></span></a></td>
+						<td>
+						<?php
+						if($row['id'] == $_SESSION['id'])
+						{
+							?>
+							<a href="sign_up.php?id=<?php echo $row['id'] ?>">
+							<span class="glyphicon glyphicon-pencil" ></span></a>
+							<?php
+						}?>						
+						</td>
+						<td>
+						<?php
+						if($row['id'] == $_SESSION['id'])
+						{
+							?>
+							<a href="delete.php?id=<?php echo $row['id']?>">
+							<span class="glyphicon glyphicon-remove" ></span></a>
+							<?php
+						}?>
+						</td>
 						<?php
 						echo "</tr>";
 					}

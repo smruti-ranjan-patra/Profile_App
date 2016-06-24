@@ -250,7 +250,7 @@ class Validation
 			{
 				$obj = DatabaseConnection::create_connection();
 				$rows = $obj->select_email($form_data[$email], $_SESSION['id']);
-				
+
 				$rnum = DatabaseConnection::db_num_rows($rows);
 				if($rnum == 0)
 				{
