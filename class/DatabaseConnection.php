@@ -1,20 +1,15 @@
 <?php
-//require_once('config/photo_path.php');
+
 require_once('config/error_messages.php');
 require_once('config/constants.php');
-//session_start();
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
+/**
+* Super Class
+*
+* @author Smruti Ranjan
+*/
 class DatabaseConnection
 {
-
-	// Member variables
-	// private $host_name = NULL;
-	// private $user_name = NULL;
-	// private $password = NULL;
-	// private $db_name = NULL;
 	public static $conn = NULL;
 	public static $connection_obj = NULL;
 
@@ -27,10 +22,6 @@ class DatabaseConnection
 	*/
 	private function __construct()
 	{
-		// $this->host_name = 'localhost';
-		// $this->user_name = 'root';
-		// $this->password = 'mindfire';
-		// $this->db_name = 'registration';
 		self::$conn = mysqli_connect(HOST_NAME, USER_NAME, PASSWORD, DB_NAME);
 		// if (mysqli_connect_errno($this->conn))
 		// {
@@ -279,17 +270,7 @@ class DatabaseConnection
 	* @return void
 	*/
 	public function update_table($table_name, $data_array)
-	{
-		/*$str = "";
-		foreach($residence_where_condition as $key => $val)
-		{
-			$str .=  ($str != "")?" AND ":"" . "$key" . '=' . "$val" ;
-		}
-		if($str != "")
-		{
-			$str = "WHERE " . $str;
-		}*/
- 
+	{ 
 		if($table_name == 'address')
 		{
 			$update_add_res = "UPDATE $table_name 

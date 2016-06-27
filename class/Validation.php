@@ -1,34 +1,43 @@
 <?php
-// require_once('config/photo_path.php');
+
 require_once('config/error_messages.php');
 require_once('class/DatabaseConnection.php');
 require_once('config/constants.php');
 
-//session_start();
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
+/**
+* Super Class
+*
+* @author Smruti Ranjan
+*/
 class Validation
 {
+	// Data members
 	public static $form_data = array();
 	public $count;
 	public static $err;
 
-	// public function __construct()
-	// {
-
-	// }
-
+	/**
+	* Constructor to initialize data members
+	*
+	* @access public
+	* @param  array $array
+	* @return void
+	*/
 	public function __construct($array)
 	{
-		// print_r($_POST);exit;
 		global $error_msg;
 		static::$err = $error_msg;
 		$this->count = 0;
 		static::$form_data = $array;
 	}
 
+	/**
+	* To validate data
+	*
+	* @access public
+	* @param  string $param
+	* @return integer $error_count
+	*/
 	public function validate_form($param)
 	{
 		if($param == 'submit')
@@ -65,6 +74,13 @@ class Validation
 		}		
 	}
 
+	/**
+	* Validation for only alphabets
+	*
+	* @access public
+	* @param  string $name
+	* @return integer $error
+	*/
 	public static function pure_string($name)
 	{
 		
@@ -96,6 +112,13 @@ class Validation
 		return $error;
 	}
 
+	/**
+	* Validation for radio buttons
+	*
+	* @access public
+	* @param  string $field
+	* @return integer $error
+	*/
 	public static function radios($field)
 	{
 		$error = 0;
@@ -115,6 +138,13 @@ class Validation
 		return $error;
 	}
 
+	/**
+	* Validation for fileds which can also be empty
+	*
+	* @access public
+	* @param  string $field
+	* @return integer $error
+	*/
 	public static function fields_with_empty($field)
 	{
 		$error = 0;
@@ -134,6 +164,13 @@ class Validation
 		return $error;
 	}
 
+	/**
+	* Validation for aplha numeric values
+	*
+	* @access public
+	* @param  string $name
+	* @return integer $error
+	*/
 	public static function alpha_numeric($name)
 	{
 		$error = 0;
@@ -141,7 +178,7 @@ class Validation
 		if(isset($form_data[$name]) && !empty($form_data[$name]))
 		{
 			$name_value = Validation::formatted($form_data[$name]);
-			if(preg_match('/^[a-zA-Z]+[a-zA-Z0-9._]+$/', $name_value))
+			if(preg_match('/^[a-zA-Z0-9 _-]+$/', $name_value))
 			{
 				$_SESSION['error_array'][$name]['val'] = $name_value;
 				$_SESSION['error_array'][$name]['msg'] = '';
@@ -162,6 +199,13 @@ class Validation
 		return $error;
 	}
 
+	/**
+	* Validation for only digits for zip code
+	*
+	* @access public
+	* @param  string $code
+	* @return integer $error
+	*/
 	public static function zip_code($code)
 	{
 		$error = 0;
@@ -191,6 +235,13 @@ class Validation
 		return $error;
 	}
 
+	/**
+	* Validation for only digits for phone number and fax
+	*
+	* @access public
+	* @param  string $number
+	* @return integer $error
+	*/
 	public static function phone_fax($number)
 	{
 		$error = 0;
@@ -221,6 +272,13 @@ class Validation
 		return $error;
 	}
 
+	/**
+	* Validation for the employer field
+	*
+	* @access public
+	* @param  string $emp
+	* @return integer $error
+	*/
 	public static function employer($emp)
 	{
 		$error = 0;
@@ -239,6 +297,13 @@ class Validation
 		return $error;
 	}
 
+	/**
+	* Validation for email id field
+	*
+	* @access public
+	* @param  string $email
+	* @return integer $error
+	*/
 	public static function email($email)
 	{
 		$error = 0;
@@ -280,6 +345,13 @@ class Validation
 		return $error;
 	}
 
+	/**
+	* Validation for password field
+	*
+	* @access public
+	* @param  string $password
+	* @return integer $error
+	*/
 	public static function password($password)
 	{
 		$error = 0;
@@ -310,6 +382,13 @@ class Validation
 		return $error;
 	}
 
+	/**
+	* Validation for notes field
+	*
+	* @access public
+	* @param  string $notes
+	* @return integer $error
+	*/
 	public function notes_validation($notes)
 	{
 		if(isset($notes))
@@ -327,6 +406,13 @@ class Validation
 		return $notes;
 	}
 
+	/**
+	* Validation for communication field
+	*
+	* @access public
+	* @param  array $comm_array
+	* @return string $comm
+	*/
 	public function comm_validation($comm_array)
 	{
 		if(isset($comm_array) && !empty($comm_array))
@@ -345,6 +431,13 @@ class Validation
 		}
 	}
 
+	/**
+	* Validation of uploaded photo
+	*
+	* @access public
+	* @param  void
+	* @return array $pic_return_data
+	*/
 	public function photo_validation()
 	{
 		$pic_return_data = array("pic_update" => FALSE, "name" => "");
@@ -387,7 +480,6 @@ class Validation
 			}
 			$_SESSION['error_array']['photo']['val'] = $file_name;
 			$_SESSION['error_array']['photo']['msg'] = '*Please Provide a Photo';
-			//$pic_return_data["name"] = $file_name;	
 		}
 		else
 		{
@@ -398,6 +490,13 @@ class Validation
 		return $pic_return_data;
 	}
 
+	/**
+	* Validation of login process
+	*
+	* @access public
+	* @param  void
+	* @return array $pic_return_data
+	*/
 	public static function login_validation()
 	{
 		$error = 0;
@@ -428,6 +527,13 @@ class Validation
 		return $error;
 	}
 
+	/**
+	* To remove extra spaces, slashes and to convert into special characters
+	*
+	* @access public
+	* @param  string $data
+	* @return string $data
+	*/
 	public static function formatted($data)
 	{
 		$data = trim($data);

@@ -1,7 +1,6 @@
 <?php
 // session_destroy();
 session_start();
-// $_SESSION['error_array']['login']['msg'] = 'lol';
 ?>
 <html>
 	<head>
@@ -9,7 +8,7 @@ session_start();
 		<title>Login</title>
 		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 	</head>
-	<body background="home_background.jpg">
+	<body background="images/home_background.jpg">
 	<!-- Navigation bar -->
 	<nav class="navbar navbar-inverse">
 		<div class="container-fluid">

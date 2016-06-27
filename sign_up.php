@@ -1,14 +1,10 @@
 <?php
 	session_start();
-	ini_set('display_errors', 1);
-	ini_set('display_startup_errors', 1);
-	error_reporting(E_ALL);
-	// session_destroy();
 
 	$check_pic = 0;
 	require_once('config/states.php');
 	// require_once('config/photo_path.php');
-	// require_once('class/DatabaseConnection.php');
+	require_once('class/DatabaseConnection.php');
 	require_once('class/Validation.php');
 	require_once('config/constants.php');
 
@@ -731,7 +727,7 @@
 								</div>
 								<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
 									<input type="text" id="r_zip" name="r_zip" class="form-control" 
-									placeholder="Zip code" 
+									placeholder="751024" 
 									<?php
 									if(isset($_GET['validation']) && $_GET['validation'] == 1)
 									{
@@ -760,7 +756,7 @@
 								</div>
 								<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
 									<input type="text" id="r_phone" name="r_phone" 
-									class="form-control" placeholder="09123456789" 
+									class="form-control" placeholder="9776097760 / 06742552115" 
 									<?php
 									if(isset($_GET['validation']) && $_GET['validation'] == 1)
 									{
@@ -918,7 +914,7 @@
 								</div>
 								<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
 									<input type="text" id="o_zip" name="o_zip" class="form-control" 
-									placeholder="Zip code"
+									placeholder="751024"
 									<?php
 									if(isset($_GET['validation']) && $_GET['validation'] == 1)
 									{
@@ -948,7 +944,7 @@
 								</div>
 								<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
 									<input type="text" id="o_phone" name="o_phone" 
-									class="form-control" placeholder="09123456789"
+									class="form-control" placeholder="9776097760 / 06742552115"
 									<?php
 									if(isset($_GET['validation']) && $_GET['validation'] == 1)
 									{

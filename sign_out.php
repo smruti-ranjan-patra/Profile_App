@@ -1,8 +1,11 @@
 <?php
 session_start();
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+if(!isset($_SESSION['id']))
+{
+	header("Location:home_default.php");
+}
+
+session_unset();
 session_destroy();
 ?>
 <!DOCTYPE html>
@@ -11,7 +14,7 @@ session_destroy();
 	<title>Display Page</title>
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 </head>
-<body background="home_background.jpg">
+<body background="images/home_background.jpg">
 	<!-- Navigation bar -->
 	<nav class="navbar navbar-inverse">
 		<div class="container-fluid">

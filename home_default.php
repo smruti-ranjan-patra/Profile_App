@@ -1,16 +1,10 @@
-<?php
-session_start();
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-?>
 <html>
 	<head>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>home_default</title>
 		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 	</head>
-	<body background="home_background.jpg">
+	<body background="images/home_background.jpg">
 	<!-- Navigation bar -->
 	<nav class="navbar navbar-inverse">
 		<div class="container-fluid">
