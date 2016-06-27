@@ -484,8 +484,7 @@ class Validation
 		else
 		{
 			$_SESSION['error_array']['photo']['val'] = ' ';
-			$_SESSION['error_array']['photo']['msg'] = '*Invalid Photo';
-			$this->count++;
+			$_SESSION['error_array']['photo']['msg'] = '';
 		}
 		return $pic_return_data;
 	}

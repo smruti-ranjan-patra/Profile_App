@@ -28,6 +28,11 @@
 	}
 	$check_box1 = $check_box2 = $check_box3 = $check_box4 = FALSE;
 
+	if (isset($_GET['id']) && !isset($_SESSION['id']))
+	{
+		header("Location:sign_up.php");
+	}
+
 	if(isset($_GET['validation']) && $_GET['validation'] == 1)
 	{
 		$communcation_array = implode(', ',$_SESSION['error_array']['comm']['val']);
@@ -612,7 +617,7 @@
 							{
 								if(isset($row['employer']))
 								{
-									echo "value=".$row['employer'];
+									echo "value='".$row['employer']."'";
 								}
 							}
 							?> >
