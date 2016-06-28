@@ -18,7 +18,6 @@ function form_validation()
 	var r_fax = document.getElementById('r_fax').value;
 	var o_fax = document.getElementById('o_fax').value;
 
-	
 	if(!pure_string(f_name.trim(), 'err_first_name'))
 	{
 		errors++;
