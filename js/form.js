@@ -6,6 +6,7 @@ function form_validation()
 	var f_name = document.getElementById('first_name').value;
 	var m_name = document.getElementById('middle_name').value;
 	var l_name = document.getElementById('last_name').value;
+	var password = document.getElementById('password').value;
 	var r_street = document.getElementById('r_street').value;
 	var o_street = document.getElementById('o_street').value;
 	var r_city = document.getElementById('r_city').value;
@@ -27,6 +28,10 @@ function form_validation()
 		errors++;
 	}
 	if(!pure_string(l_name.trim(), 'err_last_name'))
+	{
+		errors++;
+	}
+	if(!password_val(password, 'err_password'))
 	{
 		errors++;
 	}
@@ -73,7 +78,6 @@ function form_validation()
 
 	if(errors > 0)
 	{
-		console.log(errors);
 		return false;
 	}
 	console.log(errors);
@@ -148,7 +152,8 @@ function digit(number, error_field, type)
 		}
 		else if(!(number.match(/^(\d{6})/) && number.length == 6))
 		{
-			document.getElementById(error_field).innerHTML = "*Provide a Numeric value of length 6 !";
+			document.getElementById(error_field).innerHTML = "*Provide a Numeric value of \
+			length 6 !";
 			return false;
 		}
 		else
@@ -166,8 +171,8 @@ function digit(number, error_field, type)
 		}
 		else if(!(number.match(/^(\d{7})/) && number.length >= 7 && number.length <= 12))
 		{
-			document.getElementById(error_field).innerHTML = "*Provide a Numeric value of length" + 
-			"between 7 and 12 !";
+			document.getElementById(error_field).innerHTML = "*Provide a Numeric value of length \
+			between 7 and 12 !";
 			return false;
 		}
 		else
@@ -176,5 +181,24 @@ function digit(number, error_field, type)
 			return true;
 		}
 	}
+}
 
+function password_val(password, error_field)
+{
+	if(password.length == 0)
+	{
+		document.getElementById(error_field).innerHTML = "*Mandatory Field !";
+		return false;
+	}
+	else if(!(password.length >= 8 && password.length <= 12))
+	{
+		document.getElementById(error_field).innerHTML = "*Password length must be between \
+		8 to 12 !";
+		return false;
+	}
+	else
+	{
+		document.getElementById(error_field).innerHTML = "";
+		return true;	
+	}
 }

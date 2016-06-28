@@ -330,6 +330,7 @@
 								}
 							}
 							?> >
+							<span class="text-danger" id="err_password"></span>
 							<?php
 							if (isset($_SESSION['error_array']['password']['msg']))
 							{
