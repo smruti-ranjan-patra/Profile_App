@@ -1,9 +1,11 @@
 <?php
+	// session_unset();
+	// session_destroy();
 	session_start();
 
 	$check_pic = 0;
 	require_once('config/states.php');
-	// require_once('config/photo_path.php');
+	require_once('config/database.php');
 	require_once('class/DatabaseConnection.php');
 	require_once('class/Validation.php');
 	require_once('config/constants.php');
@@ -65,7 +67,7 @@
 	{
 		$check_pic = 1;
 
-		$obj = DatabaseConnection::create_connection();
+		$obj = DatabaseConnection::create_connection($db['master']);
 		if(isset($_SESSION['id']))
 			$row = $obj->select($_SESSION['id']);
 
@@ -116,6 +118,8 @@
 		<title>Sign Up</title>
 		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="css/form.css">
+		<script   src="https://code.jquery.com/jquery-3.0.0.min.js"   integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0="   crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/jquery_validation.js"></script>
 	</head>
 	<body class="bg">
 
@@ -150,22 +154,11 @@
 	<?php
 	}?>
 
-	<!-- Navigation bar -->
-	<!-- <nav class="navbar navbar-inverse">
-		<div class="container-fluid">
-			<ul class="nav navbar-nav">
-				<li><a href="home_default.php">Home</a></li>
-				<li class="active"><a href="sign_up.php">Sign Up</a></li>
-				<li><a href="login_form.php">Login</a></li>
-			</ul>
-		</div>
-	</nav> -->
-
 	<div class="container">
 
 		<div class="row">
 			<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-md-offset-1 col-lg-offset-1">
-			<form action="submit.php" method="post" enctype=multipart/form-data>
+			<form action="submit.php" method="post" id="sign_up_form" enctype=multipart/form-data>
 				<?php
 				if($_GET['id'])
 					echo "<h1>".$row['prefix'].' '.$row['f_name']."</h1>";
@@ -198,21 +191,22 @@
 							<?php
 							if(isset($_GET['validation']) && 1 == $_GET['validation'])
 							{
-								echo "value=".$_SESSION['error_array']['first_name']['val'];
+								echo "value=" . $_SESSION['error_array']['first_name']['val'];
 							}
 							else
 							{
 								if(isset($row['f_name']))
 								{
-									echo "value=".$row['f_name'];
+									echo "value=" . $row['f_name'];
 								}								
 							}
 							?> >
+							<span class="text-danger" id="err_first_name"></span>
 							<?php 
 							if(isset($_GET['validation']) && 1 == $_GET['validation'])
 							{
-								echo '<span class="text-danger">'.$_SESSION['error_array']
-								['first_name']['msg']."</span>";
+								echo '<span class="text-danger">' . $_SESSION['error_array']
+								['first_name']['msg'] . "</span>";
 							}?>
 						</div>
 					</div>
@@ -227,21 +221,22 @@
 							<?php
 							if(isset($_GET['validation']) && 1 == $_GET['validation'])
 							{
-								echo "value=".$_SESSION['error_array']['middle_name']['val'];
+								echo "value=" . $_SESSION['error_array']['middle_name']['val'];
 							}
 							else
 							{
 								if(isset($row['m_name']))
 								{
-									echo "value=".$row['m_name'];
+									echo "value=" . $row['m_name'];
 								}
 							}
 							?> >
+							<span class="text-danger" id="err_middle_name"></span>
 							<?php 
 							if(isset($_GET['validation']) && 1 == $_GET['validation'])
 							{
-								echo '<span class="text-danger">'.$_SESSION['error_array']
-								['middle_name']['msg']."</span>"; 
+								echo '<span class="text-danger">' . $_SESSION['error_array']
+								['middle_name']['msg'] . "</span>"; 
 							}
 							?>
 						</div>
@@ -257,21 +252,22 @@
 							<?php
 							if(isset($_GET['validation']) && 1 == $_GET['validation'])
 							{
-								echo "value=".$_SESSION['error_array']['last_name']['val'];
+								echo "value=" . $_SESSION['error_array']['last_name']['val'];
 							}
 							else
 							{
 								if(isset($row['l_name']))
 								{
-									echo "value=".$row['l_name'];
+									echo "value=" . $row['l_name'];
 								}
 							}
 							?> >
+							<span class="text-danger" id="err_last_name"></span>
 							<?php 
 							if(isset($_GET['validation']) && 1 == $_GET['validation'])
 							{
-								echo '<span class="text-danger">'.$_SESSION['error_array']
-								['last_name']['msg']."</span>"; 
+								echo '<span class="text-danger">' . $_SESSION['error_array']
+								['last_name']['msg'] . "</span>"; 
 							}
 							?>
 						</div>
@@ -288,25 +284,22 @@
 							<?php
 							if(isset($_GET['validation']) && 1 == $_GET['validation'])
 							{
-								echo "value=".$_SESSION['error_array']['email']['val'];
+								echo "value=" . $_SESSION['error_array']['email']['val'];
 							}
 							else
 							{
 								if(isset($row['email']))
 								{
-									echo "value=".$row['email'];
+									echo "value=" . $row['email'];
 								}
 							}
-							// if(!empty($_GET['id']))
-							// {
-							// 	echo " disabled";
-							// }
 							?> >
+							<span class="text-danger" id="err_email"></span>
 							<?php 
 							if(isset($_GET['validation']) && 1 == $_GET['validation'])
 							{
-								echo '<span class="text-danger">'.$_SESSION['error_array']
-								['email']['msg']."</span>"; 
+								echo '<span class="text-danger">' . $_SESSION['error_array']
+								['email']['msg'] . "</span>"; 
 							}
 							?>
 						</div>
@@ -323,25 +316,22 @@
 							<?php
 							if(isset($_GET['validation']) && 1 == $_GET['validation'])
 							{
-								echo "value=".$_SESSION['error_array']['password']['val'];
+								echo "value=" . $_SESSION['error_array']['password']['val'];
 							}
 							else
 							{
 								if(isset($row['password']))
 								{
-									echo "value=".$row['password'];
+									echo "value=" . $row['password'];
 								}
 							}
-							// if(!empty($_GET['id']))
-							// {
-							// 	echo " disabled";
-							// }
 							?> >
+							<span class="text-danger" id="err_password"></span>
 							<?php
 							if (isset($_SESSION['error_array']['password']['msg']))
 							{
-								echo '<span class="text-danger">'.$_SESSION['error_array']
-								['password']['msg']."</span>"; 
+								echo '<span class="text-danger">' . $_SESSION['error_array']
+								['password']['msg'] . "</span>"; 
 							}							
 							?>
 						</div>
@@ -485,21 +475,22 @@
 							<?php
 							if(isset($_GET['validation']) && $_GET['validation'] == 1)
 							{
-								echo "value=".$_SESSION['error_array']['dob']['val'];
+								echo "value=" . $_SESSION['error_array']['dob']['val'];
 							}
 							else
 							{
 								if(isset($row['dob']))
 								{
-									echo "value=".$row['dob'];
+									echo "value=" . $row['dob'];
 								}
 							}
 							?> >
+							<span class="text-danger" id="err_dob"></span>
 							<?php 
 							if(isset($_GET['validation']) && 1 == $_GET['validation'])
 							{
-								echo '<span class="text-danger">'.$_SESSION['error_array']
-								['dob']['msg']."</span>"; 
+								echo '<span class="text-danger">' . $_SESSION['error_array']
+								['dob']['msg'] . "</span>"; 
 							}
 							?>
 						</div>
@@ -611,21 +602,21 @@
 							<?php
 							if(isset($_GET['validation']) && $_GET['validation'] == 1)
 							{
-								echo "value='".$_SESSION['error_array']['employer']['val']."'";
+								echo "value='" . $_SESSION['error_array']['employer']['val'] . "'";
 							}
 							else
 							{
 								if(isset($row['employer']))
 								{
-									echo "value='".$row['employer']."'";
+									echo "value='" . $row['employer'] . "'";
 								}
 							}
 							?> >
 							<?php 
 							if(isset($_GET['validation']) && 1 == $_GET['validation'])
 							{
-								echo '<span class="text-danger">'.$_SESSION['error_array']
-								['employer']['msg']."</span>"; 
+								echo '<span class="text-danger">' . $_SESSION['error_array']
+								['employer']['msg'] . "</span>"; 
 							}
 							?>
 						</div>
@@ -647,22 +638,23 @@
 									<?php
 									if(isset($_GET['validation']) && $_GET['validation'] == 1)
 									{
-										echo "value='".$_SESSION['error_array']['r_street']
-										['val']."'";
+										echo "value='" . $_SESSION['error_array']['r_street']
+										['val'] . "'";
 									}
 									else
 									{
 										if(isset($row['r_street']))
 										{
-											echo "value=".$row['r_street'];
+											echo "value=" . $row['r_street'];
 										}
 									}
 									?> >
+									<span class="text-danger" id="err_r_street"></span>
 									<?php 
 									if(isset($_GET['validation']) && 1 == $_GET['validation'])
 									{
-										echo '<span class="text-danger">'.$_SESSION['error_array']
-										['r_street']['msg']."</span>"; 
+										echo '<span class="text-danger">' . $_SESSION['error_array']
+										['r_street']['msg'] . "</span>"; 
 									}
 									?>
 								</div>
@@ -678,22 +670,23 @@
 									<?php
 									if(isset($_GET['validation']) && $_GET['validation'] == 1)
 									{
-										echo "value='".$_SESSION['error_array']['r_city']
-										['val']."'";
+										echo "value='" . $_SESSION['error_array']['r_city']
+										['val'] . "'";
 									}
 									else
 									{
 										if(isset($row['r_city']))
 										{
-											echo "value=".$row['r_city'];
+											echo "value=" . $row['r_city'];
 										}
 									}
 									?> >
+									<span class="text-danger" id="err_r_city"></span>
 									<?php 
 									if(isset($_GET['validation']) && 1 == $_GET['validation'])
 									{
-										echo '<span class="text-danger">'.$_SESSION['error_array']
-										['r_city']['msg']."</span>"; 
+										echo '<span class="text-danger">' . $_SESSION['error_array']
+										['r_city']['msg'] . "</span>"; 
 									}
 									?>
 								</div>
@@ -720,8 +713,8 @@
 									<?php 
 									if(isset($_GET['validation']) && 1 == $_GET['validation'])
 									{
-										echo '<span class="text-danger">'.$_SESSION['error_array']
-										['r_state']['msg']."</span>"; 
+										echo '<span class="text-danger">' . $_SESSION['error_array']
+										['r_state']['msg'] . "</span>"; 
 									}
 									?>
 								</div>
@@ -736,21 +729,22 @@
 									<?php
 									if(isset($_GET['validation']) && $_GET['validation'] == 1)
 									{
-										echo "value=".$_SESSION['error_array']['r_zip']['val'];
+										echo "value=" . $_SESSION['error_array']['r_zip']['val'];
 									}
 									else
 									{
 										if(isset($row['r_zip']))
 										{
-											echo "value=".$row['r_zip'];
+											echo "value=" . $row['r_zip'];
 										}
 									}
 									?> >
+									<span class="text-danger" id="err_r_zip"></span>
 									<?php 
 									if(isset($_GET['validation']) && 1 == $_GET['validation'])
 									{
-										echo '<span class="text-danger">'.$_SESSION['error_array']
-										['r_zip']['msg']."</span>"; 
+										echo '<span class="text-danger">' . $_SESSION['error_array']
+										['r_zip']['msg'] . "</span>"; 
 									}
 									?>
 								</div>
@@ -765,21 +759,22 @@
 									<?php
 									if(isset($_GET['validation']) && $_GET['validation'] == 1)
 									{
-										echo "value=".$_SESSION['error_array']['r_phone']['val'];
+										echo "value=" . $_SESSION['error_array']['r_phone']['val'];
 									}
 									else
 									{
 										if(isset($row['r_phone']))
 										{
-											echo "value=".$row['r_phone'];
+											echo "value=" . $row['r_phone'];
 										}
 									}
 									?> >
+									<span class="text-danger" id="err_r_phone"></span>
 									<?php 
 									if(isset($_GET['validation']) && 1 == $_GET['validation'])
 									{
-										echo '<span class="text-danger">'.$_SESSION['error_array']
-										['r_phone']['msg']."</span>";
+										echo '<span class="text-danger">' . $_SESSION['error_array']
+										['r_phone']['msg'] . "</span>";
 									}?>
 								</div>
 							</div>
@@ -793,21 +788,22 @@
 									<?php
 									if(isset($_GET['validation']) && $_GET['validation'] == 1)
 									{
-										echo "value=".$_SESSION['error_array']['r_fax']['val'];
+										echo "value=" . $_SESSION['error_array']['r_fax']['val'];
 									}
 									else
 									{
 										if(isset($row['r_fax']))
 										{
-											echo "value=".$row['r_fax'];
+											echo "value=" . $row['r_fax'];
 										}
 									}
 									?> >
+									<span class="text-danger" id="err_r_fax"></span>
 									<?php 
 									if(isset($_GET['validation']) && 1 == $_GET['validation'])
 									{
-										echo '<span class="text-danger">'.$_SESSION['error_array']
-										['r_fax']['msg']."</span>"; 
+										echo '<span class="text-danger">' . $_SESSION['error_array']
+										['r_fax']['msg'] . "</span>"; 
 									}
 									?>
 								</div>
@@ -831,8 +827,8 @@
 									<?php
 									if(isset($_GET['validation']) && $_GET['validation'] == 1)
 									{
-										echo "value='".$_SESSION['error_array']['o_street']
-										['val']."'";
+										echo "value='" . $_SESSION['error_array']['o_street']
+										['val'] . "'";
 									}
 									else
 									{
@@ -842,11 +838,12 @@
 										}
 									}
 									?> >
+									<span class="text-danger" id="err_o_street"></span>
 									<?php 
 									if(isset($_GET['validation']) && 1 == $_GET['validation'])
 									{
-										echo '<span class="text-danger">'.$_SESSION['error_array']
-										['o_street']['msg']."</span>";
+										echo '<span class="text-danger">' . $_SESSION['error_array']
+										['o_street']['msg'] . "</span>";
 									}
 									?>
 								</div>
@@ -863,22 +860,23 @@
 									<?php
 									if(isset($_GET['validation']) && $_GET['validation'] == 1)
 									{
-										echo "value='".$_SESSION['error_array']['o_city']
-										['val']."'";
+										echo "value='" . $_SESSION['error_array']['o_city']
+										['val'] . "'";
 									}
 									else
 									{
 										if(isset($row['o_city']))
 										{
-											echo "value=".$row['o_city'];
+											echo "value=" . $row['o_city'];
 										}
 									}
 									?> >
+									<span class="text-danger" id="err_o_city"></span>
 									<?php 
 									if(isset($_GET['validation']) && 1 == $_GET['validation'])
 									{
-										echo '<span class="text-danger">'.$_SESSION['error_array']
-										['o_city']['msg']."</span>";
+										echo '<span class="text-danger">' . $_SESSION['error_array']
+										['o_city']['msg'] . "</span>";
 									}
 									?>
 								</div>
@@ -907,8 +905,8 @@
 									<?php 
 									if(isset($_GET['validation']) && 1 == $_GET['validation'])
 									{
-										echo '<span class="text-danger">'.$_SESSION['error_array']
-										['o_state']['msg']."</span>";
+										echo '<span class="text-danger">' . $_SESSION['error_array']
+										['o_state']['msg'] . "</span>";
 									}?>
 								</div>
 							</div>
@@ -923,21 +921,22 @@
 									<?php
 									if(isset($_GET['validation']) && $_GET['validation'] == 1)
 									{
-										echo "value=".$_SESSION['error_array']['o_zip']['val'];
+										echo "value=" . $_SESSION['error_array']['o_zip']['val'];
 									}
 									else
 									{
 										if(isset($row['o_zip']))
 										{
-											echo "value=".$row['o_zip'];
+											echo "value=" . $row['o_zip'];
 										}
 									}
 									?> >
+									<span class="text-danger" id="err_o_zip"></span>
 									<?php 
 									if(isset($_GET['validation']) && 1 == $_GET['validation'])
 									{
-										echo '<span class="text-danger">'.$_SESSION['error_array']
-										['o_zip']['msg']."</span>";
+										echo '<span class="text-danger">' . $_SESSION['error_array']
+										['o_zip']['msg'] . "</span>";
 									}
 									?>
 								</div>
@@ -953,21 +952,22 @@
 									<?php
 									if(isset($_GET['validation']) && $_GET['validation'] == 1)
 									{
-										echo "value=".$_SESSION['error_array']['o_phone']['val'];
+										echo "value=" . $_SESSION['error_array']['o_phone']['val'];
 									}
 									else
 									{
 										if(isset($row['o_phone']))
 										{
-											echo "value=".$row['o_phone'];
+											echo "value=" . $row['o_phone'];
 										}
 									}
 									?> >
+									<span class="text-danger" id="err_o_phone"></span>
 									<?php 
 									if(isset($_GET['validation']) && 1 == $_GET['validation'])
 									{
-										echo '<span class="text-danger">'.$_SESSION['error_array']
-										['o_phone']['msg']."</span>";
+										echo '<span class="text-danger">' . $_SESSION['error_array']
+										['o_phone']['msg'] . "</span>";
 									}
 									?>
 								</div>
@@ -983,21 +983,22 @@
 									<?php
 									if(isset($_GET['validation']) && $_GET['validation'] == 1)
 									{
-										echo "value=".$_SESSION['error_array']['o_fax']['val'];
+										echo "value=" . $_SESSION['error_array']['o_fax']['val'];
 									}
 									else
 									{
 										if(isset($row['o_fax']))
 										{
-											echo "value=".$row['o_fax'];
+											echo "value=" . $row['o_fax'];
 										}
 									}
 									?> >
+									<span class="text-danger" id="err_o_fax"></span>
 									<?php 
 									if(isset($_GET['validation']) && 1 == $_GET['validation'])
 									{
-										echo '<span class="text-danger">'.$_SESSION['error_array']
-										['o_fax']['msg']."</span>";
+										echo '<span class="text-danger">' . $_SESSION['error_array']
+										['o_fax']['msg'] . "</span>";
 									}
 									?>
 								</div>
@@ -1018,17 +1019,17 @@
 							<?php
 							if(isset($_GET['validation']) && $_GET['validation'] == 1)
 							{
-								echo "<img src=".PIC_PATH.$_SESSION['error_array']['photo']
-								['val']." width=200 height=200>";
+								echo "<img src=" . PIC_PATH . $_SESSION['error_array']['photo']
+								['val'] . " width=200 height=200>";
 							}
 							elseif($check_pic == 1)
 							{
-							  echo "<img src=".PIC_PATH.$row['photo']." width=200 height=200>";
+							  echo "<img src=" . PIC_PATH . $row['photo'] . " width=200 height=200>";
 							}
 							if(isset($_SESSION['error_array']['photo']['msg']))
 							{
-								echo '<span class="text-danger">'.$_SESSION['error_array']
-								['photo']['msg']."</span>";
+								echo '<span class="text-danger">' . $_SESSION['error_array']
+								['photo']['msg'] . "</span>";
 							}
 							?></span>
 						</div>

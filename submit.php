@@ -12,7 +12,8 @@
 	require_once('class/DatabaseConnection.php');
 	require_once('class/Validation.php');
 	require_once('config/constants.php');
-	$obj = DatabaseConnection::create_connection();
+	require_once('config/database.php')
+	$obj = DatabaseConnection::create_connection($db['master']);
 
 	$pic_update = FALSE;
 	

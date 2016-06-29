@@ -20,13 +20,10 @@ class DatabaseConnection
 	* @param  void
 	* @return void
 	*/
-	private function __construct()
+	private function __construct($db_param)
 	{
-		self::$conn = mysqli_connect(HOST_NAME, USER_NAME, PASSWORD, DB_NAME);
-		// if (mysqli_connect_errno($this->conn))
-		// {
-		// 	die ('Failed to connect to MySQL :' . mysqli_connect_error());
-		// }
+		self::$conn = mysqli_connect($db_param['hostname'], $db_param['username'], 
+			$db_param['password'], $db_param['database']);
 	}
 
 	/**
@@ -36,11 +33,11 @@ class DatabaseConnection
 	* @param  void
 	* @return object
 	*/
-	public static function create_connection()
+	public static function create_connection($db_param)
 	{
 		if(self::$connection_obj == NULL)
 		{
-			self::$connection_obj = new DatabaseConnection();
+			self::$connection_obj = new DatabaseConnection($db_param);
 		}
 		return self::$connection_obj;
 	}
@@ -165,7 +162,6 @@ class DatabaseConnection
 				'{$data_array['photo']}', '{$data_array['extra_note']}', 
 				'{$data_array['comm_id']}')";
 
-			// echo $q_employee; exit;
 			$result_employee = DatabaseConnection::db_query($q_employee);
 
 			if(!$result_employee)
@@ -253,13 +249,21 @@ class DatabaseConnection
 			CONCAT(res.street, ', ', res.city, ', ', res.state, ', ', res.zip, ', ', 
 			res.phone, ', ', res.fax) AS res_add, 
 			CONCAT(off.street, ', ', off.city, ', ', off.state, ', ', off.zip, ', ', 
-			off.phone, ', ', off.fax) AS off_add, emp.comm_id AS comm_id, emp.id AS id, emp.photo AS photo
-			from employee AS emp 
+			off.phone, ', ', off.fax) AS off_add, emp.comm_id AS comm_id, emp.id AS id, 
+			emp.photo AS photo from employee AS emp 
 			inner join address AS res on (emp.id = res.emp_id and res.address_type = 'residence')
 			inner join address AS off on (emp.id = off.emp_id and off.address_type = 'office')";
 
 		$result_list = DatabaseConnection::db_query($q_list);
 		return $result_list;
+	}
+
+	public function select_comm_field($value)
+	{
+		$q_comm = "SELECT GROUP_CONCAT(type SEPARATOR ', ') FROM `communication_medium` 
+		WHERE id IN ($value)";
+		$result = DatabaseConnection::db_query($q_comm);
+		return $result;
 	}
 
 	/**

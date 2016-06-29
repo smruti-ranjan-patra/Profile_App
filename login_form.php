@@ -7,6 +7,8 @@ session_start();
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Login</title>
 		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+		<script   src="https://code.jquery.com/jquery-3.0.0.min.js"   integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0="   crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/jquery_validation.js"></script>
 	</head>
 	<body background="images/home_background.jpg">
 	<!-- Navigation bar -->
@@ -22,7 +24,7 @@ session_start();
 	<div class="container">
 		<div class="row">
 			<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-md-offset-2 col-lg-offset-2">
-				<form action="login.php" method="post">
+				<form action="login.php" method="post" id="login_form">
 					<fieldset>
 					<div class="well">
 
@@ -34,6 +36,7 @@ session_start();
 							<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
 								<input type="text" name="email" id="email" 
 								class="form-control" placeholder="Email@mail.com">
+								<span class="text-danger" id="err_email"></span>
 							</div>
 						</div>
 
@@ -45,6 +48,7 @@ session_start();
 							<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
 								<input type="password" name="password" id="password" 
 								class="form-control" placeholder="********">
+								<span class="text-danger" id="err_password"></span>
 							</div>
 						</div>
 						<div class="text-center">
@@ -53,6 +57,7 @@ session_start();
 						{
 							echo '<span class="text-danger">'.$_SESSION['error_array']
 							['login']['msg']."</span>";
+							session_unset();
 						}
 						?>
 						</div>

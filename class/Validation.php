@@ -313,7 +313,7 @@ class Validation
 			$rnum = 0;
 			if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))
 			{
-				$obj = DatabaseConnection::create_connection();
+				$obj = DatabaseConnection::create_connection($db['master']);
 				$rows = $obj->select_email($form_data[$email], $_SESSION['id']);
 
 				$rnum = DatabaseConnection::db_num_rows($rows);
@@ -503,7 +503,7 @@ class Validation
 		if(isset($_POST['email']) && !empty($_POST['email']) && isset($_POST['password']) && 
 			!empty($_POST['password']))
 		{
-			$obj = DatabaseConnection::create_connection();
+			$obj = DatabaseConnection::create_connection($db['master']);
 			$rows = $obj->select_login($_POST['email'], $_POST['password']);
 			$rnum = DatabaseConnection::db_num_rows($rows);
 			$fetch_data = $obj->db_fetch_array($rows);

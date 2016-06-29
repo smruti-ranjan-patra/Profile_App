@@ -5,9 +5,9 @@ if(!isset($_SESSION['id']))
 	header("Location:home_default.php");
 }
 // session_start();
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// ini_set('display_errors', 1);
+// ini_set('display_startup_errors', 1);
+// error_reporting(E_ALL);
 
 ?>
 <!DOCTYPE html>
@@ -30,14 +30,13 @@ error_reporting(E_ALL);
 	</nav>
 	<?php
 
-		require_once('config/db_connection.php');
+		require_once('config/database.php');
 		require_once('config/photo_path.php');
-		require_once('class/oops.php');
+		require_once('class/DatabaseConnection.php');
 
-		$obj = DatabaseConnection::create_connection();
+		$obj = DatabaseConnection::create_connection($db['master']);
 
 		$result_list = $obj->display_list();
-
 		$rnum = 0;
 		$rnum = DatabaseConnection::db_num_rows($result_list);
 		if($rnum == 0)
@@ -78,10 +77,13 @@ error_reporting(E_ALL);
 						{
 							if('comm_id' == $key)
 							{
-								$q_comm = "SELECT GROUP_CONCAT(type SEPARATOR ', ') FROM 
-								`communication_medium` WHERE id IN ($value)";
-								$result_4 = mysqli_query($conn, $q_comm);
-								while ($row1 = mysqli_fetch_array($result_4, MYSQLI_ASSOC))
+								// print_r($obj);exit;
+								$result_list_comm = $obj->select_comm_field($value);
+
+								// $q_comm = "SELECT GROUP_CONCAT(type SEPARATOR ', ') FROM 
+								// `communication_medium` WHERE id IN ($value)";
+								// $result_4 = mysqli_query($conn, $q_comm);
+								while ($row1 = DatabaseConnection::db_fetch_array($result_list_comm))
 								{
 									foreach ($row1 as $key => $value) 
 									{
