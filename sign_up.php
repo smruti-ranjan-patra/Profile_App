@@ -178,16 +178,16 @@
 				?>">
 
 				<fieldset>
-
-				<!-- Names -->
 				<div class="well">
+
+					<!-- Names -->
 					<div class="row form-group">
 						<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
 							<label for="first_name">First Name:</label>
 						</div>
 						<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
 							<input type="text" name="first_name" id="first_name" 
-							class="form-control" placeholder="First Name" 
+							class="form-control text_field" placeholder="First Name" 
 							<?php
 							if(isset($_GET['validation']) && 1 == $_GET['validation'])
 							{
@@ -201,7 +201,7 @@
 								}								
 							}
 							?> >
-							<span class="text-danger" id="err_first_name"></span>
+							<span class="text-danger err_msg" id="err_first_name"></span>
 							<?php 
 							if(isset($_GET['validation']) && 1 == $_GET['validation'])
 							{
@@ -217,7 +217,7 @@
 						</div>
 						<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
 							<input type="text" name="middle_name" id="middle_name" 
-							class="form-control" placeholder="Middle Name" 
+							class="form-control text_field" placeholder="Middle Name" 
 							<?php
 							if(isset($_GET['validation']) && 1 == $_GET['validation'])
 							{
@@ -231,7 +231,7 @@
 								}
 							}
 							?> >
-							<span class="text-danger" id="err_middle_name"></span>
+							<span class="text-danger err_msg" id="err_middle_name"></span>
 							<?php 
 							if(isset($_GET['validation']) && 1 == $_GET['validation'])
 							{
@@ -248,7 +248,7 @@
 						</div>
 						<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
 							<input type="text" name="last_name" id="last_name" 
-							class="form-control" placeholder="Last Name" 
+							class="form-control text_field" placeholder="Last Name" 
 							<?php
 							if(isset($_GET['validation']) && 1 == $_GET['validation'])
 							{
@@ -262,7 +262,7 @@
 								}
 							}
 							?> >
-							<span class="text-danger" id="err_last_name"></span>
+							<span class="text-danger err_msg" id="err_last_name"></span>
 							<?php 
 							if(isset($_GET['validation']) && 1 == $_GET['validation'])
 							{
@@ -280,7 +280,7 @@
 						</div>
 						<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
 							<input type="text" name="email" id="email" 
-							class="form-control" placeholder="Email ID"
+							class="form-control email" placeholder="Email ID"
 							<?php
 							if(isset($_GET['validation']) && 1 == $_GET['validation'])
 							{
@@ -294,7 +294,7 @@
 								}
 							}
 							?> >
-							<span class="text-danger" id="err_email"></span>
+							<span class="text-danger err_msg" id="err_email"></span>
 							<?php 
 							if(isset($_GET['validation']) && 1 == $_GET['validation'])
 							{
@@ -312,7 +312,7 @@
 						</div>
 						<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
 							<input type="password" name="password" id="password" 
-							class="form-control" placeholder="**********" 
+							class="form-control password" placeholder="**********" 
 							<?php
 							if(isset($_GET['validation']) && 1 == $_GET['validation'])
 							{
@@ -326,7 +326,7 @@
 								}
 							}
 							?> >
-							<span class="text-danger" id="err_password"></span>
+							<span class="text-danger err_msg" id="err_password"></span>
 							<?php
 							if (isset($_SESSION['error_array']['password']['msg']))
 							{
@@ -400,6 +400,7 @@
 							</label>
 							</div>
 						</div>
+						<span class="text-danger err_msg"></span>
 					</div>
 
 					<!-- Gender -->
@@ -471,7 +472,7 @@
 							<label for="dob">DOB:</label>
 						</div>
 						<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
-							<input type="date" class="form-control" name="dob" id="dob"
+							<input type="date" class="form-control dob" name="dob" id="dob"
 							<?php
 							if(isset($_GET['validation']) && $_GET['validation'] == 1)
 							{
@@ -485,7 +486,7 @@
 								}
 							}
 							?> >
-							<span class="text-danger" id="err_dob"></span>
+							<span class="text-danger err_msg" id="err_dob"></span>
 							<?php 
 							if(isset($_GET['validation']) && 1 == $_GET['validation'])
 							{
@@ -634,7 +635,7 @@
 								</div>
 								<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
 									<input type="text" id="r_street" name="r_street" 
-									class="form-control" placeholder="Street"
+									class="form-control alpha_numeric" placeholder="Street"
 									<?php
 									if(isset($_GET['validation']) && $_GET['validation'] == 1)
 									{
@@ -649,7 +650,7 @@
 										}
 									}
 									?> >
-									<span class="text-danger" id="err_r_street"></span>
+									<span class="text-danger err_msg" id="err_r_street"></span>
 									<?php 
 									if(isset($_GET['validation']) && 1 == $_GET['validation'])
 									{
@@ -666,7 +667,7 @@
 								</div>
 								<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
 									<input type="text" id="r_city" name="r_city" 
-									class="form-control" placeholder="City"
+									class="form-control text_field" placeholder="City"
 									<?php
 									if(isset($_GET['validation']) && $_GET['validation'] == 1)
 									{
@@ -681,7 +682,7 @@
 										}
 									}
 									?> >
-									<span class="text-danger" id="err_r_city"></span>
+									<span class="text-danger err_msg" id="err_r_city"></span>
 									<?php 
 									if(isset($_GET['validation']) && 1 == $_GET['validation'])
 									{
@@ -724,8 +725,8 @@
 									<label for="r_zip">Zip:</label>
 								</div>
 								<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
-									<input type="text" id="r_zip" name="r_zip" class="form-control" 
-									placeholder="751024" 
+									<input type="text" id="r_zip" name="r_zip" 
+									class="form-control number_field" placeholder="751024" 
 									<?php
 									if(isset($_GET['validation']) && $_GET['validation'] == 1)
 									{
@@ -739,7 +740,7 @@
 										}
 									}
 									?> >
-									<span class="text-danger" id="err_r_zip"></span>
+									<span class="text-danger err_msg" id="err_r_zip"></span>
 									<?php 
 									if(isset($_GET['validation']) && 1 == $_GET['validation'])
 									{
@@ -755,7 +756,8 @@
 								</div>
 								<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
 									<input type="text" id="r_phone" name="r_phone" 
-									class="form-control" placeholder="9776097760 / 06742552115" 
+									class="form-control number_field" 
+									placeholder="9776097760 / 06742552115" 
 									<?php
 									if(isset($_GET['validation']) && $_GET['validation'] == 1)
 									{
@@ -769,7 +771,7 @@
 										}
 									}
 									?> >
-									<span class="text-danger" id="err_r_phone"></span>
+									<span class="text-danger err_msg" id="err_r_phone"></span>
 									<?php 
 									if(isset($_GET['validation']) && 1 == $_GET['validation'])
 									{
@@ -783,8 +785,8 @@
 									<label for="r_fax">Fax:</label>
 								</div>
 								<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
-									<input type="text" id="r_fax" name="r_fax" class="form-control" 
-									placeholder="04442544302"
+									<input type="text" id="r_fax" name="r_fax" 
+									class="form-control number_field" placeholder="04442544302"
 									<?php
 									if(isset($_GET['validation']) && $_GET['validation'] == 1)
 									{
@@ -798,7 +800,7 @@
 										}
 									}
 									?> >
-									<span class="text-danger" id="err_r_fax"></span>
+									<span class="text-danger err_msg" id="err_r_fax"></span>
 									<?php 
 									if(isset($_GET['validation']) && 1 == $_GET['validation'])
 									{
@@ -823,7 +825,7 @@
 								</div>
 								<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
 									<input type="text" id="o_street" name="o_street" 
-									class="form-control" placeholder="Street" 
+									class="form-control alpha_numeric" placeholder="Street" 
 									<?php
 									if(isset($_GET['validation']) && $_GET['validation'] == 1)
 									{
@@ -838,7 +840,7 @@
 										}
 									}
 									?> >
-									<span class="text-danger" id="err_o_street"></span>
+									<span class="text-danger err_msg" id="err_o_street"></span>
 									<?php 
 									if(isset($_GET['validation']) && 1 == $_GET['validation'])
 									{
@@ -855,8 +857,8 @@
 									<label for="o_city">City:</label>
 								</div>
 								<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
-									<input type="text" id="o_city" name="o_city" class="form-control" 
-									placeholder="City"
+									<input type="text" id="o_city" name="o_city" 
+									class="form-control text_field" placeholder="City"
 									<?php
 									if(isset($_GET['validation']) && $_GET['validation'] == 1)
 									{
@@ -871,7 +873,7 @@
 										}
 									}
 									?> >
-									<span class="text-danger" id="err_o_city"></span>
+									<span class="text-danger err_msg" id="err_o_city"></span>
 									<?php 
 									if(isset($_GET['validation']) && 1 == $_GET['validation'])
 									{
@@ -916,8 +918,8 @@
 									<label for="o_zip">Zip:</label>
 								</div>
 								<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
-									<input type="text" id="o_zip" name="o_zip" class="form-control" 
-									placeholder="751024"
+									<input type="text" id="o_zip" name="o_zip" 
+									class="form-control number_field" placeholder="751024"
 									<?php
 									if(isset($_GET['validation']) && $_GET['validation'] == 1)
 									{
@@ -931,7 +933,7 @@
 										}
 									}
 									?> >
-									<span class="text-danger" id="err_o_zip"></span>
+									<span class="text-danger err_msg" id="err_o_zip"></span>
 									<?php 
 									if(isset($_GET['validation']) && 1 == $_GET['validation'])
 									{
@@ -948,7 +950,8 @@
 								</div>
 								<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
 									<input type="text" id="o_phone" name="o_phone" 
-									class="form-control" placeholder="9776097760 / 06742552115"
+									class="form-control number_field" 
+									placeholder="9776097760 / 06742552115"
 									<?php
 									if(isset($_GET['validation']) && $_GET['validation'] == 1)
 									{
@@ -962,7 +965,7 @@
 										}
 									}
 									?> >
-									<span class="text-danger" id="err_o_phone"></span>
+									<span class="text-danger err_msg" id="err_o_phone"></span>
 									<?php 
 									if(isset($_GET['validation']) && 1 == $_GET['validation'])
 									{
@@ -978,8 +981,8 @@
 									<label for="o_fax">Fax:</label>
 								</div>
 								<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
-									<input type="text" id="o_fax" name="o_fax" class="form-control"
-									placeholder="04442544302"
+									<input type="text" id="o_fax" name="o_fax" 
+									class="form-control number_field" placeholder="04442544302"
 									<?php
 									if(isset($_GET['validation']) && $_GET['validation'] == 1)
 									{
@@ -993,7 +996,7 @@
 										}
 									}
 									?> >
-									<span class="text-danger" id="err_o_fax"></span>
+									<span class="text-danger err_msg" id="err_o_fax"></span>
 									<?php 
 									if(isset($_GET['validation']) && 1 == $_GET['validation'])
 									{

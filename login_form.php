@@ -35,8 +35,8 @@ session_start();
 							</div>
 							<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
 								<input type="text" name="email" id="email" 
-								class="form-control" placeholder="Email@mail.com">
-								<span class="text-danger" id="err_email"></span>
+								class="form-control login_email" placeholder="Email@mail.com">
+								<span class="text-danger err_msg" id="err_email"></span>
 							</div>
 						</div>
 
@@ -47,8 +47,8 @@ session_start();
 							</div>
 							<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
 								<input type="password" name="password" id="password" 
-								class="form-control" placeholder="********">
-								<span class="text-danger" id="err_password"></span>
+								class="form-control login_password" placeholder="********">
+								<span class="text-danger err_msg" id="err_password"></span>
 							</div>
 						</div>
 						<div class="text-center">

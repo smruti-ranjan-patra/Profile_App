@@ -3,6 +3,7 @@
 require_once('config/error_messages.php');
 require_once('class/DatabaseConnection.php');
 require_once('config/constants.php');
+require_once('config/database.php');
 
 /**
 * Super Class
@@ -90,6 +91,7 @@ class Validation
 		if(isset($form_data[$name]) && !empty($form_data[$name]))
 		{
 			$name_value = Validation::formatted($form_data[$name]);
+
 			if(preg_match("/^[a-zA-Z ]*$/",$name_value))
 			{
 				$_SESSION['error_array'][$name]['val'] = $name_value;
@@ -123,6 +125,7 @@ class Validation
 	{
 		$error = 0;
 		$form_data = static::$form_data;
+
 		if(isset($form_data[$field]))
 		{
 			$field_value = $form_data[$field];
@@ -149,6 +152,7 @@ class Validation
 	{
 		$error = 0;
 		$form_data = static::$form_data;
+
 		if(isset($form_data[$field]) && !empty($form_data[$field]))
 		{
 			$field_value = $form_data[$field];
@@ -175,6 +179,7 @@ class Validation
 	{
 		$error = 0;
 		$form_data = static::$form_data;
+
 		if(isset($form_data[$name]) && !empty($form_data[$name]))
 		{
 			$name_value = Validation::formatted($form_data[$name]);
@@ -210,6 +215,7 @@ class Validation
 	{
 		$error = 0;
 		$form_data = static::$form_data;
+
 		if(isset($form_data[$code]) && !empty($form_data[$code]))
 		{
 			$code_value = Validation::formatted($form_data[$code]);
@@ -246,6 +252,7 @@ class Validation
 	{
 		$error = 0;
 		$form_data = static::$form_data;
+
 		if(isset($form_data[$number]) && !empty($form_data[$number]))
 		{
 			$number_value = Validation::formatted($form_data[$number]);
@@ -283,6 +290,7 @@ class Validation
 	{
 		$error = 0;
 		$form_data = static::$form_data;
+
 		if(isset($form_data[$emp]))
 		{
 			$emp_value = $form_data[$emp];
@@ -306,17 +314,20 @@ class Validation
 	*/
 	public static function email($email)
 	{
+		global $db;
 		$error = 0;
 		$form_data = static::$form_data;
+
 		if(isset($form_data[$email]) && !empty($form_data[$email]))
 		{
 			$rnum = 0;
-			if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))
+
+			if(filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))
 			{
 				$obj = DatabaseConnection::create_connection($db['master']);
 				$rows = $obj->select_email($form_data[$email], $_SESSION['id']);
-
 				$rnum = DatabaseConnection::db_num_rows($rows);
+
 				if($rnum == 0)
 				{
 					$_SESSION['error_array'][$email]['val'] = $form_data[$email];
@@ -356,10 +367,11 @@ class Validation
 	{
 		$error = 0;
 		$form_data = static::$form_data;
+
 		if(isset($form_data[$password]) && !empty($form_data[$password]))
 		{
-			//$code_value = Validation::formatted($form_data[$password]);
 			$length = strlen((string)$form_data[$password]);
+
 			if($length >= 8 && $length <= 12)
 			{
 				$_SESSION['error_array'][$password]['val'] = $form_data[$password];
@@ -441,13 +453,14 @@ class Validation
 	public function photo_validation()
 	{
 		$pic_return_data = array("pic_update" => FALSE, "name" => "");
+
 		if(isset($_FILES['pic']))
 		{
 			$errors = array();
 			$pic_return_data["name"] = $file_name = $_FILES['pic']['name'];
 			$file_size = $_FILES['pic']['size'];
 
-			if ($file_size > 0) 
+			if($file_size > 0) 
 			{
 				// $pic_update = TRUE;
 				$file_tmp = $_FILES['pic']['tmp_name'];
@@ -456,6 +469,7 @@ class Validation
 				$ext_arr = explode('.',$file_name);
 				$file_ext = strtolower(end($ext_arr));
 				$extensions = array("jpeg","jpg","png");
+
 				if(in_array($file_ext, $extensions) === false)
 				{
 					$errors[] = "extension not allowed, please choose a JPEG or PNG file.";
@@ -464,10 +478,12 @@ class Validation
 					file';
 					$this->count++;
 				}
+
 				if($file_size > 8388608)
 				{
 					$errors[] = '*File size must be less than 8 MB';
 				}
+
 				if(empty($errors) == true)
 				{
 					move_uploaded_file($file_tmp, PIC_PATH.$file_name);
@@ -498,8 +514,10 @@ class Validation
 	*/
 	public static function login_validation()
 	{
+		global $db;
 		$error = 0;
 		$rnum = 0;
+
 		if(isset($_POST['email']) && !empty($_POST['email']) && isset($_POST['password']) && 
 			!empty($_POST['password']))
 		{
@@ -507,6 +525,7 @@ class Validation
 			$rows = $obj->select_login($_POST['email'], $_POST['password']);
 			$rnum = DatabaseConnection::db_num_rows($rows);
 			$fetch_data = $obj->db_fetch_array($rows);
+			
 			if($rnum != 0)
 			{
 				$_SESSION['error_array']['login']['msg'] = '';

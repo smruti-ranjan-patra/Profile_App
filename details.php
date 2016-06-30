@@ -35,7 +35,6 @@ if(!isset($_SESSION['id']))
 		require_once('class/DatabaseConnection.php');
 
 		$obj = DatabaseConnection::create_connection($db['master']);
-
 		$result_list = $obj->display_list();
 		$rnum = 0;
 		$rnum = DatabaseConnection::db_num_rows($result_list);
@@ -103,7 +102,15 @@ if(!isset($_SESSION['id']))
 						if($row['photo'])
 						{
 							$pic_name = PIC_PATH.$row['photo'];
-							echo '<td><img src="'.$pic_name.'" width=100 height=100</td>';
+
+							if(file_exists($pic_name))
+							{
+								echo '<td><img src="'.$pic_name.'" width=100 height=100</td>';
+							}
+							else
+							{
+								echo "<td>No image found</td>";
+							}
 						}
 						elseif($row['gender'] == 'Male')
 						{

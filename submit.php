@@ -7,14 +7,12 @@
 	session_start();
 	// session_destroy();
 
-	//require_once('config/db_connection.php');
 	require_once('config/photo_path.php');
 	require_once('class/DatabaseConnection.php');
 	require_once('class/Validation.php');
 	require_once('config/constants.php');
-	require_once('config/database.php')
+	require_once('config/database.php');
 	$obj = DatabaseConnection::create_connection($db['master']);
-
 	$pic_update = FALSE;
 	
 	if(isset($_POST['submit']))

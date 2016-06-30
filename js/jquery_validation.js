@@ -1,286 +1,237 @@
+var errors = 0;
+
 // jQuery validation
 $(document).ready(function()
 {
-	var errors = 0;
-	var s_form = $("#sign_up_form");
-	var l_form = $("#login_form");
-	var f_name = $("#first_name");
-	var m_name = $("#middle_name");
-	var l_name = $("#last_name");
-	var dob = $("#dob");
-	var email = $("#email");
-	var password = $("#password");
-	var r_street = $("#r_street");
-	var o_street = $("#o_street");
-	var r_city = $("#r_city");
-	var o_city = $("#o_city");
-	var r_zip = $("#r_zip");
-	var o_zip = $("#o_zip");
-	var r_phone = $("#r_phone");
-	var o_phone = $("#o_phone");
-	var r_fax = $("#r_fax");
-	var o_fax = $("#o_fax");
-
-	// f_name.keyup(function()
-	// {
-	// 	errors += pure_string(f_name.val().trim(), 'err_first_name');
-	// });
-	// m_name.keyup(function()
-	// {
-	// 	errors += pure_string_empty(m_name.val().trim());
-	// });
-	// l_name.keyup(function()
-	// {
-	// 	errors += pure_string(l_name.val().trim(), 'err_last_name');
-	// });
-	// dob.keyup(function()
-	// {
-	// 	errors += dob_validation(dob.val().trim(), 'err_dob');
-	// });
-	// email.keyup(function()
-	// {
-	// 	errors += email_validation(email.val().trim(), 'err_email');
-	// });
-	// password.keyup(function()
-	// {
-	// 	errors += password_validation(password.val().trim(), 'err_password');
-	// });
-	// r_street.keyup(function()
-	// {
-	// 	errors += alpha_numeric(r_street.val().trim(), 'err_r_street');
-	// });
-	// o_street.keyup(function()
-	// {
-	// 	errors += alpha_numeric(o_street.val().trim(), 'err_o_street');
-	// });
-	// r_city.keyup(function()
-	// {
-	// 	errors += pure_string(r_city.val().trim(), 'err_r_city');
-	// });
-	// o_city.keyup(function()
-	// {
-	// 	errors += pure_string(o_city.val().trim(), 'err_o_city');
-	// });
-	// r_zip.keyup(function()
-	// {
-	// 	errors += number_validation(r_zip.val().trim(), 'err_r_zip', 'zip');
-	// });
-	// o_zip.keyup(function()
-	// {
-	// 	errors += number_validation(o_zip.val().trim(), 'err_o_zip', 'zip');
-	// });
-	// r_phone.keyup(function()
-	// {
-	// 	errors += number_validation(r_phone.val().trim(), 'err_r_phone', 'phone');
-	// });
-	// o_phone.keyup(function()
-	// {
-	// 	errors += number_validation(o_phone.val().trim(), 'err_o_phone', 'phone');
-	// });
-	// r_fax.keyup(function()
-	// {
-	// 	errors += number_validation(r_fax.val().trim(), 'err_r_fax', 'fax');
-	// });
-	// o_fax.keyup(function()
-	// {
-	// 	errors += number_validation(o_fax.val().trim(), 'err_o_fax', 'fax');
-	// });
-
-
-
-	s_form.submit(function()
-		{
-			// errors = 0;
-			//alert(errors);
-			errors += pure_string(f_name.val().trim(), 'err_first_name');
-			errors += pure_string_empty(m_name.val().trim());
-			errors += pure_string(l_name.val().trim(), 'err_last_name');
-			errors += dob_validation(dob.val().trim(), 'err_dob');
-			errors += email_validation(email.val().trim(), 'err_email');
-			errors += password_validation(password.val().trim(), 'err_password');
-			errors += alpha_numeric(r_street.val().trim(), 'err_r_street');
-			errors += alpha_numeric(o_street.val().trim(), 'err_o_street');
-			errors += pure_string(r_city.val().trim(), 'err_r_city');
-			errors += pure_string(o_city.val().trim(), 'err_o_city');
-			errors += number_validation(r_zip.val().trim(), 'err_r_zip', 'zip');
-			errors += number_validation(o_zip.val().trim(), 'err_o_zip', 'zip');
-			errors += number_validation(r_phone.val().trim(), 'err_r_phone', 'phone');
-			errors += number_validation(o_phone.val().trim(), 'err_o_phone', 'phone');
-			errors += number_validation(r_fax.val().trim(), 'err_r_fax', 'fax');
-			errors += number_validation(o_fax.val().trim(), 'err_o_fax', 'fax');
-
-			if(errors > 0)
-			{
-				return true;
-			}
-			else
-			{
-				return true;
-			}
-		});
-
-	l_form.submit(function()
-		{
-			errors = 0;
-			errors += email_validation(email.val().trim(), 'err_email');
-			errors += password_validation(password.val().trim(), 'err_password');
-
-			if(errors > 0)
-			{
-				return false;
-			}
-			else
-			{
-				return true;
-			}
-		});
-
-
-	function pure_string(name, error_field)
-	{
-		if(name.length == 0)
-		{
-			$("#" + error_field).html("*Mandatory Field !");
-			return 1;
-		}
-		else if(!(/^[a-zA-Z ]*$/).test(name))
-		{
-			$("#" + error_field).html("*Only alphabets allowed !");
-			return 1;
-		}
-		else
-		{
-			$("#" + error_field).html("");
-			return 0;	
-		}
-	}
-
-	function pure_string_empty(name)
-	{
-		if(name.length == 0)
-		{
-			$("#err_middle_name").html("");
-			return 0;
-		}
-		else if(!name.match(/^[a-zA-Z ]*$/))
-		{
-			$("#err_middle_name").html("*Only alphabets allowed !");
-			console.log("*Only alphabets allowed !");
-			return 1;
-		}
-		else
-		{
-			$("#err_middle_name").html("");
-			return 0;
-		}
-	}
-
-	function dob_validation(dob_value, error_field)
-	{
-		if(dob_value.length == 0)
-		{
-			$("#" + error_field).html("*Date of Birth Mandatory !");
-			return 1;
-		}
-		else
-		{
-			$("#" + error_field).html("");
-			return 0;
-		}
-	}
-
-	function email_validation(email_value, error_field)
-	{
-		if(email_value.length == 0)
-		{
-			$("#" + error_field).html("*Mandatory Field !");
-			return 1;
-		}
-		else if(!(/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/).
-			test(email_value))
-		{
-			$("#" + error_field).html("*Invalid Email id !");
-			return 1;
-		}
-		else
-		{
-			$("#" + error_field).html("");
-			return 0;	
-		}
-	}
-
-	function password_validation(password_value, error_field)
-	{
-		if(password_value.length == 0)
-		{
-			$("#" + error_field).html("*Mandatory Field !");
-			return 1;
-		}
-		else if(!(password_value.length >= 8 && password_value.length <= 12))
-		{
-			$("#" + error_field).html("*Password length must be between 8 to 12 !");
-			return 1;
-		}
-		else
-		{
-			$("#" + error_field).html("");
-			return 0;	
-		}
-	}
-
-	function alpha_numeric(street_name, error_field)
-	{
-		if(street_name.length == 0)
-		{
-			$("#" + error_field).html("*Mandatory Field !");
-			return 1;
-		}
-		else if(!street_name.match(/^[a-zA-Z0-9 _-]+$/))
-		{
-			$("#" + error_field).html("*Only alphabets and numbers allowed !");
-			return 1;
-		}
-		else
-		{
-			$("#" + error_field).html("");
-			return 0;
-		}
-	}
-
-	function number_validation(number_value, error_field, type)
-	{
-		if(number_value.length == 0)
-		{
-			$("#" + error_field).html("*Mandatory Field !");
-			return 1;
-		}
-		if(type == "zip")
-		{
-			if(!(number_value.match(/^(\d{6})/) && number_value.length == 6))
-			{
-				$("#" + error_field).html("*Provide a Numeric value of length 6 !");
-				return 1;
-			}
-			else
-			{
-				$("#" + error_field).html("");
-				return 0;
-			}
-		}
-		else if(type == "phone" || type == "fax")
-		{
-			if(!(number_value.match(/^(\d{7})/) && number_value.length >= 7 && 
-				number_value.length <= 12))
-			{
-				$("#" + error_field).html("*Provide a Numeric value of length between 7 and 12 !");
-				return 1;
-			}
-			else
-			{
-				$("#" + error_field).html("");
-				return 0;
-			}
-		}
-	}
-
+	validation();	
 });
+
+function validation()
+{
+	$('#sign_up_form').submit(function()
+	{
+		var return_val_name = true;
+		text_elements = $('.text_field');
+		$.each(text_elements, function(index, value)
+		{
+			var a = pure_string($(value))
+			if(a == false)
+			{
+				return_val_name = false;
+				return;
+			}
+		});
+
+		var return_val_num = true;
+		number_elements = $('.number_field');
+		$.each(number_elements, function(index, value)
+		{
+			var a = number_validation($(value))
+			if(a == false)
+			{
+				return_val_num = false;
+				return;
+			}
+		});
+
+		var return_val_alpha_num = true;
+		alpha_num_elements = $('.alpha_numeric');
+		$.each(alpha_num_elements, function(index, value)
+		{
+			var a = alpha_num_validation($(value))
+			if(a == false)
+			{
+				return_val_alpha_num = false;
+				return;
+			}
+		});
+
+		return_val_dob = dob_validation($('.dob'));
+		reurn_val_email = email_validation($('.email'));
+		reurn_val_pwd = password_validation($('.password'));
+
+		return (return_val_name && return_val_num && return_val_alpha_num && return_val_dob && 
+			reurn_val_email && reurn_val_pwd);
+	});
+
+	$('#login_form').submit(function()
+	{
+		reurn_login_email = email_validation($('.login_email'));
+		reurn_login_pwd = password_validation($('.login_password'));
+		return (reurn_login_email && reurn_login_pwd);
+	});
+
+	$('.text_field').on('keyup blur change', function()
+		{
+			pure_string($(this));
+		});
+
+	$('.number_field').on('keyup blur change', function()
+		{
+			number_validation($(this));
+		});
+
+	$('.alpha_numeric').on('keyup blur change', function()
+		{
+			alpha_num_validation($(this));
+		});
+
+	$('.dob').on('keyup blur change', function()
+		{
+			dob_validation($(this));
+		});
+
+	$('.email').on('keyup blur change', function()
+		{
+			email_validation($(this));
+		});
+
+	$('.password').on('keyup blur change', function()
+		{
+			password_validation($(this));
+		});
+
+	$('.login_email').on('keyup blur change', function()
+		{
+			email_validation($(this));
+		});
+
+	$('.login_password').on('keyup blur change', function()
+		{
+			password_validation($(this));
+		});
+}
+
+function pure_string(elem)
+{
+	//console.log(elem[0].name);
+	if(elem[0].name == 'middle_name' && elem.val().trim().length == 0)
+	{
+		elem.parent().children('.err_msg').html("");
+		return true;
+	}
+	else if(elem.val().trim().length == 0)
+	{
+		elem.parent().children('.err_msg').html("*Mandatory Field !");
+		return false;
+	}
+	else if(!(/^[a-zA-Z ]*$/).test(elem.val().trim()))
+	{
+		elem.parent().children('.err_msg').html("*Only alphabets allowed !");
+		return false;
+	}
+	else
+	{
+		elem.parent().children('.err_msg').html("");
+		return true;	
+	}	
+}
+
+function number_validation(elem)
+{
+	if(elem.val().trim().length == 0)
+	{
+		elem.parent().children('.err_msg').html("*Mandatory Field !");
+		return false;
+	}
+	if(elem[0].name == 'r_zip' || elem[0].name == 'o_zip')
+	{
+		if(!((/^(\d{6})/).test(elem.val().trim()) && elem.val().trim().length == 6))
+		{
+			elem.parent().children('.err_msg').html("*Provide a Numeric value of length ");
+			return false;
+		}
+		else
+		{
+			elem.parent().children('.err_msg').html("");
+			return true;
+		}
+	}
+	else
+	{
+		if(!((/^(\d{7,12})$/).test(elem.val().trim()) && elem.val().trim().length >= 7 && 
+			elem.val().trim().length <= 12))
+		{
+			elem.parent().children('.err_msg').html("*Provide a Numeric value of length \
+				between 7 and 12 !");
+				return false;
+		}
+		else
+		{
+			elem.parent().children('.err_msg').html("");
+			return true;
+		}
+	}
+}
+
+function alpha_num_validation(elem)
+{
+	if(elem.val().trim().length == 0)
+	{
+		elem.parent().children('.err_msg').html("*Mandatory Field !");
+		return false;
+	}
+	else if(!(/^[a-zA-Z0-9 _-]*$/).test(elem.val().trim()))
+	{
+		elem.parent().children('.err_msg').html("*Only alphabets and numbers allowed !");
+		return false;
+	}
+	else
+	{
+		elem.parent().children('.err_msg').html("");
+		return true;
+	}
+}
+
+function dob_validation(elem)
+{
+	if(elem.val().trim().length == 0)
+	{
+		elem.parent().children('.err_msg').html("*Mandatory Field !");
+		return false;
+	}
+	else
+	{
+		elem.parent().children('.err_msg').html("");
+		return true;
+	}
+}
+
+function email_validation(elem)
+{
+	if(elem.val().trim().length == 0)
+	{
+		elem.parent().children('.err_msg').html("*Mandatory Field !");
+		return false;
+	}
+	else if(!(/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/).
+		test(elem.val().trim()))
+	{
+		elem.parent().children('.err_msg').html("*Invalid Email ID !");
+		return false;
+	}
+	else
+	{
+		elem.parent().children('.err_msg').html("");
+		return true;
+	}
+}
+
+function password_validation(elem)
+{
+	if(elem.val().trim().length == 0)
+	{
+		elem.parent().children('.err_msg').html("*Mandatory Field !");
+		return false;
+	}
+	else if(!(elem.val().trim().length >= 8 && elem.val().trim().length <= 12))
+	{
+		elem.parent().children('.err_msg').html("*Password length must be between 8 to 12 !");
+		return false;
+	}
+	else
+	{
+		elem.parent().children('.err_msg').html("");
+		return true;
+	}
+}
