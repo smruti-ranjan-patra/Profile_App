@@ -152,6 +152,7 @@ function number_validation(elem)
 		elem.parent().children('.err_msg').html("*Mandatory Field !");
 		return false;
 	}
+	
 	if(elem[0].name == 'r_zip' || elem[0].name == 'o_zip')
 	{
 		if(!((/^(\d{6})/).test(elem.val().trim()) && elem.val().trim().length == 6))
@@ -165,7 +166,8 @@ function number_validation(elem)
 			return true;
 		}
 	}
-	else
+	//elem[0].name is (r_phone or r_fax or o_phone or o_fax)
+	else 
 	{
 		if(!((/^(\d{7,12})$/).test(elem.val().trim()) && elem.val().trim().length >= 7 && 
 			elem.val().trim().length <= 12))
