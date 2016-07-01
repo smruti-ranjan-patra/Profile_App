@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 17, 2016 at 01:23 AM
+-- Generation Time: Jul 01, 2016 at 11:53 AM
 -- Server version: 5.5.49-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.17
 
@@ -33,9 +33,9 @@ CREATE TABLE IF NOT EXISTS `address` (
   `street` varchar(10) NOT NULL,
   `city` varchar(20) NOT NULL,
   `state` varchar(30) NOT NULL,
-  `zip` int(11) NOT NULL,
-  `phone` int(11) NOT NULL,
-  `fax` int(11) NOT NULL,
+  `zip` varchar(15) NOT NULL,
+  `phone` varchar(15) NOT NULL,
+  `fax` varchar(15) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `emp_id` (`emp_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
@@ -73,6 +73,8 @@ CREATE TABLE IF NOT EXISTS `employee` (
   `first_name` varchar(10) NOT NULL,
   `middle_name` varchar(10) NOT NULL,
   `last_name` varchar(10) NOT NULL,
+  `email` varchar(40) NOT NULL,
+  `password` varchar(20) NOT NULL,
   `prefix` varchar(3) NOT NULL,
   `gender` varchar(12) NOT NULL,
   `dob` date NOT NULL,

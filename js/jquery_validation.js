@@ -1,11 +1,16 @@
-var errors = 0;
-
 // jQuery validation
 $(document).ready(function()
 {
 	validation();	
 });
 
+/**
+* To start validation
+*
+* @access public
+* @param  void
+* @return void
+*/
 function validation()
 {
 	$('#sign_up_form').submit(function()
@@ -102,9 +107,15 @@ function validation()
 		});
 }
 
+/**
+* To check string contains alphabets only
+*
+* @access public
+* @param  object elem
+* @return boolean
+*/
 function pure_string(elem)
 {
-	//console.log(elem[0].name);
 	if(elem[0].name == 'middle_name' && elem.val().trim().length == 0)
 	{
 		elem.parent().children('.err_msg').html("");
@@ -127,6 +138,13 @@ function pure_string(elem)
 	}	
 }
 
+/**
+* To check string contains digits only
+*
+* @access public
+* @param  object elem
+* @return boolean
+*/
 function number_validation(elem)
 {
 	if(elem.val().trim().length == 0)
@@ -164,6 +182,13 @@ function number_validation(elem)
 	}
 }
 
+/**
+* To check string is alpha-numeric or not
+*
+* @access public
+* @param  object elem
+* @return boolean
+*/
 function alpha_num_validation(elem)
 {
 	if(elem.val().trim().length == 0)
@@ -183,6 +208,13 @@ function alpha_num_validation(elem)
 	}
 }
 
+/**
+* To check string is null or not
+*
+* @access public
+* @param  object elem
+* @return boolean
+*/
 function dob_validation(elem)
 {
 	if(elem.val().trim().length == 0)
@@ -197,6 +229,13 @@ function dob_validation(elem)
 	}
 }
 
+/**
+* To check for valid email id
+*
+* @access public
+* @param  object elem
+* @return boolean
+*/
 function email_validation(elem)
 {
 	if(elem.val().trim().length == 0)
@@ -217,6 +256,13 @@ function email_validation(elem)
 	}
 }
 
+/**
+* To check valid password length
+*
+* @access public
+* @param  object elem
+* @return boolean
+*/
 function password_validation(elem)
 {
 	if(elem.val().trim().length == 0)
