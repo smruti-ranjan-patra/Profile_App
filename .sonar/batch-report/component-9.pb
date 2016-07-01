@@ -1,0 +1,1 @@
+	config/photo_path.php 2phpX
