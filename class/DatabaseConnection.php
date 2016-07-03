@@ -177,7 +177,9 @@ class DatabaseConnection
 
 			if(!$result_employee)
 			{
-				echo "Data insertion into employee table unsuccessful";exit;
+				log_error('Data insertion in employee table');
+				echo "Data insertion into employee table unsuccessful";
+				exit;
 			}
 
 			return self::$conn;
@@ -199,6 +201,7 @@ class DatabaseConnection
 
 			if(!$result_address)
 			{
+				log_error('Data insertion in address table');
 				echo "Data insertion into address table unsuccessful";
 				exit;
 			}
