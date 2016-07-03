@@ -1,1 +1,0 @@
-details.php 2phpX¢
