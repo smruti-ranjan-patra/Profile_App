@@ -19,7 +19,7 @@ function validation()
 		text_elements = $('.text_field');
 		$.each(text_elements, function(index, value)
 		{
-			var a = pure_string($(value))
+			var a = strict_alphabet($(value))
 			if(a == false)
 			{
 				return_val_name = false;
@@ -68,7 +68,7 @@ function validation()
 
 	$('.text_field').on('keyup blur change', function()
 		{
-			pure_string($(this));
+			strict_alphabet($(this));
 		});
 
 	$('.number_field').on('keyup blur change', function()
@@ -114,7 +114,7 @@ function validation()
 * @param  object elem
 * @return boolean
 */
-function pure_string(elem)
+function strict_alphabet(elem)
 {
 	if(elem[0].name == 'middle_name' && elem.val().trim().length == 0)
 	{

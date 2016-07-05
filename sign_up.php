@@ -1,11 +1,5 @@
 <?php
-	// session_unset();
-	// session_destroy();
-	ini_set('display_errors', 1);
-	ini_set('display_startup_errors', 1);
-	error_reporting(E_ALL);
 	session_start();
-
 	$check_pic = 0;
 	require_once('config/states.php');
 	require_once('config/database.php');
@@ -24,7 +18,7 @@
 		foreach($st_list as $value)
 		{
 			?>
-			<option <?php if ($value == $data): ?>selected="selected"<?php endif ?> value ="<?php 
+			<option <?php if($value == $data): ?>selected="selected"<?php endif ?> value ="<?php 
 			echo $value ?>" >
 			<?php echo $value ?>
 			</option>
@@ -33,7 +27,7 @@
 	}
 	$check_box1 = $check_box2 = $check_box3 = $check_box4 = FALSE;
 
-	if (isset($_GET['id']) && !isset($_SESSION['id']))
+	if(isset($_GET['id']) && !isset($_SESSION['id']))
 	{
 		header("Location:sign_up.php");
 	}
@@ -65,17 +59,19 @@
 		}
 	}
 
-
-	if (isset($_GET['id']) || isset($_SESSION['id']))
+	if(isset($_GET['id']) || isset($_SESSION['id']))
 	{
 		$check_pic = 1;
-
 		$obj = DatabaseConnection::create_connection($db['master']);
-		if(isset($_SESSION['id']))
-			$row = $obj->select($_SESSION['id']);
 
+		if(isset($_SESSION['id']))
+		{
+			$row = $obj->select($_SESSION['id']);
+		}
 		else
+		{
 			$row = $obj->select($_GET['id']);
+		}
 
 		if(isset($row['comm_id']))
 		{
@@ -101,7 +97,7 @@
 					$check_box4 = TRUE;
 				}
 			}
-		}		
+		}
 	}
 	else
 	{
@@ -118,7 +114,18 @@
 <html>
 	<head>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Sign Up</title>
+		<?php
+
+		if(isset($_SESSION['id']))
+		{
+			echo "<title>Logged in</title>";
+		}
+		else
+		{
+			echo "<title>Sign Up</title>";
+		}
+
+		?>
 		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="css/form.css">
 		<script   src="https://code.jquery.com/jquery-3.0.0.min.js"   integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0="   crossorigin="anonymous"></script>
@@ -128,6 +135,7 @@
 
 	<!-- Navigation bar -->
 	<?php
+
 	if(isset($_SESSION['id']))
 	{
 		?>
@@ -331,7 +339,7 @@
 							?> >
 							<span class="text-danger err_msg" id="err_password"></span>
 							<?php
-							if (isset($_SESSION['error_array']['password']['msg']))
+							if(isset($_SESSION['error_array']['password']['msg']))
 							{
 								echo '<span class="text-danger">' . $_SESSION['error_array']
 								['password']['msg'] . "</span>"; 
@@ -1132,7 +1140,7 @@
 				<!-- Buttons -->
 				<div class="row form-group text-center">
 					<?php
-					if (!empty($_GET['id']))
+					if(!empty($_GET['id']))
 					{
 						echo '<button class="btn btn-primary"  type="submit" name="submit" 
 						value="update">Update</button>';

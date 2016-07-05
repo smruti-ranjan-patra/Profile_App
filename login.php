@@ -8,10 +8,10 @@ $errors = $validate_obj->validate_form('login');
 
 if($errors == 0)
 {	
-	header("Location:sign_up.php?id=".$_SESSION['id']);
+	header('Location:sign_up.php?id='.$_SESSION['id']);
 }
 else
 {
-	header("Location:login_form.php");
+	header('Location:login_form.php');
 }
 ?>

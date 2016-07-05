@@ -43,9 +43,9 @@ class Validation
 	{
 		if($param == 'submit')
 		{
-			$this->count += Validation::pure_string('first_name');
-			$this->count += Validation::pure_string('middle_name');
-			$this->count += Validation::pure_string('last_name');
+			$this->count += Validation::strict_alphabet('first_name');
+			$this->count += Validation::strict_alphabet('middle_name');
+			$this->count += Validation::strict_alphabet('last_name');
 			$this->count += Validation::email('email');
 			$this->count += Validation::password('password');
 			$this->count += Validation::radios('prefix');
@@ -55,13 +55,13 @@ class Validation
 			$this->count += Validation::radios('employment');
 			$this->count += Validation::employer('employer');
 			$this->count += Validation::alpha_numeric('r_street');
-			$this->count += Validation::pure_string('r_city');
+			$this->count += Validation::strict_alphabet('r_city');
 			$this->count += Validation::fields_with_empty('r_state');
 			$this->count += Validation::zip_code('r_zip');
 			$this->count += Validation::phone_fax('r_phone');
 			$this->count += Validation::phone_fax('r_fax');
 			$this->count += Validation::alpha_numeric('o_street');
-			$this->count += Validation::pure_string('o_city');
+			$this->count += Validation::strict_alphabet('o_city');
 			$this->count += Validation::fields_with_empty('o_state');
 			$this->count += Validation::zip_code('o_zip');
 			$this->count += Validation::phone_fax('o_phone');
@@ -82,12 +82,12 @@ class Validation
 	* @param  string $name
 	* @return integer $error
 	*/
-	public static function pure_string($name)
+	public static function strict_alphabet($name)
 	{
 		
 		$error = 0;
 		$form_data = static::$form_data;
-		// echo static::$form_data[$name];exit;
+
 		if(isset($form_data[$name]) && !empty($form_data[$name]))
 		{
 			$name_value = Validation::formatted($form_data[$name]);
@@ -110,7 +110,7 @@ class Validation
 			$_SESSION['error_array'][$name]['msg'] = static::$err[$name];			
 			$error = 1;
 		}
-		// print_r($_SESSION);exit;
+
 		return $error;
 	}
 
@@ -462,7 +462,6 @@ class Validation
 
 			if($file_size > 0) 
 			{
-				// $pic_update = TRUE;
 				$file_tmp = $_FILES['pic']['tmp_name'];
 				$file_type= $_FILES['pic']['type'];
 
@@ -489,11 +488,8 @@ class Validation
 					move_uploaded_file($file_tmp, PIC_PATH.$file_name);
 					$pic_return_data["pic_update"] = TRUE;
 				}
-				else
-				{
-					//print_r($errors);
-				}
 			}
+			
 			$_SESSION['error_array']['photo']['val'] = $file_name;
 			$_SESSION['error_array']['photo']['msg'] = '*Please Provide a Photo';
 		}
@@ -522,7 +518,7 @@ class Validation
 			!empty($_POST['password']))
 		{
 			$obj = DatabaseConnection::create_connection($db['master']);
-			$rows = $obj->select_login($_POST['email'], $_POST['password']);
+			$rows = $obj->select_email($_POST['email'], 0, $_POST['password']);
 			$rnum = DatabaseConnection::db_num_rows($rows);
 			$fetch_data = $obj->db_fetch_array($rows);
 			

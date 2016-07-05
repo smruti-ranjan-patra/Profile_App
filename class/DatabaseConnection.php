@@ -18,8 +18,8 @@ class DatabaseConnection
 	* Constructor to create a database connection
 	*
 	* @access public
-	* @param  void
-	* @return void[]
+	* @param  array $db_param
+	* @return void
 	*/
 	private function __construct($db_param)
 	{
@@ -28,7 +28,7 @@ class DatabaseConnection
 
 		if(mysqli_connect_errno(self::$conn))
 		{
-			log_error('Creation of databse connection');
+			log_error('Failed to create database connection');
 			die ('Failed to connect to Database, Please try later :' . mysqli_connect_error());
 		}
 	}
@@ -37,7 +37,7 @@ class DatabaseConnection
 	* To check of exixting connection object
 	*
 	* @access public
-	* @param  void
+	* @param  array $db_param
 	* @return object
 	*/
 	public static function create_connection($db_param)
@@ -67,12 +67,12 @@ class DatabaseConnection
 	* To fetch executed select query
 	*
 	* @access public
-	* @param  object $passed_object
+	* @param  object $result_object
 	* @return object
 	*/
-	public static function db_fetch_array($passed_object)
+	public static function db_fetch_array($result_object)
 	{
-		$result = mysqli_fetch_array($passed_object, MYSQLI_ASSOC);
+		$result = mysqli_fetch_array($result_object, MYSQLI_ASSOC);
 		return $result;
 	}
 
@@ -120,45 +120,52 @@ class DatabaseConnection
 	* To select the desired eamil from the database
 	*
 	* @access public
-	* @param  integer $id
+	* @param  string $email
+	* @param  integer $emp_id
+	* @param  string $password
 	* @return object
 	*/
-	public function select_email($email, $emp_id = 0)
+	public function select_email($email, $emp_id = 0, $password = '')
 	{
 		
 		$q_fetch = "SELECT * FROM employee WHERE email = '{$email}'";
 
-		if($emp_id > 0)
+		if($password != '')
 		{
-			$q_fetch .= "id != {$emp_id}";
+			$q_fetch .= "AND password = '{$password}'";
+		}
+		elseif($emp_id > 0)
+		{
+			$q_fetch .= "AND id != {$emp_id}";
 		}
 
 		$result = DatabaseConnection::db_query($q_fetch);
 		return $result;
 	}
 
-	/**
-	* To select the desired eamil from the database
-	*
-	* @access public
-	* @param  integer $id
-	* @return object
-	*/
-	public function select_login($email, $password)
-	{
-		$q_fetch = "SELECT * FROM employee WHERE email = '{$email}' AND password = '{$password}'";
-		$result = DatabaseConnection::db_query($q_fetch);
-		return $result;
-	}
+	// /**
+	// * To select the desired eamil from the database
+	// *
+	// * @access public
+	// * @param  integer $id
+	// * @return object
+	// */
+	// public function select_login($email, $password)
+	// {
+	// 	$q_fetch = "SELECT * FROM employee WHERE email = '{$email}' AND password = '{$password}'";
+	// 	$result = DatabaseConnection::db_query($q_fetch);
+	// 	return $result;
+	// }
 
 	/**
 	* To insert data into the database
 	*
 	* @access public
-	* @param  string $table_name, array $data_array
+	* @param  string $table_name
+	* @param  array $data_arraye
 	* @return object
 	*/
-	public function insert_full($table_name, $data_array)
+	public function insert_data($table_name, $data_array)
 	{
 		if($table_name == 'employee')
 		{
@@ -214,21 +221,27 @@ class DatabaseConnection
 	* To delete data from the database
 	*
 	* @access public
-	* @param  string $table_name, integer $id
+	* @param  integer $id
 	* @return void
 	*/
-	public function delete_from_table($table_name, $id)
+	public function delete_employee($id)
 	{
-		if($table_name == 'address')
-		{
-			$del_add = "DELETE FROM $table_name WHERE emp_id = " . $id;
-			DatabaseConnection::db_query($del_add);
-		}
-		elseif($table_name == 'employee')
-		{
-			$del_emp = "DELETE FROM $table_name WHERE id = " . $id;
-			DatabaseConnection::db_query($del_emp);
-		}
+		$del_query = "DELETE FROM `address` WHERE emp_id = " . $id;
+		DatabaseConnection::db_query($del_query);
+
+		$del_query = "DELETE FROM `employee` WHERE id = " . $id;
+		DatabaseConnection::db_query($del_query);
+
+		// if($table_name == 'address')
+		// {
+		// 	$del_add = "DELETE FROM `address` WHERE emp_id = " . $id;
+		// 	DatabaseConnection::db_query($del_add);
+		// }
+		// elseif($table_name == 'employee')
+		// {
+		// 	$del_emp = "DELETE FROM $table_name WHERE id = " . $id;
+		// 	DatabaseConnection::db_query($del_emp);
+		// }
 	}
 
 	/**
@@ -243,8 +256,12 @@ class DatabaseConnection
 		$sel_pic = "SELECT photo FROM employee WHERE id = " . $id;
 		$pic_object = DatabaseConnection::db_query($sel_pic);
 		$row = DatabaseConnection::db_fetch_array($pic_object);
-		$pic_location = PIC_PATH . $row['photo'];
-		unlink($pic_location);
+		$pic_name = PIC_PATH . $row['photo'];
+
+		if(file_exists($pic_name))
+		{
+			unlink($pic_name);
+		}
 	}
 
 	/**
@@ -254,7 +271,7 @@ class DatabaseConnection
 	* @param  void
 	* @return object
 	*/
-	public function display_list()
+	public function employee_list()
 	{
 		$q_list = "SELECT emp.prefix AS prefix, 
 			CONCAT(emp.first_name,' ', emp.middle_name,' ', emp.last_name) AS name, 
@@ -273,6 +290,14 @@ class DatabaseConnection
 		return $result_list;
 	}
 
+	/**
+	* To select communication medium
+	*
+	* @access public
+	* @param  string $table_name
+	* @param  string $value
+	* @return object
+	*/
 	public function select_comm_field($value)
 	{
 		$q_comm = "SELECT GROUP_CONCAT(type SEPARATOR ', ') FROM `communication_medium` 
@@ -286,7 +311,8 @@ class DatabaseConnection
 	* To display the employee list
 	*
 	* @access public
-	* @param  string $table_name, array $data_array
+	* @param  string $table_name
+	* @param  array $data_array
 	* @return void
 	*/
 	public function update_table($table_name, $data_array)

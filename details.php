@@ -1,13 +1,10 @@
 <?php
 session_start();
+
 if(!isset($_SESSION['id']))
 {
-	header("Location:home_default.php");
+	header('Location:home_default.php');
 }
-// session_start();
-// ini_set('display_errors', 1);
-// ini_set('display_startup_errors', 1);
-// error_reporting(E_ALL);
 
 ?>
 <!DOCTYPE html>
@@ -31,11 +28,11 @@ if(!isset($_SESSION['id']))
 	<?php
 
 		require_once('config/database.php');
-		require_once('config/photo_path.php');
+		require_once('config/constants.php');
 		require_once('class/DatabaseConnection.php');
 
 		$obj = DatabaseConnection::create_connection($db['master']);
-		$result_list = $obj->display_list();
+		$result_list = $obj->employee_list();
 		$rnum = 0;
 		$rnum = DatabaseConnection::db_num_rows($result_list);
 		if($rnum == 0)
@@ -74,14 +71,10 @@ if(!isset($_SESSION['id']))
 						echo "<td>".$sl++."</td>";
 						foreach ($row as $key => $value)
 						{
-							if('comm_id' == $key)
+							if($key == 'comm_id')
 							{
-								// print_r($obj);exit;
 								$result_list_comm = $obj->select_comm_field($value);
 
-								// $q_comm = "SELECT GROUP_CONCAT(type SEPARATOR ', ') FROM 
-								// `communication_medium` WHERE id IN ($value)";
-								// $result_4 = mysqli_query($conn, $q_comm);
 								while ($row1 = DatabaseConnection::db_fetch_array($result_list_comm))
 								{
 									foreach ($row1 as $key => $value) 
@@ -90,11 +83,11 @@ if(!isset($_SESSION['id']))
 									}
 								}
 							}
-							elseif('dob' == $key)
+							elseif($key == 'dob')
 							{
 								echo "<td>".date("d-M-Y", strtotime($value))."</td>";
 							}
-							elseif('id' != $key && 'photo' != $key)
+							elseif($key != 'id' && $key != 'photo')
 							{
 								echo "<td>".$value."</td>";
 							}
