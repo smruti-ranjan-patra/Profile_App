@@ -1036,10 +1036,17 @@
 								echo "<img src=" . PIC_PATH . $_SESSION['error_array']['photo']
 								['val'] . " width=200 height=200>";
 							}
-							elseif($check_pic == 1)
+							elseif($_SESSION['error_array']['photo']['val'])
 							{
-							  echo "<img src=" . PIC_PATH . $row['photo'] . " width=200 height=200>";
+								$pic_name = PIC_PATH . $details_row['photo'];
+								if(file_exists($pic_name))
+								{
+									echo '<td><img src="' . $pic_name . '" width=200 height=200</td>';
+								}
+							  // echo "<img src=" . PIC_PATH . $row['photo'] . " width=200 height=200>";
 							}
+							else
+							{}
 							if(isset($_SESSION['error_array']['photo']['msg']))
 							{
 								echo '<span class="text-danger">' . $_SESSION['error_array']

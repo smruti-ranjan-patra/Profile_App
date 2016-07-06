@@ -1,5 +1,6 @@
 <?php
-
+ 
+ // Include the required files
 require_once('config/error_messages.php');
 require_once('class/DatabaseConnection.php');
 require_once('config/constants.php');
@@ -211,6 +212,20 @@ class Validation
 	* @param  string $code
 	* @return integer $error
 	*/
+// number('zip');
+	// number('phone', 7, 12)
+	public static function number($field, $min_length='', $max_length=6)
+	{
+		if ($min_length)
+		{
+			// Case range
+		}
+		else
+		{
+
+		}
+	}
+
 	public static function zip_code($code)
 	{
 		$error = 0;

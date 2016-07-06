@@ -4,10 +4,12 @@ require_once('config/error_messages.php');
 require_once('config/constants.php');
 require_once('error_helper.php');
 
+
 /**
 * Super Class
 *
 * @author Smruti Ranjan
+
 */
 class DatabaseConnection
 {
@@ -96,9 +98,9 @@ class DatabaseConnection
 	* @param  integer $id
 	* @return object
 	*/
-	public function select($id)
+	public function select($id = 0, $name = "", $fields = "", $type = "")
 	{
-		$q_fetch = "SELECT emp.first_name AS f_name, emp.middle_name AS m_name, 
+		$q_fetch = "SELECT emp.id AS id, emp.first_name AS f_name, emp.middle_name AS m_name, 
 			emp.last_name AS l_name, emp.email AS email, emp.prefix AS prefix, emp.gender AS gender, 
 			emp.dob AS dob, emp.marital_status AS marital_status, emp.employment AS employment, 
 			emp.employer AS employer, res.street AS r_street, res.city AS r_city, 
@@ -108,12 +110,27 @@ class DatabaseConnection
 			emp.extra_note AS notes, emp.comm_id AS comm_id 
 			FROM employee AS emp 
 			INNER JOIN address AS res ON (emp.id = res.emp_id AND res.address_type = 'residence')
-			INNER JOIN address AS off ON (emp.id = off.emp_id AND off.address_type = 'office')
-			WHERE emp.id = $id";
+			INNER JOIN address AS off ON (emp.id = off.emp_id AND off.address_type = 'office')";
+
+		if($id)
+		{
+			$q_fetch .= "WHERE emp.id = $id";
+			$result_select = DatabaseConnection::db_query($q_fetch);
+			$row = DatabaseConnection::db_fetch_array($result_select);
+			return $row;
+		}
+		elseif($fields)
+		{
+			$q_fetch .= "WHERE first_name LIKE '%{$name}%' ORDER BY $fields $type" ;
+		}
+		elseif($name)
+		{
+			$q_fetch .= "WHERE first_name LIKE '%{$name}%'" ;
+		}
 
 		$result_select = DatabaseConnection::db_query($q_fetch);
-		$row = DatabaseConnection::db_fetch_array($result_select);
-		return $row;
+		//echo $q_fetch; exit;
+		return $result_select;
 	}
 
 	/**
@@ -142,20 +159,6 @@ class DatabaseConnection
 		$result = DatabaseConnection::db_query($q_fetch);
 		return $result;
 	}
-
-	// /**
-	// * To select the desired eamil from the database
-	// *
-	// * @access public
-	// * @param  integer $id
-	// * @return object
-	// */
-	// public function select_login($email, $password)
-	// {
-	// 	$q_fetch = "SELECT * FROM employee WHERE email = '{$email}' AND password = '{$password}'";
-	// 	$result = DatabaseConnection::db_query($q_fetch);
-	// 	return $result;
-	// }
 
 	/**
 	* To insert data into the database
@@ -231,17 +234,6 @@ class DatabaseConnection
 
 		$del_query = "DELETE FROM `employee` WHERE id = " . $id;
 		DatabaseConnection::db_query($del_query);
-
-		// if($table_name == 'address')
-		// {
-		// 	$del_add = "DELETE FROM `address` WHERE emp_id = " . $id;
-		// 	DatabaseConnection::db_query($del_add);
-		// }
-		// elseif($table_name == 'employee')
-		// {
-		// 	$del_emp = "DELETE FROM $table_name WHERE id = " . $id;
-		// 	DatabaseConnection::db_query($del_emp);
-		// }
 	}
 
 	/**
@@ -265,32 +257,6 @@ class DatabaseConnection
 	}
 
 	/**
-	* To display the employee list
-	*
-	* @access public
-	* @param  void
-	* @return object
-	*/
-	public function employee_list()
-	{
-		$q_list = "SELECT emp.prefix AS prefix, 
-			CONCAT(emp.first_name,' ', emp.middle_name,' ', emp.last_name) AS name, 
-			emp.gender AS gender, emp.dob AS dob, 
-			emp.marital_status AS marital_status, emp.employment AS employment, 
-			emp.employer AS employer, 
-			CONCAT(res.street, ', ', res.city, ', ', res.state, ', ', res.zip, ', ', 
-			res.phone, ', ', res.fax) AS res_add, 
-			CONCAT(off.street, ', ', off.city, ', ', off.state, ', ', off.zip, ', ', 
-			off.phone, ', ', off.fax) AS off_add, emp.comm_id AS comm_id, emp.id AS id, 
-			emp.photo AS photo from employee AS emp 
-			INNER JOIN address AS res ON (emp.id = res.emp_id AND res.address_type = 'residence')
-			INNER JOIN address AS off ON (emp.id = off.emp_id AND off.address_type = 'office')";
-
-		$result_list = DatabaseConnection::db_query($q_list);
-		return $result_list;
-	}
-
-	/**
 	* To select communication medium
 	*
 	* @access public
@@ -300,8 +266,8 @@ class DatabaseConnection
 	*/
 	public function select_comm_field($value)
 	{
-		$q_comm = "SELECT GROUP_CONCAT(type SEPARATOR ', ') FROM `communication_medium` 
-		WHERE id IN ($value)";
+		$q_comm = "SELECT GROUP_CONCAT(type SEPARATOR ', ') AS comm FROM `communication_medium` 
+			WHERE id IN ($value)";
 
 		$result = DatabaseConnection::db_query($q_comm);
 		return $result;

@@ -157,7 +157,7 @@ function number_validation(elem)
 	{
 		if(!((/^(\d{6})/).test(elem.val().trim()) && elem.val().trim().length == 6))
 		{
-			elem.parent().children('.err_msg').html("*Provide a Numeric value of length ");
+			elem.parent().children('.err_msg').html("*Provide a Numeric value of length 6");
 			return false;
 		}
 		else

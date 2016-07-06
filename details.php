@@ -13,6 +13,8 @@ if(!isset($_SESSION['id']))
 	<title>Display Page</title>
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="css/form.css">
+	<script   src="https://code.jquery.com/jquery-3.0.0.min.js"   integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0="   crossorigin="anonymous"></script>
+	<script type="text/javascript" src="js/ajax.js"></script>
 </head>
 <body>
 	<!-- Navigation bar -->
@@ -25,6 +27,19 @@ if(!isset($_SESSION['id']))
 			</ul>
 		</div>
 	</nav>
+	<form role="form row" id="display_submit">
+		<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1 col-lg-offset-2">
+			<label for="name">Name:</label>
+		</div>
+		<div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
+			<input type="text" name="name" id="name" class="form-control">
+		</div>
+		<div>
+		<button class="glyphicon glyphicon-search"  type="submit" name="submit" 
+			value="submit"></button>
+		</div>
+	</form>
+
 	<?php
 
 		require_once('config/database.php');
@@ -32,124 +47,11 @@ if(!isset($_SESSION['id']))
 		require_once('class/DatabaseConnection.php');
 
 		$obj = DatabaseConnection::create_connection($db['master']);
-		$result_list = $obj->employee_list();
-		$rnum = 0;
-		$rnum = DatabaseConnection::db_num_rows($result_list);
-		if($rnum == 0)
-		{
-			echo "<h3>No Record Present</h3>";
-		}
-		else
-		{?>
-			<h2><u>Employee Details :-</u></h2>
-			<div class="table-responsive">
-			<table class="table table-bordered table-hover">
-				<thead>
-					<tr>
-						<th>Sl</th>
-						<th>Prefix</th>
-						<th>Name</th>
-						<th>Gender</th>
-						<th>DOB</th>
-						<th>Marital</th>
-						<th>Employment</th>
-						<th>Employer</th>
-						<th>Residence</th>
-						<th>Office</th>
-						<th>Communication</th>
-						<th>Photo</th>
-						<th>Edit</th>
-						<th>Delete</th>
-					</tr>
-				</thead>
-				<tbody>
-				<?php
-					$sl = 1;
-					while ($row = DatabaseConnection::db_fetch_array($result_list))
-					{
-						echo "<tr>";
-						echo "<td>".$sl++."</td>";
-						foreach ($row as $key => $value)
-						{
-							if($key == 'comm_id')
-							{
-								$result_list_comm = $obj->select_comm_field($value);
+		$details_result = $obj->select();
+	?>
 
-								while ($row1 = DatabaseConnection::db_fetch_array($result_list_comm))
-								{
-									foreach ($row1 as $key => $value) 
-									{
-										echo "<td>".$value."</td>";
-									}
-								}
-							}
-							elseif($key == 'dob')
-							{
-								echo "<td>".date("d-M-Y", strtotime($value))."</td>";
-							}
-							elseif($key != 'id' && $key != 'photo')
-							{
-								echo "<td>".$value."</td>";
-							}
-						}
-						if($row['photo'])
-						{
-							$pic_name = PIC_PATH.$row['photo'];
-
-							if(file_exists($pic_name))
-							{
-								echo '<td><img src="'.$pic_name.'" width=100 height=100</td>';
-							}
-							else
-							{
-								echo "<td>No image found</td>";
-							}
-						}
-						elseif($row['gender'] == 'Male')
-						{
-							echo '<td><img src="default_images/default_male_pic.jpg" width=100 
-							height=100</td>';
-						}
-						elseif($row['gender'] == 'Female')
-						{
-							echo '<td><img src="default_images/default_female_pic.jpg" width=100 
-							height=100</td>';
-						}
-						else
-						{
-							echo '<td><img src="default_images/default_others_pic.jpg" width=100 
-							height=100</td>';
-						}
-						?>
-						<td>
-						<?php
-						if($row['id'] == $_SESSION['id'])
-						{
-							?>
-							<a href="sign_up.php?id=<?php echo $row['id'] ?>">
-							<span class="glyphicon glyphicon-pencil" ></span></a>
-							<?php
-						}?>						
-						</td>
-						<td>
-						<?php
-						if($row['id'] == $_SESSION['id'])
-						{
-							?>
-							<a href="delete.php?id=<?php echo $row['id']?>">
-							<span class="glyphicon glyphicon-remove" ></span></a>
-							<?php
-						}?>
-						</td>
-						<?php
-						echo "</tr>";
-					}
-				?>
-				</tbody>
-			</table>
-			</div>
-		<?php
-		}
-		?>
+	<h2><u>Employee Details :-</u></h2>
+	<div class="table-responsive">
+	</div>
 </body>
 </html>
