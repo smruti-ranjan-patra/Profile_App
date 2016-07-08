@@ -103,8 +103,7 @@ class DatabaseConnection
 	*/
 	public function select($id = 0, $name = "", $fields = "", $order_type = "", $page = "")
 	{
-		$fixed_records = 2;
-		$start_limit = ($page - 1) * $fixed_records;
+		$start_limit = ($page - 1) * RECORDS_PER_PAGE;
 		$q_fetch = "SELECT emp.id AS id, emp.first_name AS f_name, emp.middle_name AS m_name, 
 			emp.last_name AS l_name, emp.email AS email, emp.prefix AS prefix, emp.gender AS gender, 
 			emp.dob AS dob, emp.marital_status AS marital_status, emp.employment AS employment, 
@@ -133,7 +132,7 @@ class DatabaseConnection
 			$q_fetch .= " WHERE first_name LIKE '%{$name}%'" ;
 		}
 
-		$q_fetch .= " LIMIT $start_limit, $fixed_records";
+		$q_fetch .= " LIMIT $start_limit, " . RECORDS_PER_PAGE;
 		$result_select = DatabaseConnection::db_query($q_fetch);
 		return $result_select;
 	}
@@ -318,6 +317,7 @@ class DatabaseConnection
 	*/
 	public function update_table($table_name, $data_array)
 	{ 
+
 		if($table_name == 'address')
 		{
 			$update_add_res = "UPDATE $table_name 

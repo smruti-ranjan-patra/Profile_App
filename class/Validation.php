@@ -1,10 +1,13 @@
 <?php
- 
- // Include the required files
+
 require_once('config/error_messages.php');
 require_once('class/DatabaseConnection.php');
 require_once('config/constants.php');
 require_once('config/database.php');
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 /**
 * Super Class
@@ -58,15 +61,15 @@ class Validation
 			$this->count += Validation::alpha_numeric('r_street');
 			$this->count += Validation::strict_alphabet('r_city');
 			$this->count += Validation::fields_with_empty('r_state');
-			$this->count += Validation::zip_code('r_zip');
-			$this->count += Validation::phone_fax('r_phone');
-			$this->count += Validation::phone_fax('r_fax');
+			$this->count += Validation::number('r_zip');
+			$this->count += Validation::number('r_phone', 7, 12);
+			$this->count += Validation::number('r_fax', 7, 12);
 			$this->count += Validation::alpha_numeric('o_street');
 			$this->count += Validation::strict_alphabet('o_city');
 			$this->count += Validation::fields_with_empty('o_state');
-			$this->count += Validation::zip_code('o_zip');
-			$this->count += Validation::phone_fax('o_phone');
-			$this->count += Validation::phone_fax('o_fax');
+			$this->count += Validation::number('o_zip');
+			$this->count += Validation::number('o_phone', 7, 12);
+			$this->count += Validation::number('o_fax', 7, 12);
 		}
 		elseif($param == 'login')
 		{
@@ -206,89 +209,50 @@ class Validation
 	}
 
 	/**
-	* Validation for only digits for zip code
+	* Validation for all Numeric fields
 	*
 	* @access public
-	* @param  string $code
+	* @param  string $field
+	* @param  integer $min_length
+	* @param  integer $max_length
 	* @return integer $error
 	*/
-// number('zip');
-	// number('phone', 7, 12)
-	public static function number($field, $min_length='', $max_length=6)
+	public static function number($field, $min_length = '', $max_length = 6)
 	{
+		$error = 0;
+		$form_data = static::$form_data;
+
 		if ($min_length)
 		{
-			// Case range
+			$regex_str = '/^(\d{' . $min_length . ',' . $max_length . '})$/';
+			$error_message = '*Provide a Numeric value between 7 to 12 digits';
 		}
 		else
 		{
-
+			$regex_str = '/^(\d{' . $max_length . '})$/';
+			$error_message = '*Provide a Numeric value of length 6';
 		}
-	}
 
-	public static function zip_code($code)
-	{
-		$error = 0;
-		$form_data = static::$form_data;
-
-		if(isset($form_data[$code]) && !empty($form_data[$code]))
+		if(isset($form_data[$field]) && !empty($form_data[$field]))
 		{
-			$code_value = Validation::formatted($form_data[$code]);
-			$num_length = strlen((string)$code_value);
-			if(ctype_digit($code_value) && $num_length == 6)
+			$field_value = Validation::formatted($form_data[$field]);
+
+			if(preg_match($regex_str, $field_value))
 			{
-				$_SESSION['error_array'][$code]['val'] = $code_value;
-				$_SESSION['error_array'][$code]['msg'] = '';
+				$_SESSION['error_array'][$field]['val'] = $field_value;
+				$_SESSION['error_array'][$field]['msg'] = '';
 			}
 			else
 			{
-				$_SESSION['error_array'][$code]['val'] = $code_value;
-				$_SESSION['error_array'][$code]['msg'] = '*Provide a Numeric value of length 6';
+				$_SESSION['error_array'][$field]['val'] = $field_value;
+				$_SESSION['error_array'][$field]['msg'] = $error_message;
 				$error = 1;
 			}
 		}
 		else
 		{
-			$_SESSION['error_array'][$code]['val'] = '';
-			$_SESSION['error_array'][$code]['msg'] = static::$err[$code];
-			$error = 1;
-		}
-		return $error;
-	}
-
-	/**
-	* Validation for only digits for phone number and fax
-	*
-	* @access public
-	* @param  string $number
-	* @return integer $error
-	*/
-	public static function phone_fax($number)
-	{
-		$error = 0;
-		$form_data = static::$form_data;
-
-		if(isset($form_data[$number]) && !empty($form_data[$number]))
-		{
-			$number_value = Validation::formatted($form_data[$number]);
-			$num_length = strlen((string)$number_value);
-			if(ctype_digit($number_value) && $num_length >= 7 && $num_length <= 12)
-			{
-				$_SESSION['error_array'][$number]['val'] = $number_value;
-				$_SESSION['error_array'][$number]['msg'] = '';
-			}
-			else
-			{
-				$_SESSION['error_array'][$number]['val'] = $number_value;
-				$_SESSION['error_array'][$number]['msg'] = '*Provide a Numeric value between 7 to 
-				12 digits';
-				$error = 1;
-			}
-		}
-		else
-		{
-			$_SESSION['error_array'][$number]['val'] = '';
-			$_SESSION['error_array'][$number]['msg'] = static::$err[$number];
+			$_SESSION['error_array'][$field]['val'] = '';
+			$_SESSION['error_array'][$field]['msg'] = static::$err[$field];
 			$error = 1;
 		}
 		return $error;
@@ -308,7 +272,7 @@ class Validation
 
 		if(isset($form_data[$emp]))
 		{
-			$emp_value = $form_data[$emp];
+			$emp_value = Validation::formatted($form_data[$emp]);
 			$_SESSION['error_array'][$emp]['val'] = $emp_value;
 			$_SESSION['error_array'][$emp]['msg'] = '';
 		}
@@ -567,7 +531,7 @@ class Validation
 	{
 		$data = trim($data);
 		$data = stripslashes($data);
-		$data = htmlspecialchars($data);
+		$data = htmlentities($data, ENT_QUOTES);
 		return $data;
 	}
 }

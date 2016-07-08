@@ -1,7 +1,6 @@
 var page = 1;
 var c_name;
 var obj;
-var list_size = 2;
 
 $(document).ready(function()
 {
@@ -39,10 +38,6 @@ function event_handler()
 	{
 		response($("#name").val(), c_name, obj, $(this).text());
 	});
-	// $('#current_button').on('click', function()
-	// {
-	// 	response($("#name").text(),'', obj, $(this).text());
-	// });
 	$('#next_button').on('click', function()
 	{
 		response($("#name").val(), c_name, obj, $(this).text());
@@ -78,6 +73,13 @@ function response(input_name = "", column_name = "", ob = "", page_no = 1)
 		dataType : 'JSON',
 		success: function(employee)
 		{
+			if(employee.err_val == 1)
+			{
+				alert(employee.err_msg);
+				location.reload(true);
+				return;
+			}
+
 			var display_string = "";
 			var page_string = "";
 
@@ -91,6 +93,7 @@ function response(input_name = "", column_name = "", ob = "", page_no = 1)
 			}
 			else
 			{
+				$('h2').html('<u>Employee Details :-</u>');
 				display_string += '<table class="table table-bordered table-hover"><thead><tr><th>Sl</th><th>Prefix</th>';
 				var name_order_type = 'order_asc';
 				var gender_order_type = 'order_asc';

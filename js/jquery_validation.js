@@ -16,7 +16,7 @@ function validation()
 	$('#sign_up_form').submit(function()
 	{
 		var return_val_name = true;
-		text_elements = $('.text_field');
+		var text_elements = $('.text_field');
 		$.each(text_elements, function(index, value)
 		{
 			var a = strict_alphabet($(value))
@@ -28,7 +28,7 @@ function validation()
 		});
 
 		var return_val_num = true;
-		number_elements = $('.number_field');
+		var number_elements = $('.number_field');
 		$.each(number_elements, function(index, value)
 		{
 			var a = number_validation($(value))
@@ -40,7 +40,7 @@ function validation()
 		});
 
 		var return_val_alpha_num = true;
-		alpha_num_elements = $('.alpha_numeric');
+		var alpha_num_elements = $('.alpha_numeric');
 		$.each(alpha_num_elements, function(index, value)
 		{
 			var a = alpha_num_validation($(value))
@@ -51,9 +51,9 @@ function validation()
 			}
 		});
 
-		return_val_dob = dob_validation($('.dob'));
-		reurn_val_email = email_validation($('.email'));
-		reurn_val_pwd = password_validation($('.password'));
+		var return_val_dob = dob_validation($('.dob'));
+		var reurn_val_email = email_validation($('.email'));
+		var reurn_val_pwd = password_validation($('.password'));
 
 		return (return_val_name && return_val_num && return_val_alpha_num && return_val_dob && 
 			reurn_val_email && reurn_val_pwd);
@@ -155,7 +155,7 @@ function number_validation(elem)
 	
 	if(elem[0].name == 'r_zip' || elem[0].name == 'o_zip')
 	{
-		if(!((/^(\d{6})/).test(elem.val().trim()) && elem.val().trim().length == 6))
+		if(!((/^(\d{6})$/).test(elem.val().trim())))
 		{
 			elem.parent().children('.err_msg').html("*Provide a Numeric value of length 6");
 			return false;
@@ -166,11 +166,10 @@ function number_validation(elem)
 			return true;
 		}
 	}
-	//elem[0].name is (r_phone or r_fax or o_phone or o_fax)
+	//for residence phone/fax or office phone/fax
 	else 
 	{
-		if(!((/^(\d{7,12})$/).test(elem.val().trim()) && elem.val().trim().length >= 7 && 
-			elem.val().trim().length <= 12))
+		if(!((/^(\d{7,12})$/).test(elem.val().trim())))
 		{
 			elem.parent().children('.err_msg').html("*Provide a Numeric value of length \
 				between 7 and 12 !");

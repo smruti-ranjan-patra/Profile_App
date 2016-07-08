@@ -4,6 +4,12 @@ require_once('config/database.php');
 require_once('config/constants.php');
 require_once('class/DatabaseConnection.php');
 
+if(!isset($_SESSION['id']))
+{
+	echo '{"err_msg" : "Please Login", "err_val" : "1"}';
+	exit();
+}
+
 $obj = DatabaseConnection::create_connection($db['master']);
 
 $page = $_POST['page'];

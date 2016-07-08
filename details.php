@@ -1,4 +1,5 @@
 <?php
+require_once('config/constants.php');
 session_start();
 
 if(!isset($_SESSION['id']))
@@ -15,6 +16,9 @@ if(!isset($_SESSION['id']))
 	<link rel="stylesheet" type="text/css" href="css/form.css">
 	<script   src="https://code.jquery.com/jquery-3.0.0.min.js"   integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0="   crossorigin="anonymous"></script>
 	<script type="text/javascript" src="js/ajax.js"></script>
+	<script type="text/javascript">
+		var list_size = <?php echo RECORDS_PER_PAGE; ?>;
+	</script>
 </head>
 <body>
 	<!-- Navigation bar -->

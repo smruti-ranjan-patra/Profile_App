@@ -185,11 +185,17 @@
 				<input type="text" name="edit_id" hidden value="
 				<?php
 				if(isset($_GET['id']))
+				{
 					echo $_GET['id'];
+				}
 				elseif(isset($_SESSION['id']))
+				{
 					echo $_SESSION['id'];
+				}
 				else
+				{
 					echo 0;
+				}
 				?>">
 
 				<fieldset>
