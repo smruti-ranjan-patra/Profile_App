@@ -29,7 +29,7 @@ if(!isset($_SESSION['id']))
 	</nav>
 	<form role="form row" id="display_submit">
 		<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1 col-lg-offset-2">
-			<label for="name">Name:</label>
+			<label for="name">First Name:</label>
 		</div>
 		<div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
 			<input type="text" name="name" id="name" class="form-control">
@@ -40,18 +40,10 @@ if(!isset($_SESSION['id']))
 		</div>
 	</form>
 
-	<?php
-
-		require_once('config/database.php');
-		require_once('config/constants.php');
-		require_once('class/DatabaseConnection.php');
-
-		$obj = DatabaseConnection::create_connection($db['master']);
-		$details_result = $obj->select();
-	?>
-
 	<h2><u>Employee Details :-</u></h2>
 	<div class="table-responsive">
+	</div>
+	<div class="page_numbers">
 	</div>
 </body>
 </html>

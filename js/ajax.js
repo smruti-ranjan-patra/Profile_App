@@ -1,3 +1,7 @@
+var page = 1;
+var c_name;
+var obj;
+
 $(document).ready(function()
 {
 	response();
@@ -22,37 +26,36 @@ function event_handler()
 	$('#name_column').on('click', function()
 	{
 		response($("#name").val(),'first_name', this);
-		changeClass(this);
 	});
 	$('#gender_column').on('click', function()
 	{
 		response($("#name").val(),'gender', this);
-		changeClass(this);
 	});
 	$('#dob_column').on('click', function()
 	{
 		response($("#name").val(),'dob', this);
-		changeClass(this);
+	});
+	$('#prev_button').on('click', function()
+	{
+		response($("#name").text(), c_name, obj, $(this).text());
+	});
+	// $('#current_button').on('click', function()
+	// {
+	// 	response($("#name").text(),'', obj, $(this).text());
+	// });
+	$('#next_button').on('click', function()
+	{
+		response($("#name").text(), c_name, obj, $(this).text());
 	});
 }
 
-function changeClass(obj)
-{
-	var currentClass = $(obj).prop('class');
-	if(currentClass == 'order_asc')
-	{
-		$(obj).removeClass('order_asc').addClass('order_desc');
-	}
-	else
-	{
-		$(obj).removeClass('order_desc').addClass('order_asc');
-	}
-}
-
-function response(input_name = "", column_name = "", obj = "")
+function response(input_name = "", column_name = "", ob = "", page_no = 1)
 {
 	var order_type = "";
-	if($(obj).prop('class') == 'order_asc')
+	c_name = column_name;
+	obj = ob;
+
+	if($(ob).prop('class') == 'order_asc')
 	{
 		order_type = 'ASC';
 	}
@@ -67,53 +70,83 @@ function response(input_name = "", column_name = "", obj = "")
 		data:
 		{
 			name: input_name,
-			fields: column_name,
-			type: order_type
+			fields: c_name,
+			type: order_type,
+			page : page_no
 		},
 		type: 'POST',
 		dataType : 'JSON',
 		success: function(employee)
 		{
 			var display_string = "";
+			var page_string = "";
 
-			if(employee == null)
+			if(employee.details == null)
 			{
 				display_string = 'No records found';
 			}
 			else
 			{
-				display_string += '<table class="table table-bordered table-hover"><thead><tr><th>Sl</th><th>Prefix</th><th id="name_column" class="order_asc">Name</th><th id="gender_column" class="order_asc">Gender</th><th id="dob_column" class="order_asc">DOB</th><th>Marital</th><th>Employment</th><th>Employer</th><th>Residence</th><th>Office</th><th>Communication</th><th>Photo</th><th>Edit</th><th>Delete</th></tr></thead><tbody class="table_data">';
+				display_string += '<table class="table table-bordered table-hover"><thead><tr><th>Sl</th><th>Prefix</th>';
+				var name_order_type = 'order_asc';
+				var gender_order_type = 'order_asc';
+				var dob_order_type = 'order_asc';
 
-				for(i in employee)
+				if(column_name == 'first_name')
+				{
+					name_order_type = (order_type == 'ASC') ? 'order_desc' : 'order_asc';
+				}
+				else if(column_name == 'gender')
+				{
+					gender_order_type = (order_type == 'ASC') ? 'order_desc' : 'order_asc';
+				}
+				else(column_name == 'dob')
+				{
+					dob_order_type = (order_type == 'ASC') ? 'order_desc' : 'order_asc';
+				}
+
+				display_string += '<th id="name_column" class="' + name_order_type + '">Name</th><th id="gender_column" class="' + gender_order_type + '">Gender</th><th id="dob_column" class="' + dob_order_type + '">DOB</th>';
+
+				display_string += '<th>Marital</th><th>Employment</th><th>Employer</th><th>Residence</th><th>Office</th><th>Communication</th><th>Photo</th><th>Edit</th><th>Delete</th></tr></thead><tbody class="table_data">';
+
+				for(i in employee.details)
 				{
 					var serial_num = Number(i) + 1;
 					display_string += '<tr>' + '<td>' + serial_num + '</td>';
-					display_string += '<td>' + employee[i].prefix + '</td>';
-					display_string += '<td>' + employee[i].f_name + ' ' + employee[i].m_name + ' ' + employee[i].l_name + '</td>';
-					display_string += '<td>' + employee[i].gender + '</td>';
-					display_string += '<td>' + employee[i].dob + '</td>';
-					display_string += '<td>' + employee[i].marital_status + '</td>';
-					display_string += '<td>' + employee[i].employment + '</td>';
-					display_string += '<td>' + employee[i].employer + '</td>';
-					display_string += '<td>' + employee[i].r_street + ', ' + employee[i].r_city + ', ' + employee[i].r_state + ', ' + employee[i].r_zip + ', ' + employee[i].r_phone + ', ' + employee[i].r_fax + '</td>';
-					display_string += '<td>' + employee[i].o_street + ', ' + employee[i].o_city + ', ' + employee[i].o_state + ', ' + employee[i].o_zip + ', ' + employee[i].o_phone + ', ' + employee[i].o_fax + '</td>';
-					display_string += '<td>' + employee[i].comm + '</td>';
+					display_string += '<td>' + employee.details[i].prefix + '</td>';
+					display_string += '<td>' + employee.details[i].f_name + ' ' + 
+					employee.details[i].m_name + ' ' + employee.details[i].l_name + '</td>';
+					display_string += '<td>' + employee.details[i].gender + '</td>';
+					display_string += '<td>' + employee.details[i].dob + '</td>';
+					display_string += '<td>' + employee.details[i].marital_status + '</td>';
+					display_string += '<td>' + employee.details[i].employment + '</td>';
+					display_string += '<td>' + employee.details[i].employer + '</td>';
+					
+					display_string += '<td>' + employee.details[i].r_street + ', ' + employee.details[i].r_city + 
+					', ' + employee.details[i].r_state + ', ' + employee.details[i].r_zip + ', ' + 
+					employee.details[i].r_phone + ', ' + employee.details[i].r_fax + '</td>';
 
-					if(employee[i].pic == "")
+					display_string += '<td>' + employee.details[i].o_street + ', ' + employee.details[i].o_city + 
+					', ' + employee.details[i].o_state + ', ' + employee.details[i].o_zip + ', ' + 
+					employee.details[i].o_phone + ', ' + employee.details[i].o_fax + '</td>';
+
+					display_string += '<td>' + employee.details[i].comm + '</td>';
+
+					if(employee.details[i].pic == "")
 					{
 						display_string += '<td>No image found</td>';
 					}
 					else
 					{
-						display_string += '<td><img src="' + employee[i].pic + '" width=100 height=100</td>';
+						display_string += '<td><img src="' + employee.details[i].pic + '" width=100 height=100</td>';
 					}
 
-					if(employee[i].session_id == employee[i].emp_id)
+					if(employee.details[i].session_id == employee.details[i].emp_id)
 					{
-						display_string += '<td><a href="sign_up.php?id=' + employee[i].emp_id + '">';
+						display_string += '<td><a href="sign_up.php?id=' + employee.details[i].emp_id + '">';
 						display_string += '<span class="glyphicon glyphicon-pencil"></span></a></td>';
 
-						display_string += '<td><a href="delete.php?id=' + employee[i].emp_id + '">';
+						display_string += '<td><a href="delete.php?id=' + employee.details[i].emp_id + '">';
 						display_string += '<span class="glyphicon glyphicon-remove"></span></a></td>';
 					}
 					else
@@ -123,10 +156,32 @@ function response(input_name = "", column_name = "", obj = "")
 					display_string += '</tr>';
 				}
 				display_string += '</table>';
+
+				// Display Page numbers
+				page_string += '<ul class="pagination">';
+
+				if(page_no == 1)
+				{
+					page_display = Number(page_no) + 1;
+					page_string += '<li class="active"><a id="current_button">' + page_no + '</a></li>';
+					page_string += '<li><a id="next_button">' + page_display + '</a></li>';
+				}
+				else
+				{
+					page_display = Number(page_no) - 1;
+					page_string += '<li><a id="prev_button">' + page_display + '</a></li>';
+					page_string += '<li class="active"><a id="current_button">' + page_no + '</a></li>';
+					page_display = Number(page_no) + 1;
+					page_string += '<li><a id="next_button">' + page_display + '</a></li>';
+				}
+
+				$('.page_numbers').html(page_string);
 			}
 
 			$('.table-responsive').html(display_string);
-			//console.log(employee);
+
+			
+
 			event_handler();
 		}
 	});

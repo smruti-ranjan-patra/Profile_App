@@ -66,7 +66,7 @@ class DatabaseConnection
 	}
 
 	/**
-	* To fetch executed select query
+	* To fetch executed query
 	*
 	* @access public
 	* @param  object $result_object
@@ -96,10 +96,15 @@ class DatabaseConnection
 	*
 	* @access public
 	* @param  integer $id
+	* @param  string $name
+	* @param  string $fields
+	* @param  string $order_type
 	* @return object
 	*/
-	public function select($id = 0, $name = "", $fields = "", $type = "")
+	public function select($id = 0, $name = "", $fields = "", $order_type = "", $page = "")
 	{
+		$fixed_records = 2;
+		$start_limit = ($page - 1) * $fixed_records;
 		$q_fetch = "SELECT emp.id AS id, emp.first_name AS f_name, emp.middle_name AS m_name, 
 			emp.last_name AS l_name, emp.email AS email, emp.prefix AS prefix, emp.gender AS gender, 
 			emp.dob AS dob, emp.marital_status AS marital_status, emp.employment AS employment, 
@@ -114,23 +119,49 @@ class DatabaseConnection
 
 		if($id)
 		{
-			$q_fetch .= "WHERE emp.id = $id";
+			$q_fetch .= " WHERE emp.id = $id";
 			$result_select = DatabaseConnection::db_query($q_fetch);
 			$row = DatabaseConnection::db_fetch_array($result_select);
 			return $row;
 		}
 		elseif($fields)
 		{
-			$q_fetch .= "WHERE first_name LIKE '%{$name}%' ORDER BY $fields $type" ;
+			$q_fetch .= " WHERE first_name LIKE '%{$name}%' ORDER BY $fields $order_type" ;
 		}
 		elseif($name)
 		{
-			$q_fetch .= "WHERE first_name LIKE '%{$name}%'" ;
+			$q_fetch .= " WHERE first_name LIKE '%{$name}%'" ;
 		}
 
+		$q_fetch .= " LIMIT $start_limit, $fixed_records";
 		$result_select = DatabaseConnection::db_query($q_fetch);
-		//echo $q_fetch; exit;
 		return $result_select;
+	}
+
+	/**
+	* To get the number of records
+	*
+	* @access public
+	* @param  string $name
+	* @param  string $fields
+	* @param  string $order_type
+	* @return object
+	*/
+	public function num_of_records($name = "", $fields = "", $order_type = "")
+	{
+		$q_records = "SELECT COUNT(*) AS num_records FROM employee AS emp 
+			INNER JOIN address AS res ON (emp.id = res.emp_id AND res.address_type = 'residence')
+			INNER JOIN address AS off ON (emp.id = off.emp_id AND off.address_type = 'office')";
+
+		if($fields)
+		{
+			$q_records .= " WHERE first_name LIKE '%{$name}%' ORDER BY $fields $order_type" ;
+		}		
+
+		//echo $q_records;
+		$result = DatabaseConnection::db_query($q_records);
+		$records = DatabaseConnection::db_fetch_array($result);
+		return $records['num_records'];
 	}
 
 	/**
