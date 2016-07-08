@@ -156,6 +156,10 @@ class DatabaseConnection
 		if($fields)
 		{
 			$q_records .= " WHERE first_name LIKE '%{$name}%' ORDER BY $fields $order_type" ;
+		}
+		elseif($name)
+		{
+			$q_records .= " WHERE first_name LIKE '%{$name}%'" ;
 		}		
 
 		//echo $q_records;

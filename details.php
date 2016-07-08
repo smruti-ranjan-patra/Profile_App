@@ -35,11 +35,11 @@ if(!isset($_SESSION['id']))
 			<input type="text" name="name" id="name" class="form-control">
 		</div>
 		<div>
-		<button class="glyphicon glyphicon-search"  type="submit" name="submit" 
+		<button class="glyphicon glyphicon-search btn"  type="submit" name="submit" 
 			value="submit"></button>
 		</div>
 	</form>
-
+	<br>
 	<h2><u>Employee Details :-</u></h2>
 	<div class="table-responsive">
 	</div>

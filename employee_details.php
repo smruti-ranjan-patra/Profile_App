@@ -3,9 +3,9 @@ session_start();
 require_once('config/database.php');
 require_once('config/constants.php');
 require_once('class/DatabaseConnection.php');
+
 $obj = DatabaseConnection::create_connection($db['master']);
 
-//$name = mysql_real_escape_string($_POST['name']);
 $page = $_POST['page'];
 $details_result = $obj->select(0, $_POST['name'], $_POST['fields'], $_POST['type'], $page);
 $record_numbers = $obj->num_of_records($_POST['name'], $_POST['fields'], $_POST['type']);
@@ -67,8 +67,7 @@ while ($details_row = DatabaseConnection::db_fetch_array($details_result))
 		"emp_id" => $details_row['id']
 		);
 }
+
 $employee = array("num_of_records" => $record_numbers, "details" => $result, "page" => $page);
 echo json_encode($employee, true);
-// echo json_encode($result, true);
-
 ?>

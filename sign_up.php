@@ -172,9 +172,13 @@
 			<form action="submit.php" method="post" id="sign_up_form" enctype=multipart/form-data>
 				<?php
 				if($_GET['id'])
+				{
 					echo "<h1>".$row['prefix'].' '.$row['f_name']."</h1>";
+				}
 				else
+				{
 					echo "<h1>Registration Form</h1>";
+				}
 				?>
 
 				<!-- Hidden Form to get the ID -->

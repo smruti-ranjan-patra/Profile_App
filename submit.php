@@ -13,9 +13,6 @@
 		$error_count = 0;
 		$validate_obj->validate_form('submit');
 
-		// Validating Email ID
-		// $validate_obj->email($_POST['email']);
-
 		// Validating Picture
 		$pic_info = $validate_obj->photo_validation();
 		$pic_update = $pic_info['pic_update'];

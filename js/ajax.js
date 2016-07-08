@@ -1,11 +1,11 @@
 var page = 1;
 var c_name;
 var obj;
+var list_size = 2;
 
 $(document).ready(function()
 {
 	response();
-	// event_handler();
 });
 	
 /**
@@ -37,7 +37,7 @@ function event_handler()
 	});
 	$('#prev_button').on('click', function()
 	{
-		response($("#name").text(), c_name, obj, $(this).text());
+		response($("#name").val(), c_name, obj, $(this).text());
 	});
 	// $('#current_button').on('click', function()
 	// {
@@ -45,7 +45,7 @@ function event_handler()
 	// });
 	$('#next_button').on('click', function()
 	{
-		response($("#name").text(), c_name, obj, $(this).text());
+		response($("#name").val(), c_name, obj, $(this).text());
 	});
 }
 
@@ -81,9 +81,13 @@ function response(input_name = "", column_name = "", ob = "", page_no = 1)
 			var display_string = "";
 			var page_string = "";
 
+			// If no records found
 			if(employee.details == null)
 			{
-				display_string = 'No records found';
+				display_string = '';
+				$('h2').html('<h3>No records found</h3>');
+				page_string = "";
+				$('.page_numbers').html(page_string);
 			}
 			else
 			{
@@ -109,9 +113,10 @@ function response(input_name = "", column_name = "", ob = "", page_no = 1)
 
 				display_string += '<th>Marital</th><th>Employment</th><th>Employer</th><th>Residence</th><th>Office</th><th>Communication</th><th>Photo</th><th>Edit</th><th>Delete</th></tr></thead><tbody class="table_data">';
 
+				// Create the records in the table
 				for(i in employee.details)
 				{
-					var serial_num = Number(i) + 1;
+					var serial_num = (list_size * page_no) - list_size + Number(i) + 1;
 					display_string += '<tr>' + '<td>' + serial_num + '</td>';
 					display_string += '<td>' + employee.details[i].prefix + '</td>';
 					display_string += '<td>' + employee.details[i].f_name + ' ' + 
@@ -157,31 +162,40 @@ function response(input_name = "", column_name = "", ob = "", page_no = 1)
 				}
 				display_string += '</table>';
 
-				// Display Page numbers
-				page_string += '<ul class="pagination">';
-
-				if(page_no == 1)
+				// Display Page numbers				
+				if(employee.num_of_records != 0)
 				{
-					page_display = Number(page_no) + 1;
-					page_string += '<li class="active"><a id="current_button">' + page_no + '</a></li>';
-					page_string += '<li><a id="next_button">' + page_display + '</a></li>';
-				}
-				else
-				{
-					page_display = Number(page_no) - 1;
-					page_string += '<li><a id="prev_button">' + page_display + '</a></li>';
-					page_string += '<li class="active"><a id="current_button">' + page_no + '</a></li>';
-					page_display = Number(page_no) + 1;
-					page_string += '<li><a id="next_button">' + page_display + '</a></li>';
-				}
+					page_string += '<ul class="pagination">';
 
-				$('.page_numbers').html(page_string);
+					if(page_no == 1)
+					{
+						page_string += '<li class="active"><a id="current_button">' + page_no + '</a></li>';
+						page_display = Number(page_no) + 1;
+
+						if(page_display <= Math.ceil(employee.num_of_records / list_size))
+						{
+							page_string += '<li><a id="next_button">' + page_display + '</a></li>';
+						}
+					}
+					else
+					{
+						page_display = Number(page_no) - 1;
+						page_string += '<li><a id="prev_button">' + page_display + '</a></li>';
+						page_string += '<li class="active"><a id="current_button">' + page_no + '</a></li>';
+						page_display = Number(page_no) + 1;
+
+						if(page_display <= Math.ceil(employee.num_of_records / list_size))
+						{
+							page_string += '<li><a id="next_button">' + page_display + '</a></li>';
+						}
+					}
+
+					page_string += '</ul>';
+					$('.page_numbers').html(page_string);
+				}
 			}
 
 			$('.table-responsive').html(display_string);
-
-			
-
 			event_handler();
 		}
 	});
