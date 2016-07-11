@@ -326,6 +326,7 @@ class DatabaseConnection
 		$q_update = chop($q_update, ", ");
 		$q_update .= ' ' . $where_clause;			
 		$result = DatabaseConnection::db_query($q_update);
+		// echo $q_update; exit;
 
 		if(!$result)
 		{
@@ -355,7 +356,7 @@ class DatabaseConnection
 				$where_clause .= ' AND ';
 			}
 
-			$where_clause .= $key . " = " . $value . ' ';
+			$where_clause .= $key . " = '" . $value . "' ";
 			++$count;
 		}
 
