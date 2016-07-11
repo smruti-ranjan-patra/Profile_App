@@ -1046,14 +1046,13 @@
 								echo "<img src=" . PIC_PATH . $_SESSION['error_array']['photo']
 								['val'] . " width=200 height=200>";
 							}
-							elseif($_SESSION['error_array']['photo']['val'])
+							elseif(isset($_SESSION['error_array']['photo']['val']))
 							{
-								$pic_name = PIC_PATH . $details_row['photo'];
+								$pic_name = PIC_PATH . $row['photo'];
 								if(file_exists($pic_name))
 								{
 									echo '<td><img src="' . $pic_name . '" width=200 height=200</td>';
 								}
-							  // echo "<img src=" . PIC_PATH . $row['photo'] . " width=200 height=200>";
 							}
 							else
 							{}

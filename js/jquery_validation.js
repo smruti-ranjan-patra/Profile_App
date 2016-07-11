@@ -17,10 +17,11 @@ function validation()
 	{
 		var return_val_name = true;
 		var text_elements = $('.text_field');
+
 		$.each(text_elements, function(index, value)
 		{
-			var a = strict_alphabet($(value))
-			if(a == false)
+			var check = strict_alphabet($(value))
+			if(check == false)
 			{
 				return_val_name = false;
 				return;
@@ -29,10 +30,11 @@ function validation()
 
 		var return_val_num = true;
 		var number_elements = $('.number_field');
+
 		$.each(number_elements, function(index, value)
 		{
-			var a = number_validation($(value))
-			if(a == false)
+			var check = number_validation($(value))
+			if(check == false)
 			{
 				return_val_num = false;
 				return;
@@ -41,10 +43,11 @@ function validation()
 
 		var return_val_alpha_num = true;
 		var alpha_num_elements = $('.alpha_numeric');
+
 		$.each(alpha_num_elements, function(index, value)
 		{
-			var a = alpha_num_validation($(value))
-			if(a == false)
+			var check = alpha_num_validation($(value))
+			if(check == false)
 			{
 				return_val_alpha_num = false;
 				return;
@@ -61,46 +64,54 @@ function validation()
 
 	$('#login_form').submit(function()
 	{
-		reurn_login_email = email_validation($('.login_email'));
-		reurn_login_pwd = password_validation($('.login_password'));
+		var reurn_login_email = email_validation($('.login_email'));
+		var reurn_login_pwd = password_validation($('.login_password'));
 		return (reurn_login_email && reurn_login_pwd);
 	});
 
+	// To check the validation on text field when user types something
 	$('.text_field').on('keyup blur change', function()
 		{
 			strict_alphabet($(this));
 		});
 
+	// To check the validation on numeric field when user types something
 	$('.number_field').on('keyup blur change', function()
 		{
 			number_validation($(this));
 		});
 
+	// To check the validation on text field which may be number as well as string, when user types something
 	$('.alpha_numeric').on('keyup blur change', function()
 		{
 			alpha_num_validation($(this));
 		});
 
+	// To check the validation on date of birth field whether empty or not
 	$('.dob').on('keyup blur change', function()
 		{
 			dob_validation($(this));
 		});
 
+	// To check the validation on email field when user types something
 	$('.email').on('keyup blur change', function()
 		{
 			email_validation($(this));
 		});
 
+	// To check the validation on password field when user types something
 	$('.password').on('keyup blur change', function()
 		{
 			password_validation($(this));
 		});
 
+	// To check the validation on email field when user types something in the login page
 	$('.login_email').on('keyup blur change', function()
 		{
 			email_validation($(this));
 		});
 
+	// To check the validation on password field when user types something in the login page
 	$('.login_password').on('keyup blur change', function()
 		{
 			password_validation($(this));
@@ -116,26 +127,28 @@ function validation()
 */
 function strict_alphabet(elem)
 {
+	var is_valid = false;
+
 	if(elem[0].name == 'middle_name' && elem.val().trim().length == 0)
 	{
 		elem.parent().children('.err_msg').html("");
-		return true;
+		is_valid = true;
 	}
 	else if(elem.val().trim().length == 0)
 	{
 		elem.parent().children('.err_msg').html("*Mandatory Field !");
-		return false;
 	}
 	else if(!(/^[a-zA-Z ]*$/).test(elem.val().trim()))
 	{
 		elem.parent().children('.err_msg').html("*Only alphabets allowed !");
-		return false;
 	}
 	else
 	{
 		elem.parent().children('.err_msg').html("");
-		return true;	
-	}	
+		is_valid = true;	
+	}
+
+	return is_valid;	
 }
 
 /**
@@ -147,23 +160,22 @@ function strict_alphabet(elem)
 */
 function number_validation(elem)
 {
+	var is_valid = false;
+
 	if(elem.val().trim().length == 0)
 	{
 		elem.parent().children('.err_msg').html("*Mandatory Field !");
-		return false;
-	}
-	
-	if(elem[0].name == 'r_zip' || elem[0].name == 'o_zip')
+	}	
+	else if(elem[0].name == 'r_zip' || elem[0].name == 'o_zip')
 	{
 		if(!((/^(\d{6})$/).test(elem.val().trim())))
 		{
 			elem.parent().children('.err_msg').html("*Provide a Numeric value of length 6");
-			return false;
 		}
 		else
 		{
 			elem.parent().children('.err_msg').html("");
-			return true;
+			is_valid = true;
 		}
 	}
 	//for residence phone/fax or office phone/fax
@@ -173,14 +185,15 @@ function number_validation(elem)
 		{
 			elem.parent().children('.err_msg').html("*Provide a Numeric value of length \
 				between 7 and 12 !");
-				return false;
 		}
 		else
 		{
 			elem.parent().children('.err_msg').html("");
-			return true;
+			is_valid = true;
 		}
 	}
+
+	return is_valid;
 }
 
 /**
@@ -192,21 +205,23 @@ function number_validation(elem)
 */
 function alpha_num_validation(elem)
 {
+	var is_valid = false;
+
 	if(elem.val().trim().length == 0)
 	{
 		elem.parent().children('.err_msg').html("*Mandatory Field !");
-		return false;
 	}
 	else if(!(/^[a-zA-Z0-9 _-]*$/).test(elem.val().trim()))
 	{
 		elem.parent().children('.err_msg').html("*Only alphabets and numbers allowed !");
-		return false;
 	}
 	else
 	{
 		elem.parent().children('.err_msg').html("");
-		return true;
+		is_valid = true;
 	}
+
+	return is_valid;
 }
 
 /**
@@ -239,22 +254,23 @@ function dob_validation(elem)
 */
 function email_validation(elem)
 {
+	var is_valid = false;
+
 	if(elem.val().trim().length == 0)
 	{
 		elem.parent().children('.err_msg').html("*Mandatory Field !");
-		return false;
 	}
-	else if(!(/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/).
-		test(elem.val().trim()))
+	else if(!(/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/).test(elem.val().trim()))
 	{
 		elem.parent().children('.err_msg').html("*Invalid Email ID !");
-		return false;
 	}
 	else
 	{
 		elem.parent().children('.err_msg').html("");
-		return true;
+		is_valid = true;
 	}
+
+	return is_valid;
 }
 
 /**
@@ -266,19 +282,21 @@ function email_validation(elem)
 */
 function password_validation(elem)
 {
+	var is_valid = false;
+
 	if(elem.val().trim().length == 0)
 	{
 		elem.parent().children('.err_msg').html("*Mandatory Field !");
-		return false;
 	}
 	else if(!(elem.val().trim().length >= 8 && elem.val().trim().length <= 12))
 	{
 		elem.parent().children('.err_msg').html("*Password length must be between 8 to 12 !");
-		return false;
 	}
 	else
 	{
 		elem.parent().children('.err_msg').html("");
-		return true;
+		is_valid =  true;
 	}
+
+	return is_valid;
 }

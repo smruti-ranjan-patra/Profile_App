@@ -43,6 +43,7 @@
 			}
 
 			$comm = implode(', ', $_POST['comm']);
+
 			$employee_data_array = array(
 				"emp_id" => $_POST['edit_id'], 
 				"first_name" => $_POST['first_name'], 
@@ -58,32 +59,32 @@
 				"employer" => $_POST['employer'], 
 				"photo" => "$file_name", 
 				"extra_note" => "$notes", 
-				"comm_id" => "$comm", 
-				"r_street" => $_POST['r_street'], 
-				"r_city" => $_POST['r_city'], 
-				"r_state" => $_POST['r_state'], 
-				"r_zip" => $_POST['r_zip'], 
-				"r_phone" => $_POST['r_phone'], 
-				"r_fax" => $_POST['r_fax'], 
-				"o_street" => $_POST['o_street'], 
-				"o_city" => $_POST['o_city'], 
-				"o_state" => $_POST['o_state'], 
-				"o_zip" => $_POST['o_zip'], 
-				"o_phone" => $_POST['o_phone'], 
-				"o_fax" => $_POST['o_fax'], 
+				"comm_id" => "$comm"
 				);
 
-			$obj->update_table('address', $employee_data_array);
+			$residence_data_array = array(
+				"emp_id" => $_POST['edit_id'], 
+				"street" => $_POST['r_street'], 
+				"city" => $_POST['r_city'], 
+				"state" => $_POST['r_state'], 
+				"zip" => $_POST['r_zip'], 
+				"phone" => $_POST['r_phone'], 
+				"fax" => $_POST['r_fax']
+				);
 
-			if($pic_update)
-			{
-				$employee_data_array["photo"] = $file_name;
-				$obj->update_table('employee', $employee_data_array);
-			}
-			else
-			{
-				$obj->update_table('employee', $employee_data_array);
-			}
+			$office_data_array = array(
+				"emp_id" => $_POST['edit_id'], 
+				"street" => $_POST['o_street'], 
+				"city" => $_POST['o_city'], 
+				"state" => $_POST['o_state'], 
+				"zip" => $_POST['o_zip'], 
+				"phone" => $_POST['o_phone'], 
+				"fax" => $_POST['o_fax']
+				);
+
+			$obj->update_table('address', $residence_data_array, 'residence');
+			$obj->update_table('address', $office_data_array, 'office');
+			$obj->update_table('employee', $employee_data_array);
 
 			$check_edit_id = TRUE;
 			header('Location: details.php');
@@ -111,23 +112,30 @@
 			$connection = $obj->insert_data('employee', $employee_data_array);
 			$employee_id = mysqli_insert_id($connection);
 
-			$address_data_array = array(
+			$residence_data_array = array(
 				"emp_id" => "$employee_id", 
-				"r_street" => $_POST['r_street'], 
-				"r_city" => $_POST['r_city'], 
-				"r_state" => $_POST['r_state'], 
-				"r_zip" => $_POST['r_zip'], 
-				"r_phone" => $_POST['r_phone'], 
-				"r_fax" => $_POST['r_fax'], 
-				"o_street" => $_POST['o_street'], 
-				"o_city" => $_POST['o_city'], 
-				"o_state" => $_POST['o_state'], 
-				"o_zip" => $_POST['o_zip'], 
-				"o_phone" => $_POST['o_phone'], 
-				"o_fax" => $_POST['o_fax'], 
+				"address_type" => "residence", 
+				"street" => $_POST['r_street'], 
+				"city" => $_POST['r_city'], 
+				"state" => $_POST['r_state'], 
+				"zip" => $_POST['r_zip'], 
+				"phone" => $_POST['r_phone'], 
+				"fax" => $_POST['r_fax']
 				);
 
-			$connection = $obj->insert_data('address', $address_data_array);
+			$office_data_array = array(
+				"emp_id" => "$employee_id", 
+				"address_type" => "office", 
+				"street" => $_POST['o_street'], 
+				"city" => $_POST['o_city'], 
+				"state" => $_POST['o_state'], 
+				"zip" => $_POST['o_zip'], 
+				"phone" => $_POST['o_phone'], 
+				"fax" => $_POST['o_fax']
+				);
+
+			$connection = $obj->insert_data('address', $residence_data_array);
+			$connection = $obj->insert_data('address', $office_data_array);
 		}
 	}
 	else

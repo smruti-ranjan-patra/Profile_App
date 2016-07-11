@@ -19,7 +19,7 @@ class DatabaseConnection
 	/**
 	* Constructor to create a database connection
 	*
-	* @access public
+	* @access private
 	* @param  array $db_param
 	* @return void
 	*/
@@ -159,9 +159,8 @@ class DatabaseConnection
 		elseif($name)
 		{
 			$q_records .= " WHERE first_name LIKE '%{$name}%'" ;
-		}		
+		}
 
-		//echo $q_records;
 		$result = DatabaseConnection::db_query($q_records);
 		$records = DatabaseConnection::db_fetch_array($result);
 		return $records['num_records'];
@@ -183,6 +182,7 @@ class DatabaseConnection
 
 		if($password != '')
 		{
+			$password = DatabaseConnection::sanitize($password);
 			$q_fetch .= "AND password = '{$password}'";
 		}
 		elseif($emp_id > 0)
@@ -204,54 +204,34 @@ class DatabaseConnection
 	*/
 	public function insert_data($table_name, $data_array)
 	{
-		if($table_name == 'employee')
+		$data_array = DatabaseConnection::sanitize($data_array);
+		$query = "INSERT INTO " . $table_name . " (";
+
+		foreach($data_array as $key => $value)
 		{
-			$q_employee = "INSERT INTO $table_name (first_name, middle_name, last_name, email, 
-				password, prefix, gender, dob, marital_status, employment, employer, photo, 
-				extra_note, comm_id) 
-				VALUES ('{$data_array['first_name']}', '{$data_array['middle_name']}', 
-				'{$data_array['last_name']}', '{$data_array['email']}', 
-				'{$data_array['password']}', '{$data_array['prefix']}', 
-				'{$data_array['gender']}', '{$data_array['dob']}', 
-				'{$data_array['marital_status']}', '{$data_array['employment']}', 
-				'{$data_array['employer']}', '{$data_array['photo']}', 
-				'{$data_array['extra_note']}', '{$data_array['comm_id']}')";
-
-			$result_employee = DatabaseConnection::db_query($q_employee);
-
-			if(!$result_employee)
-			{
-				log_error('Data insertion in employee table');
-				echo "Data insertion into employee table unsuccessful";
-				exit;
-			}
-
-			return self::$conn;
+			$query .= "$key, ";
 		}
-		elseif($table_name == 'address')
+
+		$query = chop($query, ", ");
+		$query .= " ) VALUES ( ";
+
+		foreach($data_array as $key => $value)
 		{
-			$q_address = "INSERT INTO $table_name (`emp_id`, `address_type`, `street`, `city`, 
-				`state`, `zip`, `phone`, `fax`) 
-				VALUES
-				({$data_array['emp_id']}, 'residence', '{$data_array['r_street']}', 
-				'{$data_array['r_city']}', '{$data_array['r_state']}', '{$data_array['r_zip']}', 
-				'{$data_array['r_phone']}', '{$data_array['r_fax']}'),
+			$query .= "'" . $value . "', ";
+		}
 
-				({$data_array['emp_id']}, 'office', '{$data_array['o_street']}', 
-				'{$data_array['o_city']}', '{$data_array['o_state']}', '{$data_array['o_zip']}', 
-				'{$data_array['o_phone']}', '{$data_array['o_fax']}')";
+		$query = chop($query, ", ");
+		$query .= " ) ";
+		$result_employee = DatabaseConnection::db_query($query);
 
-			$result_address = DatabaseConnection::db_query($q_address);
-
-			if(!$result_address)
-			{
-				log_error('Data insertion in address table');
-				echo "Data insertion into address table unsuccessful";
-				exit;
-			}
-
-			return self::$conn;
-		}		
+		if(!$result_employee)
+		{
+			$err = "Error while inserting data into $table_name table";
+			log_error($err);
+			header('Location: error_page.php');
+			exit;
+		}
+		return self::$conn;
 	}
 
 	/**
@@ -263,6 +243,8 @@ class DatabaseConnection
 	*/
 	public function delete_employee($id)
 	{
+		$id = mysqli_real_escape_string(self::$conn, $id);
+
 		$del_query = "DELETE FROM `address` WHERE emp_id = " . $id;
 		DatabaseConnection::db_query($del_query);
 
@@ -279,6 +261,7 @@ class DatabaseConnection
 	*/
 	public function delete_pic($id)
 	{
+		$id = mysqli_real_escape_string(self::$conn, $id);
 		$sel_pic = "SELECT photo FROM employee WHERE id = " . $id;
 		$pic_object = DatabaseConnection::db_query($sel_pic);
 		$row = DatabaseConnection::db_fetch_array($pic_object);
@@ -315,52 +298,88 @@ class DatabaseConnection
 	* @param  array $data_array
 	* @return void
 	*/
-	public function update_table($table_name, $data_array)
-	{ 
+	public function update_table($table_name, $data_array, $type)
+	{
+		$data_array = DatabaseConnection::sanitize($data_array);
 
-		if($table_name == 'address')
+		if($type)
 		{
-			$update_add_res = "UPDATE $table_name 
-				SET `street` = '{$data_array['r_street']}', `city` = '{$data_array['r_city']}', 
-				`state` = '{$data_array['r_state']}', `zip` = {$data_array['r_zip']}, 
-				`phone` = {$data_array['r_phone']}, `fax` = {$data_array['r_fax']} 
-				WHERE (address_type = 'residence' AND emp_id = {$data_array['emp_id']})";
-
-			DatabaseConnection::db_query($update_add_res);
-
-			$update_add_off = "UPDATE $table_name 
-				SET `street` = '{$data_array['o_street']}', `city` = '{$data_array['o_city']}', 
-				`state` = '{$data_array['o_state']}', `zip` = {$data_array['o_zip']}, 
-				`phone` = {$data_array['o_phone']}, `fax` = {$data_array['o_fax']} 
-				WHERE (address_type = 'office' AND emp_id = {$data_array['emp_id']})";
-
-			DatabaseConnection::db_query($update_add_off);
+			$where_cond_arr = ['address_type' => $type, 'emp_id' => $data_array['emp_id']];
+			$where_clause = DatabaseConnection::where_generation($where_cond_arr);
 		}
-		elseif($table_name == 'employee')
+		else
 		{
-			$update_emp = "UPDATE $table_name 
-				SET `first_name` = '{$data_array['first_name']}', 
-				`middle_name` = '{$data_array['middle_name']}', 
-				`last_name` = '{$data_array['last_name']}', 
-				`email` = '{$data_array['email']}', 
-				`password` = '{$data_array['password']}', 
-				`prefix` = '{$data_array['prefix']}', 
-				`gender` = '{$data_array['gender']}', 
-				`dob` = '{$data_array['dob']}', 
-				`marital_status` = '{$data_array['marital_status']}', 
-				`employment` = '{$data_array['employment']}', 
-				`employer` = '{$data_array['employer']}', 
-				`extra_note` = '{$data_array['extra_note']}', 
-				`comm_id` = '{$data_array['comm_id']}'";
+			$where_cond_arr = ['id' => $data_array['emp_id']];
+			$where_clause = DatabaseConnection::where_generation($where_cond_arr);
+		}
 
-			if(isset($data_array['photo']))
+		$q_update = "UPDATE $table_name SET ";
+
+		foreach($data_array as $key => $value)
+		{
+			if($key != 'emp_id')
 			{
-				$update_emp .= ", `photo` = '{$data_array['photo']}'";
+				$q_update .= $key . " = " . "'" . $value . "'" . ", ";
+			}
+		}
+
+		$q_update = chop($q_update, ", ");
+		$q_update .= ' ' . $where_clause;			
+		$result = DatabaseConnection::db_query($q_update);
+
+		if(!$result)
+		{
+			$err = "Error while updating data into $table_name table";
+			log_error($err);
+			header('Location: error_page.php');
+			exit;
+		}
+	}
+
+	/**
+	* To generate where condition for update query
+	*
+	* @access public
+	* @param  array $arr
+	* @return string $where_clause
+	*/
+	public static function where_generation($arr)
+	{
+		$count = 0;
+		$where_clause = ' WHERE ';
+
+		foreach($arr as $key => $value)
+		{
+			if($count > 0)
+			{
+				$where_clause .= ' AND ';
 			}
 
-			$update_emp .= "WHERE id = {$data_array['emp_id']}";
-			DatabaseConnection::db_query($update_emp);
+			$where_clause .= $key . " = " . $value . ' ';
+			++$count;
 		}
+
+		return $where_clause;
+	}
+
+	/**
+	* To sanitize data before inserting into database
+	*
+	* @access public
+	* @param  array $array
+	* @return object
+	*/
+	public static function sanitize($arr)
+	{
+		foreach($arr as $key => $value)
+		{
+			$arr["$key"] = trim($value);
+			// $arr["$key"] = stripslashes($value);
+			$arr["$key"] = htmlentities($value, ENT_QUOTES);
+			$arr["$key"] = mysqli_real_escape_string(self::$conn, $value);
+		}
+
+		return $arr;
 	}
 }
 

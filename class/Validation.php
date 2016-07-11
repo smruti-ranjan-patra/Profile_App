@@ -5,10 +5,6 @@ require_once('class/DatabaseConnection.php');
 require_once('config/constants.php');
 require_once('config/database.php');
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 /**
 * Super Class
 *
@@ -530,7 +526,6 @@ class Validation
 	public static function formatted($data)
 	{
 		$data = trim($data);
-		$data = stripslashes($data);
 		$data = htmlentities($data, ENT_QUOTES);
 		return $data;
 	}
