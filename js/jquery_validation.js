@@ -69,6 +69,11 @@ function validation()
 		return (reurn_login_email && reurn_login_pwd);
 	});
 
+	$('#reset').on('click', function()
+	{
+		$('.err_msg').html("");
+	});
+
 	// To check the validation on text field when user types something
 	$('.text_field').on('keyup blur change', function()
 		{
