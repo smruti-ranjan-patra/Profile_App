@@ -169,6 +169,7 @@ function response(input_name = "", column_name = "", ob = "", page_no = 1)
 				if(employee.num_of_records != 0)
 				{
 					page_string += '<ul class="pagination">';
+					var page_display;
 
 					if(page_no == 1)
 					{

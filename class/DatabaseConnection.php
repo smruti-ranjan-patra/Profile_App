@@ -177,12 +177,12 @@ class DatabaseConnection
 	*/
 	public function select_email($email, $emp_id = 0, $password = '')
 	{
-		
+		$email = mysqli_real_escape_string(self::$conn, $email);
 		$q_fetch = "SELECT * FROM employee WHERE email = '{$email}'";
 
 		if($password != '')
 		{
-			$password = DatabaseConnection::sanitize($password);
+			$password = mysqli_real_escape_string(self::$conn, $password);
 			$q_fetch .= "AND password = '{$password}'";
 		}
 		elseif($emp_id > 0)
@@ -374,7 +374,7 @@ class DatabaseConnection
 		foreach($arr as $key => $value)
 		{
 			$arr["$key"] = trim($value);
-			// $arr["$key"] = stripslashes($value);
+			$arr["$key"] = stripslashes($value);
 			$arr["$key"] = htmlentities($value, ENT_QUOTES);
 			$arr["$key"] = mysqli_real_escape_string(self::$conn, $value);
 		}

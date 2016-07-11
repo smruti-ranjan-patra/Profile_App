@@ -1054,8 +1054,7 @@
 									echo '<td><img src="' . $pic_name . '" width=200 height=200</td>';
 								}
 							}
-							else
-							{}
+							
 							if(isset($_SESSION['error_array']['photo']['msg']))
 							{
 								echo '<span class="text-danger">' . $_SESSION['error_array']

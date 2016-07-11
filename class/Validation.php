@@ -438,8 +438,6 @@ class Validation
 			if($file_size > 0) 
 			{
 				$file_tmp = $_FILES['pic']['tmp_name'];
-				$file_type= $_FILES['pic']['type'];
-
 				$ext_arr = explode('.',$file_name);
 				$file_ext = strtolower(end($ext_arr));
 				$extensions = array("jpeg","jpg","png");
