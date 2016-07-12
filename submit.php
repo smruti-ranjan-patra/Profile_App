@@ -27,9 +27,11 @@
 		// Fetching no. of errors from the validation object
 		$error_count += $validate_obj->count;
 
+		$user_id = isset($_POST['edit_id']) ? $_POST['edit_id'] : $_SESSION['id'];
+
 		if($error_count > 0)
 		{
-			header('Location:sign_up.php?validation=1');
+			header('Location:sign_up.php?validation=1&id=' . $user_id);
 			exit();
 		}
 

@@ -1,6 +1,10 @@
 <?php
 require_once('config/constants.php');
+
 session_start();
+
+// File for ACL implementation
+require_once('acl.php');
 
 if(!isset($_SESSION['id']))
 {

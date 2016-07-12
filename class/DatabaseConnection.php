@@ -30,8 +30,10 @@ class DatabaseConnection
 
 		if(mysqli_connect_errno(self::$conn))
 		{
-			log_error('Failed to create database connection');
-			die ('Failed to connect to Database, Please try later :' . mysqli_connect_error());
+			$err = "Failed to create database connection";
+			log_error($err);
+			header('Location: error_page.php');
+			exit;
 		}
 	}
 
@@ -326,7 +328,6 @@ class DatabaseConnection
 		$q_update = chop($q_update, ", ");
 		$q_update .= ' ' . $where_clause;			
 		$result = DatabaseConnection::db_query($q_update);
-		// echo $q_update; exit;
 
 		if(!$result)
 		{

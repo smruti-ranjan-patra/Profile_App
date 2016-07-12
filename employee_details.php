@@ -9,7 +9,7 @@ if(!isset($_SESSION['id']))
 	echo '{"err_msg" : "Please Login", "err_val" : "1"}';
 	exit();
 }
-
+// print_r($_SESSION['permission_info']);exit;
 $obj = DatabaseConnection::create_connection($db['master']);
 
 $page = $_POST['page'];
@@ -74,6 +74,6 @@ while ($details_row = DatabaseConnection::db_fetch_array($details_result))
 		);
 }
 
-$employee = array("num_of_records" => $record_numbers, "details" => $result, "page" => $page);
+$employee = array("num_of_records" => $record_numbers, "details" => $result, "page" => $page, "permission_info" => $_SESSION['permission_info']);
 echo json_encode($employee, true);
 ?>

@@ -61,16 +61,21 @@
 
 	if(isset($_GET['id']) || isset($_SESSION['id']))
 	{
+		if (isset($_GET['id']) && ($_GET['id']!= $_SESSION['id']))
+		{
+			header('Location:sign_up.php');exit;
+		}
+
 		$check_pic = 1;
 		$obj = DatabaseConnection::create_connection($db['master']);
 
-		if(isset($_SESSION['id']))
+		if(isset($_GET['id']))
 		{
-			$row = $obj->select($_SESSION['id']);
+			$row = $obj->select($_GET['id']);
 		}
 		else
 		{
-			$row = $obj->select($_GET['id']);
+			$row = $obj->select($_SESSION['id']);
 		}
 
 		if(isset($row['comm_id']))
@@ -171,7 +176,7 @@
 			<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-md-offset-1 col-lg-offset-1">
 			<form action="submit.php" method="post" id="sign_up_form" enctype=multipart/form-data>
 				<?php
-				if($_GET['id'])
+				if(isset($_SESSION['id']))
 				{
 					echo "<h1>".$row['prefix'].' '.$row['f_name']."</h1>";
 				}
@@ -179,24 +184,23 @@
 				{
 					echo "<h1>Registration Form</h1>";
 				}
-				?>
 
-				<!-- Hidden Form to get the ID -->
-				<input type="text" name="edit_id" hidden value="
-				<?php
 				if(isset($_GET['id']))
 				{
-					echo $_GET['id'];
+					$selected_user_id = $_GET['id'];
 				}
 				elseif(isset($_SESSION['id']))
 				{
-					echo $_SESSION['id'];
+					$selected_user_id = $_SESSION['id'];
 				}
 				else
 				{
-					echo 0;
+					$selected_user_id = 0;
 				}
-				?>">
+				?>
+
+				<!-- Hidden Form to get the ID -->
+				<input type="text" name="edit_id" hidden value="<?php echo $selected_user_id; ?>">
 
 				<fieldset>
 				<div class="well">
@@ -1136,7 +1140,7 @@
 				<!-- Buttons -->
 				<div class="row form-group text-center">
 					<?php
-					if(!empty($_GET['id']))
+					if(!empty($_GET['id']) || isset($_SESSION['id']))
 					{
 						echo '<button class="btn btn-primary"  type="submit" name="submit" 
 						value="update">Update</button>';

@@ -47,6 +47,10 @@ function event_handler()
 function response(input_name = "", column_name = "", ob = "", page_no = 1)
 {
 	var order_type = "";
+	var url = window.location.pathname;
+	var file_name = url.substring(url.lastIndexOf('/')+1);
+	var resource_name = file_name.split('.')[0];
+
 	c_name = column_name;
 	obj = ob;
 
@@ -149,13 +153,27 @@ function response(input_name = "", column_name = "", ob = "", page_no = 1)
 						display_string += '<td><img src="' + employee.details[i].pic + '" width=100 height=100</td>';
 					}
 
-					if(employee.details[i].session_id == employee.details[i].emp_id)
+					if (employee.permission_info['role'] == 'admin') 
 					{
 						display_string += '<td><a href="sign_up.php?id=' + employee.details[i].emp_id + '">';
 						display_string += '<span class="glyphicon glyphicon-pencil"></span></a></td>';
 
 						display_string += '<td><a href="delete.php?id=' + employee.details[i].emp_id + '">';
 						display_string += '<span class="glyphicon glyphicon-remove"></span></a></td>';
+					} 
+					else if(employee.details[i].session_id == employee.details[i].emp_id)
+					{
+						if (employee.permission_info['permissions'][resource_name + '-edit']) 
+						{
+							display_string += '<td><a href="sign_up.php?id=' + employee.details[i].emp_id + '">';
+							display_string += '<span class="glyphicon glyphicon-pencil"></span></a></td>';
+						}
+
+						if (employee.permission_info['permissions'][resource_name + '-delete']) 
+						{
+							display_string += '<td><a href="delete.php?id=' + employee.details[i].emp_id + '">';
+							display_string += '<span class="glyphicon glyphicon-remove"></span></a></td>';
+						}
 					}
 					else
 					{
