@@ -61,7 +61,7 @@
 
 	if(isset($_GET['id']) || isset($_SESSION['id']))
 	{
-		if (isset($_GET['id']) && ($_GET['id']!= $_SESSION['id']))
+		if ((isset($_GET['id']) && ($_GET['id']!= $_SESSION['id'])) && ($_SESSION['permission_info']['role'] != 'admin'))
 		{
 			header('Location:sign_up.php');exit;
 		}

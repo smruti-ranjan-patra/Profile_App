@@ -300,7 +300,7 @@ class Validation
 			if(filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))
 			{
 				$obj = DatabaseConnection::create_connection($db['master']);
-				$rows = $obj->select_email($form_data[$email], $_SESSION['id']);
+				$rows = $obj->select_email($form_data[$email], $_POST['edit_id']);
 				$rnum = DatabaseConnection::db_num_rows($rows);
 
 				if($rnum == 0)

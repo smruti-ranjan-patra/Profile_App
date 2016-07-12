@@ -20,7 +20,7 @@ require_once('acl.php');
 		</nav>
 		<div>
 			<?php
-				echo 'Welcome ' . $_SESSION['permission_info']['role']; 
+				echo '<h1>Welcome ' . $_SESSION['permission_info']['role'] . '</h1>'; 
 			?>
 		</div>
 	</body>

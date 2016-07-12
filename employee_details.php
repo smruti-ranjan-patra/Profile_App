@@ -9,7 +9,7 @@ if(!isset($_SESSION['id']))
 	echo '{"err_msg" : "Please Login", "err_val" : "1"}';
 	exit();
 }
-// print_r($_SESSION['permission_info']);exit;
+
 $obj = DatabaseConnection::create_connection($db['master']);
 
 $page = $_POST['page'];
