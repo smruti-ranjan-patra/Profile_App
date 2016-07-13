@@ -73,7 +73,7 @@ function is_allowed($resource, $permission = '')
 {
 	$permissions_available = $_SESSION['permission_info']['permissions'];
 	$permission_to_check = $resource . "-" . $permission;
-
+	
 	//Checking if all access permission or current action access permission
     if((isset($permissions_available[$resource . "-" ."all"]) && 
     	($permissions_available[$resource . "-" ."all"] == TRUE)) || 

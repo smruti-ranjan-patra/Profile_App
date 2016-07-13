@@ -65,7 +65,7 @@ function response(input_name = "", column_name = "", ob = "", page_no = 1)
 
 	$.ajax(
 	{
-		url: './employee_details.php',
+		url: './display_helper.php',
 		data:
 		{
 			name: input_name,

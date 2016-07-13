@@ -5,7 +5,7 @@
 			'hostname' => 'localhost',
 			'username' => 'root',
 			'password' => 'mindfire',
-			'database' => 'registration'
+			'database' => 'regtest1'
 		),
 		'slave' => array(
 			'hostname' => 'localhost',

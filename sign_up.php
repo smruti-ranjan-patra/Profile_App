@@ -63,7 +63,8 @@
 	{
 		if ((isset($_GET['id']) && ($_GET['id']!= $_SESSION['id'])) && ($_SESSION['permission_info']['role'] != 'admin'))
 		{
-			header('Location:sign_up.php');exit;
+			header('Location:sign_up.php');
+			exit;
 		}
 
 		$check_pic = 1;
