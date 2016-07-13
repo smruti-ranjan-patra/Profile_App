@@ -15,12 +15,13 @@ class Acl
 	{
 		$permission_info = array();
 
-		$query = "SELECT  fk_employee, ro.role_name, rs.resource_name, pr.permission_name 
+		$query = "SELECT emp.id, ro.role_name, rs.resource_name, pr.permission_name 
 			FROM role_resource_permission AS rrp
 			JOIN role AS ro ON rrp.fk_role = ro.id
 			JOIN resource AS rs ON rrp.fk_resource = rs.id
 			JOIN permission AS pr ON rrp.fk_permission = pr.id
-			WHERE fk_employee = $user_id";
+			JOIN employee AS emp ON emp.role_id = rrp.fk_role
+			WHERE emp.id = $user_id";
 
 		$result = mysqli_query($this->conn, $query);
 
@@ -40,6 +41,12 @@ $acl = new Acl($db['master']);
 $user_id = $_SESSION['id'];
 $_SESSION['permission_info'] = $acl->get_role_resource_permission($user_id);
 
+/**
+* It is method that will check whether the user has permission for specified resource
+*
+* @param string $resource
+* @return boolean
+*/
 function is_resource_allowed($resource)
 {
 	$permissions_available = $_SESSION['permission_info']['resources'];
@@ -82,11 +89,9 @@ function is_allowed($resource, $permission = '')
 
 //Checking access for current page
 $path_parts = pathinfo($_SERVER['REQUEST_URI']);
-$requestedResource = $path_parts['filename'];
+$requested_resource = $path_parts['filename'];
 
-$requestedAction = isset($_GET['action']) ? $_GET['action'] : '';
-
-if(!is_resource_allowed($requestedResource))
+if(!is_resource_allowed($requested_resource))
 {
 	header("Location: sign_up.php");
 }

@@ -7,6 +7,7 @@ require_once('config/database.php');
 
 /**
 * Super Class
+* To handle all types of validations
 *
 * @author Smruti Ranjan
 */

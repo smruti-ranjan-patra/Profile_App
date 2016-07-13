@@ -7,6 +7,7 @@ require_once('error_helper.php');
 
 /**
 * Super Class
+* To handle all database operations
 *
 * @author Smruti Ranjan
 

@@ -20,7 +20,25 @@ require_once('acl.php');
 		</nav>
 		<div>
 			<?php
-				echo '<h1>Welcome ' . $_SESSION['permission_info']['role'] . '</h1>'; 
+				echo '<h1>Welcome ' . $_SESSION['permission_info']['role'] . '</h1><hr>';
+				$path_parts = pathinfo($_SERVER['REQUEST_URI']);
+				$file_name = $path_parts['filename'];
+
+				if(is_allowed($file_name, 'view'))
+				{
+					echo "<h3>View</h3>";
+				}
+
+				if(is_allowed($file_name, 'edit'))
+				{
+					echo "<h3>Edit</h3>";
+				}
+
+				if(is_allowed($file_name, 'delete'))
+				{
+					echo "<h3>Delete</h3>";
+				}
+
 			?>
 		</div>
 	</body>
