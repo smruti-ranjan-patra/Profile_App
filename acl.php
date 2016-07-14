@@ -93,6 +93,6 @@ $requested_resource = $path_parts['filename'];
 
 if(!is_resource_allowed($requested_resource))
 {
-	header("Location: sign_up.php");
+	header("Location: login_home.php");
 }
 ?>

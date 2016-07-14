@@ -34,6 +34,7 @@
 
 	if(isset($_GET['validation']) && $_GET['validation'] == 1)
 	{
+		require_once('acl.php');
 		$communcation_array = implode(', ',$_SESSION['error_array']['comm']['val']);
 		$com = explode(", ",$communcation_array);
 		$length = count($com);
@@ -61,6 +62,7 @@
 
 	if(isset($_GET['id']) || isset($_SESSION['id']))
 	{
+		require_once('acl.php');
 		if ((isset($_GET['id']) && ($_GET['id']!= $_SESSION['id'])) && ($_SESSION['permission_info']['role'] != 'admin'))
 		{
 			header('Location:sign_up.php');
@@ -150,6 +152,7 @@
 				<ul class="nav navbar-nav">
 					<li class="active"><a href="sign_up.php">Home</a></li>
 					<li><a href="details.php">Details</a></li>
+					<li><a href="dashboard.php">Change Permissions</a></li>
 					<li><a href="sign_out.php">Sign out</a></li>
 				</ul>
 			</div>
@@ -165,6 +168,7 @@
 					<li><a href="home_default.php">Home</a></li>
 					<li class="active"><a href="sign_up.php">Sign Up</a></li>
 					<li><a href="login_form.php">Login</a></li>
+					<li><a href="sign_out.php">Sign out</a></li>
 				</ul>
 			</div>
 		</nav>

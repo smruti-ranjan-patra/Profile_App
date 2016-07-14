@@ -12,7 +12,8 @@ require_once('acl.php');
 	<head>
 		<title>User Home</title>
 		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-		<link rel="stylesheet" type="text/css" href="js/admin_access.js">
+		<script   src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+		<script type="text/javascript" src="js/admin_access.js"></script>
 	</head>
 	<body>
 		<nav class="navbar navbar-inverse">
@@ -20,13 +21,14 @@ require_once('acl.php');
 				<ul class="nav navbar-nav">
 					<li class="active"><a href="dashboard.php">Home</a></li>
 					<li><a href="sign_up.php">View Profile</a></li>
+					<li><a href="details.php">Details</a></li>
+					<li><a href="sign_out.php">Sign out</a></li>
 				</ul>
 			</div>
 		</nav>
 		<div>
 			<?php
 				echo '<h1>Welcome ' . $_SESSION['permission_info']['role'] . '</h1>';
-
 				$resource_qry = mysqli_query($acl->conn, "SELECT id, resource_name FROM resource");
 				$permission_qry = mysqli_query($acl->conn, "SELECT id, permission_name FROM permission");
 				$role_qry = mysqli_query($acl->conn, "SELECT id, role_name FROM role");

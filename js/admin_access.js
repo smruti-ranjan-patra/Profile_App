@@ -13,11 +13,11 @@ function check_action(obj)
 
 	if($(obj).prop("checked") == true)
 	{
-		is_checked = true;
+		is_checked = 1;
 	}
 	else
 	{		
-		is_checked = false;
+		is_checked = 0;
 	}
 
 	id = $(obj).attr('id');

@@ -8,7 +8,8 @@ $errors = $validate_obj->validate_form('login');
 
 if($errors == 0)
 {	
-	header('Location:dashboard.php');
+	// header('Location:dashboard.php');
+	header('Location:login_home.php');
 }
 else
 {
