@@ -4,6 +4,9 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 session_start();
+
+require_once('class/DatabaseConnection.php');
+require_once('config/database.php');
 require_once('acl.php');
 ?>
 
@@ -28,29 +31,30 @@ require_once('acl.php');
 		</nav>
 		<div>
 			<?php
+				$obj2 = DatabaseConnection::create_connection($db['master']);
 				echo '<h1>Welcome ' . $_SESSION['permission_info']['role'] . '</h1>';
-				$resource_qry = mysqli_query($acl->conn, "SELECT id, resource_name FROM resource");
-				$permission_qry = mysqli_query($acl->conn, "SELECT id, permission_name FROM permission");
-				$role_qry = mysqli_query($acl->conn, "SELECT id, role_name FROM role");
-				$role_res_per_qry = mysqli_query($acl->conn, "SELECT fk_role, fk_resource, fk_permission FROM role_resource_permission");
+				$resource_qry = DatabaseConnection::db_query("SELECT id, resource_name FROM resource");
+				$permission_qry = DatabaseConnection::db_query("SELECT id, permission_name FROM permission");
+				$role_qry = DatabaseConnection::db_query("SELECT id, role_name FROM role");
+				$role_res_per_qry = DatabaseConnection::db_query("SELECT fk_role, fk_resource, fk_permission FROM role_resource_permission");
 
 				$permission_result = [];
 
-				while($row = mysqli_fetch_assoc($permission_qry))
+				while($row = DatabaseConnection::db_fetch_array($permission_qry))
 				{
 					$permission_result[] = $row;
 				}
 
 				$resource_result = [];
 
-				while($row = mysqli_fetch_assoc($resource_qry))
+				while($row = DatabaseConnection::db_fetch_array($resource_qry))
 				{
 					$resource_result[] = $row;
 				}
 
 				$selected_permission = [];
 
-				while ($row = mysqli_fetch_assoc($role_res_per_qry))
+				while ($row = DatabaseConnection::db_fetch_array($role_res_per_qry))
 				{
 					$selected_permission[$row['fk_role'] . '-' . $row['fk_resource'] . '-' . $row['fk_permission']] = true;
 				}
@@ -77,7 +81,7 @@ require_once('acl.php');
 						<tbody>
 							<?php
 
-								while ($role = mysqli_fetch_assoc($role_qry))
+								while ($role = DatabaseConnection::db_fetch_array($role_qry))
 								{
 
 									if($role['role_name'] == 'admin')

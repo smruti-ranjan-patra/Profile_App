@@ -35,6 +35,12 @@
 	if(isset($_GET['validation']) && $_GET['validation'] == 1)
 	{
 		require_once('acl.php');
+
+		if(!is_allowed($requested_resource, 'edit'))
+		{
+			header("Location: login_home.php");
+		}
+
 		$communcation_array = implode(', ',$_SESSION['error_array']['comm']['val']);
 		$com = explode(", ",$communcation_array);
 		$length = count($com);
@@ -63,6 +69,12 @@
 	if(isset($_GET['id']) || isset($_SESSION['id']))
 	{
 		require_once('acl.php');
+
+		if(!is_allowed($requested_resource, 'edit'))
+		{
+			header("Location: login_home.php");
+		}
+
 		if ((isset($_GET['id']) && ($_GET['id']!= $_SESSION['id'])) && ($_SESSION['permission_info']['role'] != 'admin'))
 		{
 			header('Location:sign_up.php');

@@ -33,7 +33,6 @@ function check_action(obj)
 		type: 'POST',
 		success: function(access_details)
 		{
-			window.alert("Permission changed");
 		}
 	});
 }

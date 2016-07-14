@@ -1,14 +1,16 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 require_once('class/DatabaseConnection.php');
 require_once('config/database.php');
 
 class Acl
 {
-	public $conn;
+	public $obj1;
 	public function __construct($db_master)
 	{
-		$obj1 = DatabaseConnection::create_connection($db_master);
-		$this->conn = $obj1::$conn;
+		$this->obj1 = DatabaseConnection::create_connection($db_master);
 	}
 
 	public function get_role_resource_permission($user_id)
@@ -23,9 +25,9 @@ class Acl
 			JOIN employee AS emp ON emp.role_id = rrp.fk_role
 			WHERE emp.id = $user_id";
 
-		$result = mysqli_query($this->conn, $query);
+		$query_result = DatabaseConnection::db_query($query);
 
-		while($row = mysqli_fetch_array($result, MYSQLI_ASSOC))
+		while($row = DatabaseConnection::db_fetch_array($query_result))
 		{
 			$permission_info['resources'][$row["resource_name"]] = TRUE;
 			$permission_info['role'] = $row["role_name"];
