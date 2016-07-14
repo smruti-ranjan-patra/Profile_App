@@ -1,20 +1,21 @@
 <?php
-require_once('config/constants.php');
 
-session_start();
+	require_once('config/constants.php');
 
-// File for ACL implementation
-require_once('acl.php');
+	session_start();
 
-if(!isset($_SESSION['id']))
-{
-	header('Location:home_default.php');
-}
+	// File for ACL implementation
+	require_once('acl.php');
 
-if(!is_allowed($requested_resource, 'view'))
-{
-	header("Location: login_home.php");
-}
+	if(!isset($_SESSION['id']))
+	{
+		header('Location:home_default.php');
+	}
+
+	if(!is_allowed($requested_resource, 'view'))
+	{
+		header("Location: login_home.php");
+	}
 
 ?>
 <!DOCTYPE html>

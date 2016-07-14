@@ -1,13 +1,13 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+	ini_set('display_errors', 1);
+	ini_set('display_startup_errors', 1);
+	error_reporting(E_ALL);
 
-session_start();
+	session_start();
 
-require_once('class/DatabaseConnection.php');
-require_once('config/database.php');
-require_once('acl.php');
+	require_once('class/DatabaseConnection.php');
+	require_once('config/database.php');
+	require_once('acl.php');
 ?>
 
 <!DOCTYPE html>
@@ -56,7 +56,8 @@ require_once('acl.php');
 
 				while ($row = DatabaseConnection::db_fetch_array($role_res_per_qry))
 				{
-					$selected_permission[$row['fk_role'] . '-' . $row['fk_resource'] . '-' . $row['fk_permission']] = true;
+					$selected_permission[$row['fk_role'] . '-' . $row['fk_resource'] . '-' . 
+					$row['fk_permission']] = true;
 				}
 
 			?>
