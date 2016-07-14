@@ -11,6 +11,12 @@ if(!isset($_SESSION['id']))
 	header('Location:home_default.php');
 }
 
+require_once('acl.php');
+
+if(!is_allowed($requested_resource, 'view'))
+{
+	header("Location: login_home.php");
+}
 ?>
 <!DOCTYPE html>
 <html>
