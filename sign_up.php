@@ -228,7 +228,7 @@
 							<label for="first_name">First Name:</label>
 						</div>
 						<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
-							<input type="text" name="first_name" id="first_name" 
+							<input type="text" maxlength="10" name="first_name" id="first_name" 
 							class="form-control text_field" placeholder="First Name" 
 							<?php
 							if(isset($_GET['validation']) && 1 == $_GET['validation'])
@@ -257,7 +257,7 @@
 							<label for="middle_mail">Middle Name:</label>
 						</div>
 						<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
-							<input type="text" name="middle_name" id="middle_name" 
+							<input type="text" maxlength="10" name="middle_name" id="middle_name" 
 							class="form-control text_field" placeholder="Middle Name" 
 							<?php
 							if(isset($_GET['validation']) && 1 == $_GET['validation'])
@@ -287,7 +287,7 @@
 							<label for="last_name">Last Name:</label>
 						</div>
 						<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
-							<input type="text" name="last_name" id="last_name" 
+							<input type="text" maxlength="10" name="last_name" id="last_name" 
 							class="form-control text_field" placeholder="Last Name" 
 							<?php
 							if(isset($_GET['validation']) && 1 == $_GET['validation'])
@@ -350,7 +350,7 @@
 							<label for="password">Password:</label>
 						</div>
 						<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
-							<input type="password" name="password" id="password" 
+							<input type="password" maxlength="12" name="password" id="password" 
 							class="form-control password" placeholder="**********" 
 							<?php
 							if(isset($_GET['validation']) && 1 == $_GET['validation'])
@@ -635,7 +635,7 @@
 							<label for="employer">Employer:</label>
 						</div>
 						<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
-							<input type="text" id="employer" name="employer" class="form-control" 
+							<input type="text" maxlength="30" id="employer" name="employer" class="form-control" 
 							placeholder="Organization"
 							<?php
 							if(isset($_GET['validation']) && $_GET['validation'] == 1)
@@ -1090,7 +1090,7 @@
 								}
 							}
 							?>
-							<textarea class="form-control" id="notes" name="notes" rows="10" 
+							<textarea maxlength="200" class="form-control" id="notes" name="notes" rows="10" 
 							placeholder="Notes"><?php echo $note_value; ?></textarea>
 						</div>
 					</div>
