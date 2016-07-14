@@ -46,7 +46,9 @@ CREATE TABLE IF NOT EXISTS `resource` (
 
 INSERT INTO `resource` (`id`, `resource_name`) VALUES
 (1, 'details'),
-(2, 'user_home');
+(2, 'user_home'),
+(3, 'sign_up'),
+(4, 'login_home');
 
 -- --------------------------------------------------------
 
@@ -90,16 +92,27 @@ CREATE TABLE IF NOT EXISTS `role_resource_permission` (
 --
 
 INSERT INTO `role_resource_permission` (`table_id`, `fk_role`, `fk_resource`, `fk_permission`) VALUES
-(1, 2, 1, 1),
-(2, 2, 1, 2),
-(3, 2, 1, 3),
-(4, 2, 2, 1),
 (5, 1, 1, 1),
 (6, 1, 1, 2),
 (7, 1, 1, 3),
 (8, 1, 2, 1),
 (9, 1, 2, 2),
-(10, 1, 2, 3);
+(10, 1, 2, 3),
+(29, 1, 3, 1),
+(30, 1, 3, 2),
+(31, 1, 3, 3),
+(32, 1, 4, 1),
+(33, 1, 4, 2),
+(34, 1, 4, 3),
+(39, 2, 4, 1),
+(40, 2, 4, 2),
+(41, 2, 4, 3),
+(45, 2, 3, 1),
+(47, 2, 3, 2),
+(48, 2, 3, 3),
+(49, 2, 1, 1),
+(50, 2, 1, 2),
+(51, 2, 1, 3);
 
 --
 -- Constraints for dumped tables
