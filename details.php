@@ -1,7 +1,7 @@
 <?php
 
 	require_once('config/constants.php');
-
+	require_once('header.php');
 	session_start();
 
 	// File for ACL implementation
@@ -31,16 +31,15 @@
 	</script>
 </head>
 <body>
+
 	<!-- Navigation bar -->
-	<nav class="navbar navbar-inverse">
-		<div class="container-fluid">
-			<ul class="nav navbar-nav">
-				<li><a href="sign_up.php?id=<?php echo $_SESSION['id'];?>">Home</a></li>
-				<li class="active"><a href="details.php">Details</a></li>
-				<li><a href="sign_out.php">Sign out</a></li>
-			</ul>
-		</div>
-	</nav>
+	<?php
+
+		$signup_ref = 'sign_up.php?id="' . $_SESSION['id'] . '"'; 
+		$header_array = [$signup_ref => 'Home', 'details.php' => 'Details', 'sign_out.php' => 'Sign out'];
+		display_header($header_array);
+	
+	?>	
 	<form role="form row" id="display_submit">
 		<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1 col-lg-offset-2">
 			<label for="name">First Name:</label>

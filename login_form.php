@@ -1,5 +1,7 @@
 <?php
+
 	session_start();
+	require_once('header.php');
 
 	if(isset($_SESSION['id']))
 	{
@@ -17,16 +19,15 @@
 		<script type="text/javascript" src="js/jquery_validation.js"></script>
 	</head>
 	<body background="images/home_background.jpg">
+
 	<!-- Navigation bar -->
-	<nav class="navbar navbar-inverse">
-		<div class="container-fluid">
-			<ul class="nav navbar-nav">
-				<li><a href="home_default.php">Home</a></li>
-				<li><a href="sign_up.php">Sign Up</a></li>
-				<li class="active"><a href="login.php">Login</a></li>
-			</ul>
-		</div>
-	</nav>
+	<?php
+
+		$header_array = ['home_default.php' => 'Home', 'sign_up.php' => 'Sign Up', 'login.php' => 'Login'];
+		display_header($header_array);
+
+	?>
+
 	<div class="container">
 		<div class="row">
 			<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-md-offset-2 col-lg-offset-2">

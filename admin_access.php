@@ -1,4 +1,5 @@
 <?php
+
 	require_once('config/database.php');
 	require_once('class/DatabaseConnection.php');
 
@@ -26,6 +27,5 @@
 
 		DatabaseConnection::db_query($query);
 	}
-
 
 ?>

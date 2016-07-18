@@ -76,4 +76,5 @@
 
 	$employee = array("num_of_records" => $record_numbers, "details" => $result, "page" => $page, "permission_info" => $_SESSION['permission_info']);
 	echo json_encode($employee, true);
+
 ?>

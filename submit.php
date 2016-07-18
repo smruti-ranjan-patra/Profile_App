@@ -1,4 +1,5 @@
 <?php
+
 	session_start();
 	require_once('class/DatabaseConnection.php');
 	require_once('class/Validation.php');
@@ -146,4 +147,5 @@
 	}
 	
 	header('Location:details.php');
+
 ?>

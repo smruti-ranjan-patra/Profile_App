@@ -47,8 +47,7 @@ CREATE TABLE IF NOT EXISTS `resource` (
 INSERT INTO `resource` (`id`, `resource_name`) VALUES
 (1, 'details'),
 (2, 'user_home'),
-(3, 'sign_up'),
-(4, 'login_home');
+(3, 'sign_up');
 
 -- --------------------------------------------------------
 
@@ -101,12 +100,6 @@ INSERT INTO `role_resource_permission` (`table_id`, `fk_role`, `fk_resource`, `f
 (29, 1, 3, 1),
 (30, 1, 3, 2),
 (31, 1, 3, 3),
-(32, 1, 4, 1),
-(33, 1, 4, 2),
-(34, 1, 4, 3),
-(39, 2, 4, 1),
-(40, 2, 4, 2),
-(41, 2, 4, 3),
 (45, 2, 3, 1),
 (47, 2, 3, 2),
 (48, 2, 3, 3),

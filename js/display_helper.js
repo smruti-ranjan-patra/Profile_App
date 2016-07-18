@@ -163,10 +163,15 @@ function response(input_name = "", column_name = "", ob = "", page_no = 1)
 					} 
 					else if(employee.details[i].session_id == employee.details[i].emp_id)
 					{
+
 						if (employee.permission_info['permissions'][resource_name + '-edit']) 
 						{
 							display_string += '<td><a href="sign_up.php?id=' + employee.details[i].emp_id + '">';
 							display_string += '<span class="glyphicon glyphicon-pencil"></span></a></td>';
+						}
+						else
+						{
+							display_string += '<td></td>';
 						}
 
 						if (employee.permission_info['permissions'][resource_name + '-delete']) 
@@ -174,6 +179,11 @@ function response(input_name = "", column_name = "", ob = "", page_no = 1)
 							display_string += '<td><a href="delete.php?id=' + employee.details[i].emp_id + '">';
 							display_string += '<span class="glyphicon glyphicon-remove"></span></a></td>';
 						}
+						else
+						{
+							display_string += '<td></td>';
+						}
+
 					}
 					else
 					{
@@ -221,5 +231,4 @@ function response(input_name = "", column_name = "", ob = "", page_no = 1)
 			event_handler();
 		}
 	});
-
 }
