@@ -24,7 +24,7 @@
 	<title>Display Page</title>
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="css/form.css">
-	<script   src="https://code.jquery.com/jquery-3.0.0.min.js"   integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0="   crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
 	<script type="text/javascript" src="js/display_helper.js"></script>
 	<script type="text/javascript">
 		var list_size = <?php echo RECORDS_PER_PAGE; ?>;
