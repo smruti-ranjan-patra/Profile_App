@@ -13,3 +13,12 @@ th
 text-align:center;
 }
 
+th#name_column, #gender_column, #dob_column 
+{
+cursor:pointer;
+}
+
+li
+{
+cursor:pointer;
+}

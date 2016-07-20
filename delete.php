@@ -1,16 +1,16 @@
 <?php
 
-session_start();
-require_once('config/photo_path.php');
-require_once('class/DatabaseConnection.php');
-$obj = DatabaseConnection::create_connection();
+	require_once('class/DatabaseConnection.php');
+	require_once('config/database.php');
 
-if(isset($_GET['id']))
-{
-	$obj->delete_from_table('address', $_GET['id']);
-	$obj->delete_pic($_GET['id']);
-	$obj->delete_from_table('employee', $_GET['id']);
-}
-header("Location: details.php");
+	$obj = DatabaseConnection::create_connection($db['master']);
+
+	if(isset($_GET['id']))
+	{
+		$obj->delete_pic($_GET['id']);
+		$obj->delete_employee($_GET['id']);
+	}
+	
+	header("Location: details.php");
 
 ?>

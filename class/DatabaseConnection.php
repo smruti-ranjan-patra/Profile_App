@@ -2,11 +2,15 @@
 
 require_once('config/error_messages.php');
 require_once('config/constants.php');
+require_once('error_helper.php');
+
 
 /**
 * Super Class
+* To handle all database operations
 *
 * @author Smruti Ranjan
+
 */
 class DatabaseConnection
 {
@@ -16,32 +20,38 @@ class DatabaseConnection
 	/**
 	* Constructor to create a database connection
 	*
-	* @access public
-	* @param  void
+	* @access private
+	* @param  array $db_param
 	* @return void
 	*/
-	private function __construct()
+	private function __construct($db_param)
 	{
-		self::$conn = mysqli_connect(HOST_NAME, USER_NAME, PASSWORD, DB_NAME);
-		// if (mysqli_connect_errno($this->conn))
-		// {
-		// 	die ('Failed to connect to MySQL :' . mysqli_connect_error());
-		// }
+		self::$conn = mysqli_connect($db_param['hostname'], $db_param['username'], 
+			$db_param['password'], $db_param['database']);
+
+		if(mysqli_connect_errno(self::$conn))
+		{
+			$err = "Failed to create database connection";
+			log_error($err);
+			header('Location: error_page.php');
+			exit;
+		}
 	}
 
 	/**
 	* To check of exixting connection object
 	*
 	* @access public
-	* @param  void
+	* @param  array $db_param
 	* @return object
 	*/
-	public static function create_connection()
+	public static function create_connection($db_param)
 	{
 		if(self::$connection_obj == NULL)
 		{
-			self::$connection_obj = new DatabaseConnection();
+			self::$connection_obj = new DatabaseConnection($db_param);
 		}
+
 		return self::$connection_obj;
 	}
 
@@ -59,15 +69,15 @@ class DatabaseConnection
 	}
 
 	/**
-	* To fetch executed select query
+	* To fetch executed query
 	*
 	* @access public
-	* @param  object $passed_object
+	* @param  object $result_object
 	* @return object
 	*/
-	public static function db_fetch_array($passed_object)
+	public static function db_fetch_array($result_object)
 	{
-		$result = mysqli_fetch_array($passed_object, MYSQLI_ASSOC);
+		$result = mysqli_fetch_array($result_object, MYSQLI_ASSOC);
 		return $result;
 	}
 
@@ -89,11 +99,15 @@ class DatabaseConnection
 	*
 	* @access public
 	* @param  integer $id
+	* @param  string $name
+	* @param  string $fields
+	* @param  string $order_type
 	* @return object
 	*/
-	public function select($id)
+	public function select($id = 0, $name = "", $fields = "", $order_type = "", $page = "")
 	{
-		$q_fetch = "SELECT emp.first_name AS f_name, emp.middle_name AS m_name, 
+		$start_limit = ($page - 1) * RECORDS_PER_PAGE;
+		$q_fetch = "SELECT emp.id AS id, emp.first_name AS f_name, emp.middle_name AS m_name, 
 			emp.last_name AS l_name, emp.email AS email, emp.prefix AS prefix, emp.gender AS gender, 
 			emp.dob AS dob, emp.marital_status AS marital_status, emp.employment AS employment, 
 			emp.employer AS employer, res.street AS r_street, res.city AS r_city, 
@@ -101,44 +115,84 @@ class DatabaseConnection
 			res.fax AS r_fax, off.street AS o_street, off.city AS o_city, off.state AS o_state, 
 			off.zip AS o_zip, off.phone AS o_phone, off.fax AS o_fax, emp.photo AS photo, 
 			emp.extra_note AS notes, emp.comm_id AS comm_id 
-			from employee AS emp 
+			FROM employee AS emp 
 			INNER JOIN address AS res ON (emp.id = res.emp_id AND res.address_type = 'residence')
-			INNER JOIN address AS off ON (emp.id = off.emp_id AND off.address_type = 'office')
-			where emp.id = $id";
+			INNER JOIN address AS off ON (emp.id = off.emp_id AND off.address_type = 'office')";
 
-		$result_select = DatabaseConnection::db_query($q_fetch);
-		$row = DatabaseConnection::db_fetch_array($result_select);
-		return $row;
-	}
-
-	/**
-	* To select the desired eamil from the database
-	*
-	* @access public
-	* @param  integer $id
-	* @return object
-	*/
-	public function select_email($email, $eid = 0)
-	{
-		
-		$q_fetch = "SELECT * from employee where email = '{$email}'";
-		if($eid > 0) {
-			$q_fetch .= "id != {$eid}";
+		if($id)
+		{
+			$q_fetch .= " WHERE emp.id = $id";
+			$result_select = DatabaseConnection::db_query($q_fetch);
+			$row = DatabaseConnection::db_fetch_array($result_select);
+			return $row;
 		}
-		$result = DatabaseConnection::db_query($q_fetch);
-		return $result;
+		elseif($fields)
+		{
+			$q_fetch .= " WHERE first_name LIKE '%{$name}%' ORDER BY $fields $order_type" ;
+		}
+		elseif($name)
+		{
+			$q_fetch .= " WHERE first_name LIKE '%{$name}%'" ;
+		}
+
+		$q_fetch .= " LIMIT $start_limit, " . RECORDS_PER_PAGE;
+		$result_select = DatabaseConnection::db_query($q_fetch);
+		return $result_select;
+	}
+
+	/**
+	* To get the number of records
+	*
+	* @access public
+	* @param  string $name
+	* @param  string $fields
+	* @param  string $order_type
+	* @return object
+	*/
+	public function num_of_records($name = "", $fields = "", $order_type = "")
+	{
+		$q_records = "SELECT COUNT(*) AS num_records FROM employee AS emp 
+			INNER JOIN address AS res ON (emp.id = res.emp_id AND res.address_type = 'residence')
+			INNER JOIN address AS off ON (emp.id = off.emp_id AND off.address_type = 'office')";
+
+		if($fields)
+		{
+			$q_records .= " WHERE first_name LIKE '%{$name}%' ORDER BY $fields $order_type" ;
+		}
+		elseif($name)
+		{
+			$q_records .= " WHERE first_name LIKE '%{$name}%'" ;
+		}
+
+		$result = DatabaseConnection::db_query($q_records);
+		$records = DatabaseConnection::db_fetch_array($result);
+		return $records['num_records'];
 	}
 
 	/**
 	* To select the desired eamil from the database
 	*
 	* @access public
-	* @param  integer $id
+	* @param  string $email
+	* @param  integer $emp_id
+	* @param  string $password
 	* @return object
 	*/
-	public function select_login($email, $password)
+	public function select_email($email, $emp_id = 0, $password = '')
 	{
-		$q_fetch = "SELECT * from employee where email = '{$email}' AND password = '{$password}'";
+		$email = mysqli_real_escape_string(self::$conn, $email);
+		$q_fetch = "SELECT * FROM employee WHERE email = '{$email}'";
+
+		if($password != '')
+		{
+			$password = mysqli_real_escape_string(self::$conn, $password);
+			$q_fetch .= "AND password = '{$password}'";
+		}
+		elseif($emp_id > 0)
+		{
+			$q_fetch .= "AND id != {$emp_id}";
+		}
+
 		$result = DatabaseConnection::db_query($q_fetch);
 		return $result;
 	}
@@ -147,77 +201,58 @@ class DatabaseConnection
 	* To insert data into the database
 	*
 	* @access public
-	* @param  string $table_name, array $data_array
+	* @param  string $table_name
+	* @param  array $data_arraye
 	* @return object
 	*/
-	public function insert_full($table_name, $data_array)
+	public function insert_data($table_name, $data_array)
 	{
-		if($table_name == 'employee')
+		$data_array = DatabaseConnection::sanitize($data_array);
+		$query = "INSERT INTO " . $table_name . " (";
+
+		foreach($data_array as $key => $value)
 		{
-			$q_employee = "INSERT INTO $table_name (first_name, middle_name, last_name, email, 
-				password, prefix, gender, dob, marital_status, employment, employer, photo, 
-				extra_note, comm_id) 
-				VALUES ('{$data_array['first_name']}', '{$data_array['middle_name']}', 
-				'{$data_array['last_name']}', '{$data_array['email']}', '{$data_array['password']}', 
-				'{$data_array['prefix']}', '{$data_array['gender']}', 
-				'{$data_array['dob']}', '{$data_array['marital_status']}', 
-				'{$data_array['employment']}', '{$data_array['employer']}', 
-				'{$data_array['photo']}', '{$data_array['extra_note']}', 
-				'{$data_array['comm_id']}')";
-
-			// echo $q_employee; exit;
-			$result_employee = DatabaseConnection::db_query($q_employee);
-
-			if(!$result_employee)
-			{
-				echo "Data insertion into employee table unsuccessful";exit;
-			}
-			return self::$conn;
+			$query .= "$key, ";
 		}
 
-		elseif($table_name == 'address')
+		$query = chop($query, ", ");
+		$query .= " ) VALUES ( ";
+
+		foreach($data_array as $key => $value)
 		{
-			$q_address = "INSERT INTO $table_name (`emp_id`, `address_type`, `street`, `city`, 
-				`state`, `zip`, `phone`, `fax`) 
-				VALUES
-				({$data_array['emp_id']}, 'residence', '{$data_array['r_street']}', 
-				'{$data_array['r_city']}', '{$data_array['r_state']}', '{$data_array['r_zip']}', 
-				'{$data_array['r_phone']}', '{$data_array['r_fax']}'),
+			$query .= "'" . $value . "', ";
+		}
 
-				({$data_array['emp_id']}, 'office', '{$data_array['o_street']}', 
-				'{$data_array['o_city']}', '{$data_array['o_state']}', '{$data_array['o_zip']}', 
-				'{$data_array['o_phone']}', '{$data_array['o_fax']}')";
+		$query = chop($query, ", ");
+		$query .= " ) ";
+		$result_employee = DatabaseConnection::db_query($query);
 
-			$result_address = DatabaseConnection::db_query($q_address);
-
-			if(!$result_address)
-			{
-				echo "Data insertion into address table unsuccessful";
-				exit;
-			}
-			return self::$conn;
-		}		
+		if(!$result_employee)
+		{
+			$err = "Error while inserting data into $table_name table";
+			log_error($err);
+			header('Location: error_page.php');
+			exit;
+		}
+		return self::$conn;
 	}
 
 	/**
 	* To delete data from the database
 	*
 	* @access public
-	* @param  string $table_name, integer $id
+	* @param  integer $id
 	* @return void
 	*/
-	public function delete_from_table($table_name, $id)
+	public function delete_employee($id)
 	{
-		if($table_name == 'address')
-		{
-			$del_add = "DELETE FROM $table_name WHERE emp_id = " . $id;
-			DatabaseConnection::db_query($del_add);
-		}		
-		elseif($table_name == 'employee')
-		{
-			$del_emp = "DELETE FROM $table_name WHERE id = " . $id;
-			DatabaseConnection::db_query($del_emp);
-		}
+		$id = mysqli_real_escape_string(self::$conn, $id);
+
+		$del_query = "DELETE FROM `address` WHERE emp_id = " . $id;
+		DatabaseConnection::db_query($del_query);
+
+		$del_query = "DELETE FROM `employee` WHERE id = " . $id;
+		DatabaseConnection::db_query($del_query);
 	}
 
 	/**
@@ -229,107 +264,125 @@ class DatabaseConnection
 	*/
 	public function delete_pic($id)
 	{
+		$id = mysqli_real_escape_string(self::$conn, $id);
 		$sel_pic = "SELECT photo FROM employee WHERE id = " . $id;
 		$pic_object = DatabaseConnection::db_query($sel_pic);
 		$row = DatabaseConnection::db_fetch_array($pic_object);
-		$pic_location = PIC_PATH . $row['photo'];
-		unlink($pic_location);
+		$pic_name = PIC_PATH . $row['photo'];
+
+		if(file_exists($pic_name))
+		{
+			unlink($pic_name);
+		}
 	}
 
 	/**
-	* To display the employee list
+	* To select communication medium
 	*
 	* @access public
-	* @param  void
+	* @param  string $table_name
+	* @param  string $value
 	* @return object
 	*/
-	public function display_list()
+	public function select_comm_field($value)
 	{
-		$q_list = "SELECT emp.prefix AS prefix, 
-			CONCAT(emp.first_name,' ', emp.middle_name,' ', emp.last_name) AS name, 
-			emp.gender AS gender, emp.dob AS dob, 
-			emp.marital_status AS marital_status, emp.employment AS employment, 
-			emp.employer AS employer, 
-			CONCAT(res.street, ', ', res.city, ', ', res.state, ', ', res.zip, ', ', 
-			res.phone, ', ', res.fax) AS res_add, 
-			CONCAT(off.street, ', ', off.city, ', ', off.state, ', ', off.zip, ', ', 
-			off.phone, ', ', off.fax) AS off_add, emp.comm_id AS comm_id, emp.id AS id, emp.photo AS photo
-			from employee AS emp 
-			inner join address AS res on (emp.id = res.emp_id and res.address_type = 'residence')
-			inner join address AS off on (emp.id = off.emp_id and off.address_type = 'office')";
+		$q_comm = "SELECT GROUP_CONCAT(type SEPARATOR ', ') AS comm FROM `communication_medium` 
+			WHERE id IN ($value)";
 
-		$result_list = DatabaseConnection::db_query($q_list);
-		return $result_list;
+		$result = DatabaseConnection::db_query($q_comm);
+		return $result;
 	}
 
 	/**
 	* To display the employee list
 	*
 	* @access public
-	* @param  string $table_name, array $data_array
+	* @param  string $table_name
+	* @param  array $data_array
 	* @return void
 	*/
-	public function update_table($table_name, $data_array)
-	{ 
-		if($table_name == 'address')
+	public function update_table($table_name, $data_array, $type)
+	{
+		$data_array = DatabaseConnection::sanitize($data_array);
+
+		if($type)
 		{
-			$update_add_res = "UPDATE $table_name 
-				SET `street` = '{$data_array['r_street']}', `city` = '{$data_array['r_city']}', 
-				`state` = '{$data_array['r_state']}', `zip` = {$data_array['r_zip']}, 
-				`phone` = {$data_array['r_phone']}, `fax` = {$data_array['r_fax']} 
-				WHERE (address_type = 'residence' AND emp_id = {$data_array['emp_id']})";
-
-			DatabaseConnection::db_query($update_add_res);
-
-			$update_add_off = "UPDATE $table_name 
-				SET `street` = '{$data_array['o_street']}', `city` = '{$data_array['o_city']}', 
-				`state` = '{$data_array['o_state']}', `zip` = {$data_array['o_zip']}, 
-				`phone` = {$data_array['o_phone']}, `fax` = {$data_array['o_fax']} 
-				WHERE (address_type = 'office' AND emp_id = {$data_array['emp_id']})";
-
-			DatabaseConnection::db_query($update_add_off);
+			$where_cond_arr = ['address_type' => $type, 'emp_id' => $data_array['emp_id']];
+			$where_clause = DatabaseConnection::where_generation($where_cond_arr);
 		}
-		elseif($table_name == 'employee')
+		else
 		{
-			if(isset($data_array['photo']))
-			{
-				$update_emp = "UPDATE $table_name 
-					SET `first_name` = '{$data_array['first_name']}', 
-					`middle_name` = '{$data_array['middle_name']}', 
-					`last_name` = '{$data_array['last_name']}', 
-					`email` = '{$data_array['email']}', 
-					`password` = '{$data_array['password']}', 
-					`prefix` = '{$data_array['prefix']}', 
-					`gender` = '{$data_array['gender']}', 
-					`dob` = '{$data_array['dob']}', 
-					`marital_status` = '{$data_array['marital_status']}', 
-					`employment` = '{$data_array['employment']}', 
-					`employer` = '{$data_array['employer']}', 
-					`photo` = '{$data_array['photo']}', 
-					`extra_note` = '{$data_array['extra_note']}', 
-					`comm_id` = '{$data_array['comm_id']}' 
-					WHERE id = {$data_array['emp_id']}";
-			}
-			else
-			{
-				$update_emp = "UPDATE $table_name 
-					SET `first_name` = '{$data_array['first_name']}', 
-					`middle_name` = '{$data_array['middle_name']}', 
-					`last_name` = '{$data_array['last_name']}', 
-					`email` = '{$data_array['email']}', 
-					`password` = '{$data_array['password']}', 
-					`prefix` = '{$data_array['prefix']}', 
-					`gender` = '{$data_array['gender']}', 
-					`dob` = '{$data_array['dob']}', 
-					`marital_status` = '{$data_array['marital_status']}', 
-					`employment` = '{$data_array['employment']}', 
-					`employer` = '{$data_array['employer']}', 
-					`extra_note` = '{$data_array['extra_note']}', 
-					`comm_id` = '{$data_array['comm_id']}' 
-					WHERE id = {$data_array['emp_id']}";
-			}
-			DatabaseConnection::db_query($update_emp);
+			$where_cond_arr = ['id' => $data_array['emp_id']];
+			$where_clause = DatabaseConnection::where_generation($where_cond_arr);
 		}
+
+		$q_update = "UPDATE $table_name SET ";
+
+		foreach($data_array as $key => $value)
+		{
+			if($key != 'emp_id')
+			{
+				$q_update .= $key . " = " . "'" . $value . "'" . ", ";
+			}
+		}
+
+		$q_update = chop($q_update, ", ");
+		$q_update .= ' ' . $where_clause;			
+		$result = DatabaseConnection::db_query($q_update);
+
+		if(!$result)
+		{
+			$err = "Error while updating data into $table_name table";
+			log_error($err);
+			header('Location: error_page.php');
+			exit;
+		}
+	}
+
+	/**
+	* To generate where condition for update query
+	*
+	* @access public
+	* @param  array $arr
+	* @return string $where_clause
+	*/
+	public static function where_generation($arr)
+	{
+		$count = 0;
+		$where_clause = ' WHERE ';
+
+		foreach($arr as $key => $value)
+		{
+			if($count > 0)
+			{
+				$where_clause .= ' AND ';
+			}
+
+			$where_clause .= $key . " = '" . $value . "' ";
+			++$count;
+		}
+
+		return $where_clause;
+	}
+
+	/**
+	* To sanitize data before inserting into database
+	*
+	* @access public
+	* @param  array $array
+	* @return object
+	*/
+	public static function sanitize($arr)
+	{
+		foreach($arr as $key => $value)
+		{
+			$arr["$key"] = trim($value);
+			$arr["$key"] = stripslashes($value);
+			$arr["$key"] = htmlentities($value, ENT_QUOTES);
+			$arr["$key"] = mysqli_real_escape_string(self::$conn, $value);
+		}
+
+		return $arr;
 	}
 }
 
