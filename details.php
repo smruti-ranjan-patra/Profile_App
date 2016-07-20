@@ -24,8 +24,9 @@
 	<title>Display Page</title>
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="css/form.css">
-	<script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<script type="text/javascript" src="js/display_helper.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 	<script type="text/javascript">
 		var list_size = <?php echo RECORDS_PER_PAGE; ?>;
 	</script>
@@ -35,7 +36,7 @@
 	<!-- Navigation bar -->
 	<?php
 
-		$signup_ref = 'sign_up.php?id="' . $_SESSION['id'] . '"'; 
+		$signup_ref = 'sign_up.php'; 
 		$header_array = [$signup_ref => 'Home', 'details.php' => 'Details', 'sign_out.php' => 'Sign out'];
 		display_header($header_array);
 	
@@ -57,6 +58,24 @@
 	<div class="table-responsive">
 	</div>
 	<div class="page_numbers">
+	</div>
+
+	<!-- Modal -->
+	<div class="modal fade" id="myModal" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Tweets</h4>
+				</div>
+				<div class="modal-body">
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
 	</div>
 </body>
 </html>

@@ -50,6 +50,7 @@
 			"f_name" => $details_row['f_name'],
 			"m_name" => $details_row['m_name'],
 			"l_name" => $details_row['l_name'],
+			"twitter_name" => $details_row['twitter_name'],
 			"gender" => $details_row['gender'],
 			"dob" => $date_of_birth,
 			"marital_status" => $details_row['marital_status'],

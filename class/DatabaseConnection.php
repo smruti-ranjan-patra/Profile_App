@@ -108,13 +108,13 @@ class DatabaseConnection
 	{
 		$start_limit = ($page - 1) * RECORDS_PER_PAGE;
 		$q_fetch = "SELECT emp.id AS id, emp.first_name AS f_name, emp.middle_name AS m_name, 
-			emp.last_name AS l_name, emp.email AS email, emp.prefix AS prefix, emp.gender AS gender, 
-			emp.dob AS dob, emp.marital_status AS marital_status, emp.employment AS employment, 
-			emp.employer AS employer, res.street AS r_street, res.city AS r_city, 
-			res.state AS r_state, res.zip AS r_zip, res.phone AS r_phone, 
-			res.fax AS r_fax, off.street AS o_street, off.city AS o_city, off.state AS o_state, 
-			off.zip AS o_zip, off.phone AS o_phone, off.fax AS o_fax, emp.photo AS photo, 
-			emp.extra_note AS notes, emp.comm_id AS comm_id 
+			emp.last_name AS l_name, emp.email AS email, emp.twitter_name AS twitter_name, 
+			emp.prefix AS prefix, emp.gender AS gender, emp.dob AS dob, 
+			emp.marital_status AS marital_status, emp.employment AS employment, 
+			emp.employer AS employer, res.street AS r_street, res.city AS r_city, res.state AS r_state, 
+			res.zip AS r_zip, res.phone AS r_phone, res.fax AS r_fax, off.street AS o_street, 
+			off.city AS o_city, off.state AS o_state, off.zip AS o_zip, off.phone AS o_phone, 
+			off.fax AS o_fax, emp.photo AS photo, emp.extra_note AS notes, emp.comm_id AS comm_id 
 			FROM employee AS emp 
 			INNER JOIN address AS res ON (emp.id = res.emp_id AND res.address_type = 'residence')
 			INNER JOIN address AS off ON (emp.id = off.emp_id AND off.address_type = 'office')";
@@ -299,6 +299,7 @@ class DatabaseConnection
 	* @access public
 	* @param  string $table_name
 	* @param  array $data_array
+	* @param  string $type
 	* @return void
 	*/
 	public function update_table($table_name, $data_array, $type)

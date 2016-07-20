@@ -165,7 +165,7 @@
 		}
 		else
 		{
-			$header_array = ['home_default.php' => 'Home', 'sign_up.php' => 'Sign Up', 'login_form.php' => 'Login', 'sign_out.php' => 'Sign out'];
+			$header_array = ['home_default.php' => 'Home', 'sign_up.php' => 'Sign Up', 'login_form.php' => 'Login'];
 			display_header($header_array);
 		}
 
@@ -349,6 +349,22 @@
 										echo '<span class="text-danger">' . $_SESSION['error_array']['password']['msg'] . "</span>"; 
 									}
 								?>
+							</div>
+						</div>
+
+						<!-- Twitter name -->
+						<div class="row form-group">
+							<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+								<label for="twitter_name">Twitter name:</label>
+							</div>
+							<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
+								<input type="text" maxlength="15" name="twitter_name" id="twitter_name" class="form-control twitter" placeholder="iamfree" 
+								<?php
+										if(isset($row['twitter_name']))
+										{
+											echo 'value="' . $row['twitter_name'] . '"';
+										}
+								?> >
 							</div>
 						</div>
 

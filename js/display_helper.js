@@ -5,6 +5,9 @@ var obj;
 $(document).ready(function()
 {
 	response();
+	// alert("hello");
+
+
 });
 	
 /**
@@ -18,7 +21,7 @@ function event_handler()
 {
 	$('#display_submit').submit(function()
 	{
-		response($("#name").val());
+		response($('#name').val());
 		return false;
 	});
 
@@ -126,21 +129,16 @@ function response(input_name = "", column_name = "", ob = "", page_no = 1)
 					var serial_num = (list_size * page_no) - list_size + Number(i) + 1;
 					display_string += '<tr>' + '<td>' + serial_num + '</td>';
 					display_string += '<td>' + employee.details[i].prefix + '</td>';
-					display_string += '<td>' + employee.details[i].f_name + ' ' + 
-					employee.details[i].m_name + ' ' + employee.details[i].l_name + '</td>';
+					display_string += '<td class="full_name" data_userid="' + employee.details[i].emp_id + '"data-toggle="modal" data-target="#myModal" data-backdrop="static" data-keyboard="false">' + employee.details[i].f_name + ' ' + employee.details[i].m_name + ' ' + employee.details[i].l_name + '</td>';
 					display_string += '<td>' + employee.details[i].gender + '</td>';
 					display_string += '<td>' + employee.details[i].dob + '</td>';
 					display_string += '<td>' + employee.details[i].marital_status + '</td>';
 					display_string += '<td>' + employee.details[i].employment + '</td>';
 					display_string += '<td>' + employee.details[i].employer + '</td>';
 					
-					display_string += '<td>' + employee.details[i].r_street + ', ' + employee.details[i].r_city + 
-					', ' + employee.details[i].r_state + ', ' + employee.details[i].r_zip + ', ' + 
-					employee.details[i].r_phone + ', ' + employee.details[i].r_fax + '</td>';
+					display_string += '<td>' + employee.details[i].r_street + ', ' + employee.details[i].r_city + ', ' + employee.details[i].r_state + ', ' + employee.details[i].r_zip + ', ' + employee.details[i].r_phone + ', ' + employee.details[i].r_fax + '</td>';
 
-					display_string += '<td>' + employee.details[i].o_street + ', ' + employee.details[i].o_city + 
-					', ' + employee.details[i].o_state + ', ' + employee.details[i].o_zip + ', ' + 
-					employee.details[i].o_phone + ', ' + employee.details[i].o_fax + '</td>';
+					display_string += '<td>' + employee.details[i].o_street + ', ' + employee.details[i].o_city + ', ' + employee.details[i].o_state + ', ' + employee.details[i].o_zip + ', ' + employee.details[i].o_phone + ', ' + employee.details[i].o_fax + '</td>';
 
 					display_string += '<td>' + employee.details[i].comm + '</td>';
 
@@ -228,7 +226,35 @@ function response(input_name = "", column_name = "", ob = "", page_no = 1)
 			}
 
 			$('.table-responsive').html(display_string);
+
+			$('.full_name').off('click').on('click', function()
+			{
+				var user_id = $(this).attr('data_userid');
+				get_tweets(user_id);
+			});
+
 			event_handler();
+		}
+	});
+}
+
+function get_tweets(id)
+{
+	tweets_display = '<div style="text-align: center"><img src="images/loading.gif" style="width:80px;height:80px;"></div>';
+
+	$('.modal-body').html(tweets_display);
+	$.ajax(
+	{
+		url: './tweet_helper.php',
+		data:
+		{
+			id : id
+		},
+		type: 'POST',
+		success: function(tweets)
+		{
+			tweets_display = tweets;
+			$('.modal-body').html(tweets_display);
 		}
 	});
 }
