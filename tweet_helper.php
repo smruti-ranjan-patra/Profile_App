@@ -5,11 +5,11 @@
 
 	$obj = DatabaseConnection::create_connection($db['master']);
 	$id = $_POST['id'];
+	$num_of_tweets = $_POST['num_tweets'];
 	$query = 'SELECT twitter_name FROM employee WHERE id = ' . $id;
 	$result = DatabaseConnection::db_query($query);
 	$row = DatabaseConnection::db_fetch_array($result);
 	$twitter_name = $row['twitter_name'];
-	$num_of_tweets = 5;
 
 	$settings = array(
 		'oauth_access_token' => '755592390543482880-lSbmjPI8ZxxoWNBuH9kFISWkjE6zMFO',

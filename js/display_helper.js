@@ -1,13 +1,17 @@
 var page = 1;
 var c_name;
 var obj;
+var user_id;
 
 $(document).ready(function()
 {
 	response();
-	// alert("hello");
 
-
+	$('select').on('change', function()
+	{
+		var num = $(this).val();
+		get_tweets(user_id, num);
+	});
 });
 	
 /**
@@ -229,7 +233,7 @@ function response(input_name = "", column_name = "", ob = "", page_no = 1)
 
 			$('.full_name').off('click').on('click', function()
 			{
-				var user_id = $(this).attr('data_userid');
+				user_id = $(this).attr('data_userid');
 				get_tweets(user_id);
 			});
 
@@ -238,17 +242,21 @@ function response(input_name = "", column_name = "", ob = "", page_no = 1)
 	});
 }
 
-function get_tweets(id)
+
+
+function get_tweets(id, num_tweets = 1)
 {
 	tweets_display = '<div style="text-align: center"><img src="images/loading.gif" style="width:80px;height:80px;"></div>';
 
 	$('.modal-body').html(tweets_display);
+
 	$.ajax(
 	{
 		url: './tweet_helper.php',
 		data:
 		{
-			id : id
+			id : id,
+			num_tweets : num_tweets
 		},
 		type: 'POST',
 		success: function(tweets)

@@ -69,6 +69,15 @@
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
 					<h4 class="modal-title">Tweets</h4>
 				</div>
+				<div>
+					<select>
+						<option value="1" selected>1</option>
+						<option value="2">2</option>
+						<option value="4">4</option>
+						<option value="6">6</option>
+						<option value="8">8</option>
+					</select>
+				</div>
 				<div class="modal-body">
 				</div>
 				<div class="modal-footer">
