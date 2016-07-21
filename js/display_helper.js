@@ -234,6 +234,7 @@ function response(input_name = "", column_name = "", ob = "", page_no = 1)
 
 			$('.full_name').off('click').on('click', function()
 			{
+				$("select").val("1");
 				user_id = $(this).attr('data_userid');
 				get_tweets(user_id);
 			});
