@@ -69,7 +69,7 @@
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
 					<h4 class="modal-title"></h4>
 				</div>
-				<div>
+				<div id="tweet_selector">
 					<select>
 						<option value="1" selected>1</option>
 						<option value="2">2</option>

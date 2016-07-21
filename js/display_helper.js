@@ -248,8 +248,8 @@ function response(input_name = "", column_name = "", ob = "", page_no = 1)
 
 function get_tweets(id, num_tweets = $('select').val())
 {
+	$('#tweet_selector').hide();
 	tweets_display = '<div style="text-align: center"><img src="images/loading.gif" style="width:80px;height:80px;"></div>';
-
 	$('.modal-body').html(tweets_display);
 	$('.modal-title').html('');
 
@@ -267,12 +267,19 @@ function get_tweets(id, num_tweets = $('select').val())
 		{
 			if(tweet_data.err_val == 1)
 			{
-				alert(tweet_data.err_msg);
-				location.reload(true);
-				return;
+				$('.modal-title').html('Oops !!!');
+				$('#tweet_selector').hide();
+				$('.modal-body').html(tweet_data.err_msg);
+			}
+			else if (tweet_data.err_val == 2)
+			{
+				$('.modal-title').html('Oops !!!');
+				$('#tweet_selector').hide();
+				$('.modal-body').html(tweet_data.err_msg);
 			}
 			else
 			{
+				$('#tweet_selector').show();
 				var user = 'Tweets of ' + tweet_data.user_name;
 				$('.modal-title').html(user);
 				var tweet_body = '';

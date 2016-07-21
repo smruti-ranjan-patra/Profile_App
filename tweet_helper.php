@@ -18,6 +18,12 @@
 	$row = DatabaseConnection::db_fetch_array($result_query);
 	$twitter_name = $row['twitter_name'];
 
+	if($twitter_name == '')
+	{
+		echo '{"err_msg" : "You forgot to provide your twitter account", "err_val" : "2"}';
+		exit();
+	}
+
 	$settings = array(
 		'oauth_access_token' => '755592390543482880-lSbmjPI8ZxxoWNBuH9kFISWkjE6zMFO',
 		'oauth_access_token_secret' => 'P8xhwiVpwNvTso2GkmRnyOLHBEqgg2lmZctxiDLKdZxEX',
@@ -38,7 +44,7 @@
 	if($string["errors"][0]["message"] != "")
 	{
 		// echo "<h3>Sorry, there was a problem.</h3><p>Twitter returned the following error message:</p><p><em>".$string[errors][0]["message"]."</em></p>";
-		echo '{"err_msg" : "Error occured", "err_val" : "1"}';
+		echo '{"err_msg" : "Invalid twitter account", "err_val" : "1"}';
 		exit();
 	}
 

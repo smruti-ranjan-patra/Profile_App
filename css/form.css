@@ -22,3 +22,9 @@ li ,.full_name
 {
 cursor:pointer;
 }
+
+#tweet_selector
+{
+padding-top: 5px;
+padding-left: 15px;
+}
